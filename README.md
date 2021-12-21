@@ -1,9 +1,8 @@
-# Trabajo de Fin de Grado: *Título*
+# Trabajo de Fin de Grado: Herramienta de gestión de negocios de cita previa y venta de productos
 
-**Este sería el README de tu proyecto. Consulta las [instrucciones de
-instalación](INSTALL.md)
+## BusinessApp - Web Service
 
-### Autor(a): Nombre
+### Autor: Antonio Jiménez Rodríguez
 ### Tutor(a)(es): Nombre(s)
 ___
 
@@ -13,24 +12,4 @@ nuestra distribución.
 
 Una vez instalada, tan solo deberemos situarnos en el directorio `doc` y ejecutar:
 
-`
-$ pdflatex proyecto.tex
-`
-
-Seguido por
-
-    bibtex proyecto
-    
-y de nuevo
-
-    pdflatex proyecto.tex
-
-O directamente
-
     make
-    
-(que habrá que editar si el nombre del archivo del proyecto cambia)
-
-# INSTRUCCIONES
-
-Lee [INSTALL.md](INSTALL.md) para las instrucciones de uso.
