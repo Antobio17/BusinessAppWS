@@ -3,7 +3,7 @@
 ## BusinessApp - Web Service
 
 ### Autor: Antonio Jiménez Rodríguez
-### Tutor(a)(es): Nombre(s)
+### Tutor: Javier Mart ́ınez Baena
 ___
 
 La documentación de este proyecto está realizada con `LaTeX`, por lo
