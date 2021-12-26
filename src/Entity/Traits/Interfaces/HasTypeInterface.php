@@ -23,6 +23,7 @@ interface HasTypeInterface
      * Sets the Type property.
      *
      * @param int $type The type to be set.
+     *
      * @return $this $this
      */
     public function setType(int $type): self;
