@@ -85,7 +85,8 @@ class AppService extends AbstractController implements AppServiceInterface
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
-     * @param AbstractORM $object
+     * @inheritDoc
+     * @return bool bool
      */
     public function persistAndFlush(AbstractORMInterface $object): bool
     {
@@ -109,10 +110,14 @@ class AppService extends AbstractController implements AppServiceInterface
         return $persisted;
     }
 
+    /**
+     * @inheritDoc
+     * @return AppError AppError
+     */
     public function registerPersistException(string $method, int $exceptionCode, string $exceptionMessage,
-                                             array  $exceptionTrace)
+                                             array  $exceptionTrace): AppError
     {
-        $this->registerAppError(
+        return $this->registerAppError(
             $method,
             AppError::ERROR_ORM_PERSIST,
             'Error al persistir entidad ORM',
@@ -124,6 +129,10 @@ class AppService extends AbstractController implements AppServiceInterface
         );
     }
 
+    /**
+     * @inheritDoc
+     * @return AppError AppError
+     */
     public function registerAppError(string  $method, int $type, string $message, ?int $exceptionCode = NULL,
                                      ?string $exceptionMessage = NULL, array $exceptionTrace = array(),
                                      bool    $notify = TRUE, bool $persist = TRUE): AppError
@@ -132,13 +141,8 @@ class AppService extends AbstractController implements AppServiceInterface
             $type, $method . ': ' . $message, $exceptionCode, $exceptionMessage, $exceptionTrace
         );
 
-        if ($persist):
-            $this->persistAndFlush($appError);
-        endif;
-
-        if ($notify):
-            # TODO notificación telegram
-        endif;
+        if ($persist): $this->persistAndFlush($appError); endif;
+        # TODO notificación telegram
 
         return $appError;
     }
