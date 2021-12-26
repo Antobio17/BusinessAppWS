@@ -23,6 +23,7 @@ interface HasMessageInterface
      * Sets the Message property.
      *
      * @param string $message The message to be set.
+     *
      * @return $this $this
      */
     public function setMessage(string $message): self;

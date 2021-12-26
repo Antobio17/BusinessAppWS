@@ -24,6 +24,7 @@ interface HasCreatedAtInterface
      * Sets the CreatedAt property.
      *
      * @param DateTime $createdAt The creation date to be set.
+     *
      * @return $this $this
      */
     public function setCreatedAt(DateTime $createdAt): self;

@@ -309,7 +309,9 @@ typings/
 
 package-lock.json
 
-.idea
+/.idea/
+
+/migrations/
 
 ###> symfony/framework-bundle ###
 /.env.local
