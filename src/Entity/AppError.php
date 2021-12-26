@@ -2,19 +2,26 @@
 
 namespace App\Entity;
 
-use App\Entity\Interfaces\AppErrorInterface;
-use App\Entity\Traits\CreatedAtTrait;
-use App\Entity\Traits\MessageTrait;
-use App\Entity\Traits\TypeTrait;
+use App\Entity\Traits\ArrayDataTrait;
 use DateTime;
+use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Traits\TypeTrait;
+use App\Entity\Traits\MessageTrait;
+use App\Entity\Traits\CreatedAtTrait;
+use App\Repository\AppErrorRepository;
+use App\Entity\Interfaces\AppErrorInterface;
 
 /**
+ * AppError entity
  *
+ * @ORM\Entity(repositoryClass=AppErrorRepository::class)
  */
 class AppError extends AbstractORM implements AppErrorInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
+
+    public const ERROR_ORM_PERSIST = 0;
 
     /************************************************* PROPERTIES *************************************************/
 
@@ -28,6 +35,11 @@ class AppError extends AbstractORM implements AppErrorInterface
         MessageTrait::__toArray as protected __messageToArray;
     }
 
+    use ArrayDataTrait {
+        ArrayDataTrait::__construct as protected __arrayDataConstruct;
+        ArrayDataTrait::__toArray as protected __arrayDataToArray;
+    }
+
     use CreatedAtTrait {
         CreatedAtTrait::__construct as protected __createdAtConstruct;
         CreatedAtTrait::__toArray as protected __createdAtToArray;
@@ -37,11 +49,25 @@ class AppError extends AbstractORM implements AppErrorInterface
 
     /**
      *  AppError constructor.
+     *
+     * @param int $type Type of the AppError.
+     * @param string $message Message of the AppError.
+     * @param int|null $exceptionCode Code of the exception catch.
+     * @param string|null $exceptionMessage Message of the exception catch.
+     * @param array $exceptionTrace Trace of the exception catch.
+     * @param DateTime|null $createdAt Error creation date.
      */
-    public function __construct(int $type, string $message, DateTime $createdAt = NULL)
+    public function __construct(int $type, string $message, ?int $exceptionCode = NULL,
+                                ?string $exceptionMessage = NULL, array $exceptionTrace = array(),
+                                DateTime $createdAt = NULL)
     {
         $this->__typeConstruct($type);
         $this->__messageConstruct($message);
+        $this->__arrayDataConstruct(array(
+            'exceptionCode' => $exceptionCode,
+            'exceptionMessage' => $exceptionMessage,
+            'exceptionTrace' => $exceptionTrace,
+        ));
         $this->__createdAtConstruct($createdAt ?? date_create());
     }
 
@@ -58,9 +84,14 @@ class AppError extends AbstractORM implements AppErrorInterface
         return array_merge(
             $this->__typeToArray(),
             $this->__messageToArray(),
+            $this->__arrayDataToArray(),
             $this->__createdAtToArray()
         );
     }
+
+    # TODO getExceptionCode
+    # TODO getExceptionMessage
+    # TODO getExceptionTrace
 
     /********************************************** PROTECTED METHODS *********************************************/
 
