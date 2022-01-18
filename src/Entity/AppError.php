@@ -22,6 +22,7 @@ class AppError extends AbstractORM implements AppErrorInterface
     /************************************************* CONSTANTS **************************************************/
 
     public const ERROR_ORM_PERSIST = 0;
+    public const ERROR_TELEGRAM_API = 10;
 
     /************************************************* PROPERTIES *************************************************/
 
