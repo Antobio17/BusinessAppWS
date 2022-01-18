@@ -32,9 +32,10 @@ interface HasTypeInterface
 
     /**
      * ToArray function of the property.
-     * Returns array(
-     *      'type' => $this->>getType()
-     * )
+     *
+     *      Returns array(
+     *          'type' => $this->>getType()
+     *      )
      *
      * @return array array
      */

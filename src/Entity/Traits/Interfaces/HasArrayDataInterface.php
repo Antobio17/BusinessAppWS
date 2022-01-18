@@ -30,7 +30,8 @@ interface HasArrayDataInterface
 
     /**
      * ToArray function of the property.
-     * Returns the property ArrayData.
+     *
+     *      Returns the property ArrayData.
      *
      * @return array array
      */

@@ -8,8 +8,9 @@ use App\Repository\Interfaces\AppRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
+ * Repository of App.
  */
-class AppRepository extends ServiceEntityRepository implements AppRepositoryInterface
+abstract class AppRepository extends ServiceEntityRepository implements AppRepositoryInterface
 {
 
     /************************************************* CONSTRUCT **************************************************/
