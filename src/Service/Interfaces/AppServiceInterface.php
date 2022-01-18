@@ -3,12 +3,13 @@
 namespace App\Service\Interfaces;
 
 
-use App\Entity\AbstractORM;
 use App\Entity\AppError;
-use App\Entity\Interfaces\AbstractORMInterface;
+use App\Entity\AbstractORM;
 use Doctrine\Persistence\ObjectManager;
+use App\Entity\Interfaces\AbstractORMInterface;
+use App\Service\Traits\Interfaces\HasRepositoriesInterface;
 
-interface AppServiceInterface
+interface AppServiceInterface extends HasRepositoriesInterface
 {
 
     /************************************************** ROUTING ***************************************************/
