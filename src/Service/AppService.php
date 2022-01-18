@@ -198,7 +198,6 @@ class AppService extends AbstractController implements AppServiceInterface
     {
         $bot = new BotApi($this->getParameter('app.telegram_bot_api_token'));
         try {
-            dump($bot);
             $bot->sendMessage($this->getParameter('app.telegram_chat_id_developer'), $message);
             $sent = TRUE;
         } catch (TelegramException $e) {
