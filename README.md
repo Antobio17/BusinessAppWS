@@ -28,3 +28,21 @@ symfony new BusinessAppWS
 Se deberán añadir los nuevos archivos generados al _stage_ de _git_ y commitearlos para el seguimiento.
 
 ---
+
+### Actualizaciones en Base de Datos
+Para aplicar cambios realizados en la estructura de la base de datos se deberán ejecutar los siguientes comandos:
+
+```shell
+# Generación de un nuevo archivo migration con los cambios
+php bin/console doctrine:migrations:diff
+# Ejecución del migration
+php bin/console doctrine:migrations:execute --up DoctrineMigrations\VersionXXXXXXXXXX
+```
+
+En caso de querer revertir los cambios:
+
+```shell
+php bin/console doctrine:migrations:execute --down DoctrineMigrations\VersionXXXXXXXXXX
+```
+
+---
