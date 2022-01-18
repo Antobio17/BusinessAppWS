@@ -2,12 +2,11 @@
 
 namespace App\Controller;
 
-use App\Controller\Interfaces\AppControllerInterface;
-use App\Service\Interfaces\AppServiceInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Service\Interfaces\AppServiceInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Controller\Interfaces\AppControllerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AppController extends AbstractController implements AppControllerInterface
 {
@@ -16,56 +15,31 @@ class AppController extends AbstractController implements AppControllerInterface
 
     /************************************************* PROPERTIES *************************************************/
 
-    /**
-     * @var AppServiceInterface
-     */
-    protected AppServiceInterface $appService;
-
     /************************************************** ROUTING ***************************************************/
 
     /************************************************* CONSTRUCT **************************************************/
 
     /**
      * AppController construct.
-     *
-     * @param AppServiceInterface $appService Service of App.
      */
-    public function __construct(AppServiceInterface $appService)
+    public function __construct()
     {
-        $this->setAppService($appService);
+
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
-
-    /**
-     * @inheritDoc
-     * @return AppServiceInterface AppServiceInterface
-     */
-    public function getAppService(): AppServiceInterface
-    {
-        return $this->appService;
-    }
-
-    /**
-     * @inheritDoc
-     * @return $this $this
-     */
-    public function setAppService(AppServiceInterface $appService): self
-    {
-        $this->appService = $appService;
-
-        return $this;
-    }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
      * @param array $data
-     * @return Response
+     * @param AppServiceInterface $service
+     *
+     * @return Response Response
      */
-    public function createJsonResponse(array $data): Response
+    public function createJsonResponse(array $data, AppServiceInterface $service): Response
     {
-        $errors = $this->getAppService()->getErrors();
+        $errors = $service->getErrors();
         $response = array(
             'data' => serialize($data),
             'result' => empty($errors),

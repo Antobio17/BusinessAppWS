@@ -120,7 +120,7 @@ class AppService extends AbstractController implements AppServiceInterface
     public function persistAndFlush(AbstractORMInterface $object): bool
     {
         $persisted = FALSE;
-        if ($this->getTestMode()):
+        if (!$this->getTestMode()):
             try {
                 $entityManager = $this->getEntityManager();
                 $entityManager->persist($object);
