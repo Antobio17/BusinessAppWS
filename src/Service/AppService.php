@@ -2,14 +2,14 @@
 
 namespace App\Service;
 
-use App\Entity\AbstractORM;
-use App\Entity\AppError;
-use App\Entity\Interfaces\AbstractORMInterface;
-use App\Helper\ToolsHelper;
-use App\Service\Interfaces\AppServiceInterface;
-use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectManager;
 use Exception;
+use App\Entity\AppError;
+use App\Helper\ToolsHelper;
+use Doctrine\Persistence\ObjectManager;
+use App\Service\Traits\RepositoriesTrait;
+use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Interfaces\AbstractORMInterface;
+use App\Service\Interfaces\AppServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AppService extends AbstractController implements AppServiceInterface
@@ -28,6 +28,8 @@ class AppService extends AbstractController implements AppServiceInterface
      * @var ObjectManager
      */
     private ObjectManager $entityManager;
+
+    use RepositoriesTrait;
 
     /************************************************* CONSTRUCT **************************************************/
 
