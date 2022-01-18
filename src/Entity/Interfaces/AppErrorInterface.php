@@ -18,6 +18,27 @@ interface AppErrorInterface extends HasTypeInterface, HasMessageInterface, HasCr
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
+     * Gets the exception code of the error.
+     *
+     * @return int|null int|null
+     */
+    public function getExceptionCode(): ?int;
+
+    /**
+     * Gets the exception message of the error.
+     *
+     * @return string|null string|null
+     */
+    public function getExceptionMessage(): ?string;
+
+    /**
+     * Gets the exception trace of the error.
+     *
+     * @return array|null array|null
+     */
+    public function getExceptionTrace(): ?array;
+
+    /**
      * ToArray function of the property.
      *
      *      Returns array(

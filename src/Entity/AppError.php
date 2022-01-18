@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\ArrayDataTrait;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\TypeTrait;
 use App\Entity\Traits\MessageTrait;
 use App\Entity\Traits\CreatedAtTrait;
+use App\Entity\Traits\ArrayDataTrait;
 use App\Repository\AppErrorRepository;
 use App\Entity\Interfaces\AppErrorInterface;
 
@@ -77,6 +77,33 @@ class AppError extends AbstractORM implements AppErrorInterface
 
     /**
      * @inheritDoc
+     * @return int|null int|null
+     */
+    public function getExceptionCode(): ?int
+    {
+        return $this->getArrayData()['exceptionCode'];
+    }
+
+    /**
+     * @inheritDoc
+     * @return string|null string|null
+     */
+    public function getExceptionMessage(): ?string
+    {
+        return $this->getArrayData()['exceptionMessage'];
+    }
+
+    /**
+     * @inheritDoc
+     * @return array|null array|null
+     */
+    public function getExceptionTrace(): ?array
+    {
+        return $this->getArrayData()['exceptionTrace'];
+    }
+
+    /**
+     * @inheritDoc
      * @return array array
      */
     public function __toArray(): array
@@ -88,10 +115,6 @@ class AppError extends AbstractORM implements AppErrorInterface
             $this->__createdAtToArray()
         );
     }
-
-    # TODO getExceptionCode
-    # TODO getExceptionMessage
-    # TODO getExceptionTrace
 
     /********************************************** PROTECTED METHODS *********************************************/
 
