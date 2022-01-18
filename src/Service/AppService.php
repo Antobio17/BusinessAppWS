@@ -5,12 +5,15 @@ namespace App\Service;
 use Exception;
 use App\Entity\AppError;
 use App\Helper\ToolsHelper;
+use TelegramBot\Api\BotApi;
 use Doctrine\Persistence\ObjectManager;
 use App\Service\Traits\RepositoriesTrait;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Interfaces\AppErrorInterface;
+use TelegramBot\Api\InvalidArgumentException;
 use App\Entity\Interfaces\AbstractORMInterface;
 use App\Service\Interfaces\AppServiceInterface;
+use TelegramBot\Api\Exception as TelegramException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AppService extends AbstractController implements AppServiceInterface
@@ -169,7 +172,7 @@ class AppService extends AbstractController implements AppServiceInterface
     {
         $appError = new AppError(
             $type,
-            $method . ': ' . $message,
+            $method . ' -> ' . $message,
             $exceptionCode,
             $exceptionMessage,
             $exceptionTrace
@@ -177,12 +180,42 @@ class AppService extends AbstractController implements AppServiceInterface
         $this->_addAppError($appError);
 
         if ($persist): $this->persistAndFlush($appError); endif;
-        # TODO notificación telegram
+        if ($notify): $this->_sendTelegramNotification($method . ' -> ' . $message); endif;
 
         return $appError;
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
+
+    /**
+     * Method to notify by a Telegram Bot.
+     *
+     * @param string $message Message to send.
+     *
+     * @return bool bool
+     */
+    protected function _sendTelegramNotification(string $message): bool
+    {
+        $bot = new BotApi($this->getParameter('app.telegram_bot_api_token'));
+        try {
+            dump($bot);
+            $bot->sendMessage($this->getParameter('app.telegram_chat_id_developer'), $message);
+            $sent = TRUE;
+        } catch (TelegramException $e) {
+            $sent = FALSE;
+            $this->registerAppError(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
+                AppError::ERROR_TELEGRAM_API,
+                'Error al enviar notificación con Telegram.',
+                $e->getCode(),
+                $e->getMessage(),
+                $e->getTrace(),
+                FALSE
+            );
+        }
+
+        return $sent;
+    }
 
     /**
      * Adds a new AppError registered in a Service.
