@@ -5,6 +5,7 @@ namespace App\Service\Interfaces;
 
 use App\Entity\AppError;
 use App\Entity\AbstractORM;
+use App\Entity\Interfaces\AppErrorInterface;
 use App\Service\AppService;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Interfaces\AbstractORMInterface;
@@ -84,10 +85,10 @@ interface AppServiceInterface extends HasRepositoriesInterface
      * @param string $exceptionMessage Message of the exception catch.
      * @param array $exceptionTrace Trace of the exception catch.
      *
-     * @return AppError AppError
+     * @return AppErrorInterface AppErrorInterface
      */
     public function registerPersistException(string $method, int $exceptionCode, string $exceptionMessage,
-                                             array  $exceptionTrace): AppError;
+                                             array  $exceptionTrace): AppErrorInterface;
 
     /**
      * Logs an error.
@@ -101,11 +102,11 @@ interface AppServiceInterface extends HasRepositoriesInterface
      * @param bool $notify Boolean to notify or not the error.
      * @param bool $persist Boolean to persist or not the error.
      *
-     * @return AppError AppError
+     * @return AppErrorInterface AppErrorInterface
      */
     public function registerAppError(string  $method, int $type, string $message, ?int $exceptionCode = NULL,
                                      ?string $exceptionMessage = NULL, array $exceptionTrace = array(),
-                                     bool    $notify = TRUE, bool $persist = TRUE): AppError;
+                                     bool    $notify = TRUE, bool $persist = TRUE): AppErrorInterface;
 
     /*********************************************** STATIC METHODS ***********************************************/
 

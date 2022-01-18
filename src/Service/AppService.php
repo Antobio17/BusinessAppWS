@@ -8,6 +8,7 @@ use App\Helper\ToolsHelper;
 use Doctrine\Persistence\ObjectManager;
 use App\Service\Traits\RepositoriesTrait;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Interfaces\AppErrorInterface;
 use App\Entity\Interfaces\AbstractORMInterface;
 use App\Service\Interfaces\AppServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,7 +32,7 @@ class AppService extends AbstractController implements AppServiceInterface
 
 
     /**
-     * @var AppError[]
+     * @var AppErrorInterface[]
      */
     protected array $errors;
 
@@ -141,10 +142,10 @@ class AppService extends AbstractController implements AppServiceInterface
 
     /**
      * @inheritDoc
-     * @return AppError AppError
+     * @return AppErrorInterface AppErrorInterface
      */
     public function registerPersistException(string $method, int $exceptionCode, string $exceptionMessage,
-                                             array  $exceptionTrace): AppError
+                                             array  $exceptionTrace): AppErrorInterface
     {
         return $this->registerAppError(
             $method,
@@ -160,11 +161,11 @@ class AppService extends AbstractController implements AppServiceInterface
 
     /**
      * @inheritDoc
-     * @return AppError AppError
+     * @return AppErrorInterface AppErrorInterface
      */
     public function registerAppError(string  $method, int $type, string $message, ?int $exceptionCode = NULL,
                                      ?string $exceptionMessage = NULL, array $exceptionTrace = array(),
-                                     bool    $notify = TRUE, bool $persist = TRUE): AppError
+                                     bool    $notify = TRUE, bool $persist = TRUE): AppErrorInterface
     {
         $appError = new AppError(
             $type,
