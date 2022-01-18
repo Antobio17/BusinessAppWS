@@ -18,7 +18,8 @@
         "symfony/proxy-manager-bridge": "5.4.*",
         "symfony/runtime": "5.4.*",
         "symfony/webpack-encore-bundle": "^1.13",
-        "symfony/yaml": "5.4.*"
+        "symfony/yaml": "5.4.*",
+        "telegram-bot/api": "^2.3"
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.36"
