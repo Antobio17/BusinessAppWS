@@ -2,15 +2,14 @@
 
 namespace App\Entity\Traits;
 
-use App\Entity\Traits\Interfaces\HasArrayDataInterface;
 use App\Helper\ToolsHelper;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\Interfaces\_HasTemplateInterface_;
+use App\Entity\Traits\Interfaces\HasArrayDataInterface;
 
 /**
- * Trait to implement _Template_ property.
+ * Trait to implement ArrayData property.
  *
- * @see _HasTemplateInterface_
+ * @see HasArrayDataInterface
  */
 trait ArrayDataTrait
 {

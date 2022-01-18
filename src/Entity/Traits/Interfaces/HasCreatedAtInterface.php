@@ -33,9 +33,10 @@ interface HasCreatedAtInterface
 
     /**
      * ToArray function of the property.
-     * Returns array(
-     *      'createdAt' => $this->>getCreatedAt
-     * )
+     *
+     *      Returns array(
+     *              'createdAt' => $this->>getCreatedAt
+     *      )
      *
      * @return array array
      */

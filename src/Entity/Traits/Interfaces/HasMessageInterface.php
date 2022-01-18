@@ -32,9 +32,10 @@ interface HasMessageInterface
 
     /**
      * ToArray function of the property.
-     * Returns array(
-     *      'message' => $this->>getMessage()
-     * )
+     *
+     *      Returns array(
+     *              'message' => $this->>getMessage()
+     *      )
      *
      * @return array array
      */

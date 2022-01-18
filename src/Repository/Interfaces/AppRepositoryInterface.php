@@ -2,7 +2,9 @@
 
 namespace App\Repository\Interfaces;
 
-
+/**
+ * Interface of AppRepository.
+ */
 interface AppRepositoryInterface
 {
 
