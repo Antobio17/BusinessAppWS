@@ -22,12 +22,18 @@ class AppService extends AbstractController implements AppServiceInterface
     /**
      * @var bool
      */
-    private bool $testMode;
+    protected bool $testMode;
 
     /**
      * @var ObjectManager
      */
-    private ObjectManager $entityManager;
+    protected ObjectManager $entityManager;
+
+
+    /**
+     * @var AppError[]
+     */
+    protected array $errors;
 
     use RepositoriesTrait;
 
@@ -39,7 +45,8 @@ class AppService extends AbstractController implements AppServiceInterface
     public function __construct(ManagerRegistry $doctrine, bool $testMode = FALSE)
     {
         $this->setEntityManager($doctrine->getManager())
-            ->setTestMode($testMode);
+            ->setTestMode($testMode)
+            ->setErrors();
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -80,6 +87,26 @@ class AppService extends AbstractController implements AppServiceInterface
     public function setEntityManager(ObjectManager $entityManager): self
     {
         $this->entityManager = $entityManager;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @inheritDoc
+     * @return $this $this
+     */
+    public function setErrors(array $errors = array()): self
+    {
+        $this->errors = $errors;
 
         return $this;
     }
@@ -140,8 +167,13 @@ class AppService extends AbstractController implements AppServiceInterface
                                      bool    $notify = TRUE, bool $persist = TRUE): AppError
     {
         $appError = new AppError(
-            $type, $method . ': ' . $message, $exceptionCode, $exceptionMessage, $exceptionTrace
+            $type,
+            $method . ': ' . $message,
+            $exceptionCode,
+            $exceptionMessage,
+            $exceptionTrace
         );
+        $this->_addAppError($appError);
 
         if ($persist): $this->persistAndFlush($appError); endif;
         # TODO notificación telegram
@@ -150,6 +182,16 @@ class AppService extends AbstractController implements AppServiceInterface
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
+
+    /**
+     * Adds a new AppError registered in a Service.
+     *
+     * @param AppError $appError The error to add in the AppService.
+     */
+    protected function _addAppError(AppError $appError)
+    {
+        $this->errors[] = $appError;
+    }
 
     /*********************************************** STATIC METHODS ***********************************************/
 
