@@ -5,6 +5,7 @@ namespace App\Service\Interfaces;
 
 use App\Entity\AppError;
 use App\Entity\AbstractORM;
+use App\Service\AppService;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Interfaces\AbstractORMInterface;
 use App\Service\Traits\Interfaces\HasRepositoriesInterface;
@@ -47,6 +48,22 @@ interface AppServiceInterface extends HasRepositoriesInterface
      * @return $this $this
      */
     public function setEntityManager(ObjectManager $entityManager): self;
+
+    /**
+     * Gets the error's array of the AppService.
+     *
+     * @return array array
+     */
+    public function getErrors(): array;
+
+    /**
+     * Sets the error's array of the AppService.
+     *
+     * @param array $errors The errors to set.
+     *
+     * @return $this $this
+     */
+    public function setErrors(array $errors = array()): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 
