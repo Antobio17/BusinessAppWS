@@ -18,10 +18,10 @@ abstract class AbstractORM implements AbstractORMInterface
     /**
      * @var int|null
      * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="id", type="integer")
      */
-    private int $id;
+    protected int $id;
 
     /************************************************* CONSTRUCT **************************************************/
 
