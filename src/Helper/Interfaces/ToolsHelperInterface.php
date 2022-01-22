@@ -36,4 +36,23 @@ interface ToolsHelperInterface
      */
     static function getStringAsArray(?string $string): array;
 
+    /**
+     * Encrypts the string passed by parameters.
+     *
+     * @param string $str String to encrypt.
+     * @param string $secretToken Secret token for the encryption.
+     *
+     * @return string string
+     */
+    static function encrypt(string $str, string $secretToken): string;
+
+    /**
+     * Decrypts the string passed by parameters.
+     *
+     * @param string $str String to decrypt.
+     * @param string $secretToken Secret token for the decryption.
+     *
+     * @return string string
+     */
+    static function decrypt(string $str, string $secretToken): string;
 }
