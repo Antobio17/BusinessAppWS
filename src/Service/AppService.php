@@ -5,15 +5,13 @@ namespace App\Service;
 use Exception;
 use App\Entity\AppError;
 use App\Helper\ToolsHelper;
-use TelegramBot\Api\BotApi;
 use Doctrine\Persistence\ObjectManager;
 use App\Service\Traits\RepositoriesTrait;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Interfaces\AppErrorInterface;
-use TelegramBot\Api\InvalidArgumentException;
 use App\Entity\Interfaces\AbstractORMInterface;
 use App\Service\Interfaces\AppServiceInterface;
-use TelegramBot\Api\Exception as TelegramException;
+use App\Service\Interfaces\TelegramServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AppService extends AbstractController implements AppServiceInterface
@@ -33,6 +31,10 @@ class AppService extends AbstractController implements AppServiceInterface
      */
     protected ObjectManager $entityManager;
 
+    /**
+     * @var TelegramServiceInterface
+     */
+    protected TelegramServiceInterface $telegramService;
 
     /**
      * @var AppErrorInterface[]
@@ -45,10 +47,14 @@ class AppService extends AbstractController implements AppServiceInterface
 
     /**
      * AppService construct.
+     *
+     * @param ManagerRegistry $doctrine Doctrine to manage the ORM.
+     * @param bool $testMode Boolean to set the Test Mode.
      */
-    public function __construct(ManagerRegistry $doctrine, bool $testMode = FALSE)
+    public function __construct(ManagerRegistry $doctrine, TelegramService $telegramService, bool $testMode = FALSE)
     {
         $this->setEntityManager($doctrine->getManager())
+            ->setTelegramService($telegramService)
             ->setTestMode($testMode)
             ->setErrors();
     }
@@ -91,6 +97,26 @@ class AppService extends AbstractController implements AppServiceInterface
     public function setEntityManager(ObjectManager $entityManager): self
     {
         $this->entityManager = $entityManager;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     * @return TelegramServiceInterface TelegramServiceInterface
+     */
+    public function getTelegramService(): TelegramServiceInterface
+    {
+        return $this->telegramService;
+    }
+
+    /**
+     * @inheritDoc
+     * @return $this $this
+     */
+    public function setTelegramService(TelegramServiceInterface $telegramService): self
+    {
+        $this->telegramService = $telegramService;
 
         return $this;
     }
@@ -172,7 +198,8 @@ class AppService extends AbstractController implements AppServiceInterface
     {
         $appError = new AppError(
             $type,
-            $method . ' -> ' . $message,
+            $method,
+            $message,
             $exceptionCode,
             $exceptionMessage,
             $exceptionTrace
@@ -180,41 +207,12 @@ class AppService extends AbstractController implements AppServiceInterface
         $this->_addAppError($appError);
 
         if ($persist): $this->persistAndFlush($appError); endif;
-        if ($notify): $this->_sendTelegramNotification($method . ' -> ' . $message); endif;
+        if ($notify): $this->getTelegramService()->sendNotificationAppError($appError); endif;
 
         return $appError;
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
-
-    /**
-     * Method to notify by a Telegram Bot.
-     *
-     * @param string $message Message to send.
-     *
-     * @return bool bool
-     */
-    protected function _sendTelegramNotification(string $message): bool
-    {
-        $bot = new BotApi($this->getParameter('app.telegram_bot_api_token'));
-        try {
-            $bot->sendMessage($this->getParameter('app.telegram_chat_id_developer'), $message);
-            $sent = TRUE;
-        } catch (TelegramException $e) {
-            $sent = FALSE;
-            $this->registerAppError(
-                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
-                AppError::ERROR_TELEGRAM_API,
-                'Error al enviar notificación con Telegram.',
-                $e->getCode(),
-                $e->getMessage(),
-                $e->getTrace(),
-                FALSE
-            );
-        }
-
-        return $sent;
-    }
 
     /**
      * Adds a new AppError registered in a Service.
