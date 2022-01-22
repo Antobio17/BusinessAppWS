@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\MethodTrait;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\TypeTrait;
@@ -31,6 +32,11 @@ class AppError extends AbstractORM implements AppErrorInterface
         TypeTrait::__toArray as protected __typeToArray;
     }
 
+    use MethodTrait {
+        MethodTrait::__construct as protected __methodConstruct;
+        MethodTrait::__toArray as protected __methodToArray;
+    }
+
     use MessageTrait {
         MessageTrait::__construct as protected __messageConstruct;
         MessageTrait::__toArray as protected __messageToArray;
@@ -52,17 +58,19 @@ class AppError extends AbstractORM implements AppErrorInterface
      *  AppError constructor.
      *
      * @param int $type Type of the AppError.
+     * @param string $method Method of the AppError.
      * @param string $message Message of the AppError.
      * @param int|null $exceptionCode Code of the exception catch.
      * @param string|null $exceptionMessage Message of the exception catch.
      * @param array $exceptionTrace Trace of the exception catch.
      * @param DateTime|null $createdAt Error creation date.
      */
-    public function __construct(int $type, string $message, ?int $exceptionCode = NULL,
+    public function __construct(int $type, string $method, string $message, ?int $exceptionCode = NULL,
                                 ?string $exceptionMessage = NULL, array $exceptionTrace = array(),
                                 DateTime $createdAt = NULL)
     {
         $this->__typeConstruct($type);
+        $this->__methodConstruct($method);
         $this->__messageConstruct($message);
         $this->__arrayDataConstruct(array(
             'exceptionCode' => $exceptionCode,
@@ -111,6 +119,7 @@ class AppError extends AbstractORM implements AppErrorInterface
     {
         return array_merge(
             $this->__typeToArray(),
+            $this->__methodToArray(),
             $this->__messageToArray(),
             $this->__arrayDataToArray(),
             $this->__createdAtToArray()

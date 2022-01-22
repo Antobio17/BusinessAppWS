@@ -3,28 +3,28 @@
 namespace App\Entity\Traits\Interfaces;
 
 /**
- * MessageTrait interface
+ * MethodTrait interface
  */
-interface HasMessageInterface
+interface HasMethodInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
-     * Gets the Message property.
+     * Gets the Method property.
      *
      * @return string string
      */
-    public function getMessage(): string;
+    public function getMethod(): string;
 
     /**
-     * Sets the Message property.
+     * Sets the Method property.
      *
-     * @param string $message The message to be set.
+     * @param string $message The method to be set.
      *
      * @return $this $this
      */
-    public function setMessage(string $message): self;
+    public function setMethod(string $message): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 
@@ -32,7 +32,7 @@ interface HasMessageInterface
      * ToArray function of the property.
      *
      *      Returns array(
-     *              'message' => $this->>getMessage()
+     *              'method' => $this->>getMethod()
      *      )
      *
      * @return array array

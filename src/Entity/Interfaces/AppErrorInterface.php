@@ -4,13 +4,15 @@ namespace App\Entity\Interfaces;
 
 use App\Entity\Traits\Interfaces\HasArrayDataInterface;
 use App\Entity\Traits\Interfaces\HasMessageInterface;
+use App\Entity\Traits\Interfaces\HasMethodInterface;
 use App\Entity\Traits\Interfaces\HasTypeInterface;
 use App\Entity\Traits\Interfaces\HasCreatedAtInterface;
 
 /**
  * AppError interface.
  */
-interface AppErrorInterface extends HasTypeInterface, HasMessageInterface, HasCreatedAtInterface, HasArrayDataInterface
+interface AppErrorInterface extends HasTypeInterface, HasMessageInterface, HasCreatedAtInterface, HasArrayDataInterface,
+    HasMethodInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
