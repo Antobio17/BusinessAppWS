@@ -3,11 +3,9 @@
 namespace App\Service\Interfaces;
 
 
-use App\Entity\AppError;
 use App\Entity\AbstractORM;
-use App\Entity\Interfaces\AppErrorInterface;
-use App\Service\AppService;
 use Doctrine\Persistence\ObjectManager;
+use App\Entity\Interfaces\AppErrorInterface;
 use App\Entity\Interfaces\AbstractORMInterface;
 use App\Service\Traits\Interfaces\HasRepositoriesInterface;
 
@@ -49,6 +47,22 @@ interface AppServiceInterface extends HasRepositoriesInterface
      * @return $this $this
      */
     public function setEntityManager(ObjectManager $entityManager): self;
+
+    /**
+     * Gets the TelegramService property.
+     *
+     * @return TelegramServiceInterface TelegramServiceInterface
+     */
+    public function getTelegramService(): TelegramServiceInterface;
+
+    /**
+     * Sets the TelegramService property.
+     *
+     * @param TelegramServiceInterface $telegramService The TelegramService to set.
+     *
+     * @return $this $this
+     */
+    public function setTelegramService(TelegramServiceInterface $telegramService): self;
 
     /**
      * Gets the error's array of the AppService.
