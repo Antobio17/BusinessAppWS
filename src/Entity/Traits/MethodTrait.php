@@ -2,44 +2,43 @@
 
 namespace App\Entity\Traits;
 
-use App\Helper\ToolsHelper;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\Interfaces\HasArrayDataInterface;
+use App\Entity\Traits\Interfaces\HasMethodInterface;
 
 /**
- * Trait to implement ArrayData property.
+ * Trait to implement Method property.
  *
- * @see HasArrayDataInterface
+ * @see HasMethodInterface
  */
-trait ArrayDataTrait
+trait MethodTrait
 {
 
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @var string|null
-     * @ORM\Column(type="text", nullable=true)
+     * @var string
+     * @ORM\Column(type="string", length=512)
      */
-    private string $arrayData;
+    private string $method;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return array array
+     * @return string string
      */
-    public function getArrayData(): array
+    public function getMethod(): string
     {
-        return json_decode($this->arrayData, TRUE);
+        return $this->method;
     }
 
     /**
      * @inheritDoc
      * @return $this $this
      */
-    public function setArrayData(array $arrayData): self
+    public function setMethod(string $method): self
     {
-        $this->arrayData = json_encode($arrayData);
+        $this->method = $method;
 
         return $this;
     }
@@ -47,11 +46,11 @@ trait ArrayDataTrait
     /************************************************* CONSTRUCT **************************************************/
 
     /**
-     *  ArrayDataTrait constructor.
+     *  MethodTrait constructor.
      */
-    public function __construct(array $arrayData)
+    public function __construct(string $method)
     {
-        $this->setArrayData($arrayData);
+        $this->setMethod($method);
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
@@ -62,7 +61,9 @@ trait ArrayDataTrait
      */
     public function __toArray(): array
     {
-        return $this->getArrayData();
+        return array(
+            'method' => $this->getMethod(),
+        );
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
