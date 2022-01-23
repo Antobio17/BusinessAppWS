@@ -4,9 +4,9 @@ namespace App\Service\Interfaces;
 
 
 use App\Entity\AbstractORM;
+use App\Entity\Interfaces\ORMInterface;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Interfaces\AppErrorInterface;
-use App\Entity\Interfaces\AbstractORMInterface;
 use App\Service\Traits\Interfaces\HasRepositoriesInterface;
 
 interface AppServiceInterface extends HasRepositoriesInterface
@@ -89,7 +89,7 @@ interface AppServiceInterface extends HasRepositoriesInterface
      *
      * @return bool bool
      */
-    public function persistAndFlush(AbstractORMInterface $object): bool;
+    public function persistAndFlush(ORMInterface $object): bool;
 
     /**
      * Logs an error when trying to persist an ORM object.

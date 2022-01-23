@@ -5,7 +5,7 @@ namespace App\Entity\Interfaces;
 /**
  * Abstract ORM entity that adds a self-generated ID to descendant entities.
  */
-interface AbstractORMInterface
+interface ORMInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
