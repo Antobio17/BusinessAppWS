@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Interfaces\AbstractORMInterface;
+use App\Entity\Interfaces\ORMInterface;
 
 /**
  * AbstractORM entity.
  */
-abstract class AbstractORM implements AbstractORMInterface
+abstract class AbstractORM implements ORMInterface
 {
 
     /************************************************* CONSTANTS **************************************************/

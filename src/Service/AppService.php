@@ -9,7 +9,7 @@ use Doctrine\Persistence\ObjectManager;
 use App\Service\Traits\RepositoriesTrait;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Interfaces\AppErrorInterface;
-use App\Entity\Interfaces\AbstractORMInterface;
+use App\Entity\Interfaces\ORMInterface;
 use App\Service\Interfaces\AppServiceInterface;
 use App\Service\Interfaces\TelegramServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -147,7 +147,7 @@ class AppService extends AbstractController implements AppServiceInterface
      * @inheritDoc
      * @return bool bool
      */
-    public function persistAndFlush(AbstractORMInterface $object): bool
+    public function persistAndFlush(ORMInterface $object): bool
     {
         $persisted = FALSE;
         if (!$this->getTestMode()):
