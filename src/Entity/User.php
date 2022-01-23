@@ -25,7 +25,7 @@ class User extends AbstractORM implements UserInterface, PasswordAuthenticatedUs
     /**
      * @ORM\Column(type="json")
      */
-    protected array $roles;
+    protected array $roles = array();
 
     /**
      * @var string The hashed password
@@ -35,7 +35,7 @@ class User extends AbstractORM implements UserInterface, PasswordAuthenticatedUs
 
     /************************************************* CONSTRUCT **************************************************/
 
-    public function __construct(string $email, string $password, array $roles)
+    public function __construct(string $email, string $password, array $roles = array('ROLE_USER'))
     {
         $this->setEmail($email)
             ->setPassword($password)
@@ -62,7 +62,8 @@ class User extends AbstractORM implements UserInterface, PasswordAuthenticatedUs
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
+
+        # Guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
