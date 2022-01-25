@@ -14,9 +14,10 @@ interface _HasTemplateInterface_
 
     /**
      * ToArray function of the property.
-     * Returns array(
-     *      '_Template_' => $_template_,
-     * )
+     *
+     *      Returns array(
+     *          '_Template_' => $this->getTemplate()
+     *      )
      *
      * @return array array
      */
