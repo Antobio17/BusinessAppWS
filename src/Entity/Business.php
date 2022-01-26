@@ -6,6 +6,7 @@ use App\Entity\Interfaces\BusinessInterface;
 use App\Entity\Traits\DomainTrait;
 use App\Entity\Traits\NameTrait;
 use App\Entity\Traits\PhoneNumberTrait;
+use App\Entity\Traits\PostalAddressTrait;
 
 /**
  *
@@ -32,6 +33,11 @@ class Business extends AbstractORM implements BusinessInterface
         PhoneNumberTrait::__toArray as protected __phoneNumberToArray;
     }
 
+    use PostalAddressTrait {
+        PostalAddressTrait::__construct as protected __postalAddressConstruct;
+        PostalAddressTrait::__toArray as protected __postalAddressToArray;
+    }
+
     /************************************************* CONSTRUCT **************************************************/
 
     /**
@@ -40,12 +46,14 @@ class Business extends AbstractORM implements BusinessInterface
      * @param string $domain Domain to set in the entity.
      * @param string $name Name to set in the entity.
      * @param string $phoneNumber PhoneNumber to set in the entity.
+     * @param PostalAddress $postalAddress PostalAddress to set in the entity.
      */
-    public function __construct(string $domain, string $name, string $phoneNumber)
+    public function __construct(string $domain, string $name, string $phoneNumber, PostalAddress $postalAddress)
     {
         $this->__domainConstruct($domain);
         $this->__nameConstruct($name);
         $this->__phoneNumberConstruct($phoneNumber);
+        $this->__postalAddressConstruct($postalAddress);
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -61,7 +69,8 @@ class Business extends AbstractORM implements BusinessInterface
         return array_merge(
             $this->__domainToArray(),
             $this->__nameToArray(),
-            $this->__phoneNumberToArray()
+            $this->__phoneNumberToArray(),
+            $this->__postalAddressToArray()
         );
     }
 
