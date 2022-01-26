@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\MethodTrait;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\TypeTrait;
+use App\Entity\Traits\MethodTrait;
 use App\Entity\Traits\MessageTrait;
 use App\Entity\Traits\CreatedAtTrait;
 use App\Entity\Traits\ArrayDataTrait;
