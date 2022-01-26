@@ -2,14 +2,27 @@
 
 namespace App\Entity;
 
-use App\Entity\Interfaces\BusinessInterface;
-use App\Entity\Traits\DomainTrait;
+use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\NameTrait;
+use App\Entity\Traits\DomainTrait;
 use App\Entity\Traits\PhoneNumberTrait;
 use App\Entity\Traits\PostalAddressTrait;
+use App\Entity\Interfaces\BusinessInterface;
+use Doctrine\ORM\Mapping\AttributeOverrides;
 
 /**
+ * Business entity
  *
+ * @ORM\Entity(repositoryClass=BusinessRepository::class)
+ * @AttributeOverrides({
+ *      @AttributeOverride(name="name",
+ *          column=@Column(
+ *              name   = "name",
+ *              unique = false,
+ *              length = 255
+ *          )
+ *      )
+ * })
  */
 class Business extends AbstractORM implements BusinessInterface
 {

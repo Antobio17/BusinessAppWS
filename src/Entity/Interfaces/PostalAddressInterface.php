@@ -20,6 +20,23 @@ interface PostalAddressInterface extends HasNameInterface, HasAddressInterface, 
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 
+    /**
+     * ToArray function of the property.
+     *
+     *      Returns array(
+     *          'name' => $this->getName(),
+     *          'address' => $this->getAddress(),
+     *          'neighborhood' => $this->getNeighborhood(),
+     *          'postalCode' => $this->getPostalCode(),
+     *          'population' => $this->getPopulation(),
+     *          'province' => $this->getProvince(),
+     *          'state' => $this->getState()
+     *      )
+     *
+     * @return array array
+     */
+    public function __toArray(): array;
+
     /*********************************************** STATIC METHODS ***********************************************/
 
 }
