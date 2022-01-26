@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Interfaces\BusinessInterface;
 use App\Entity\Traits\DomainTrait;
 use App\Entity\Traits\NameTrait;
+use App\Entity\Traits\PhoneNumberTrait;
 
 /**
  *
@@ -26,6 +27,11 @@ class Business extends AbstractORM implements BusinessInterface
         NameTrait::__toArray as protected __nameToArray;
     }
 
+    use PhoneNumberTrait {
+        PhoneNumberTrait::__construct as protected __phoneNumberConstruct;
+        PhoneNumberTrait::__toArray as protected __phoneNumberToArray;
+    }
+
     /************************************************* CONSTRUCT **************************************************/
 
     /**
@@ -33,11 +39,13 @@ class Business extends AbstractORM implements BusinessInterface
      *
      * @param string $domain Domain to set in the entity.
      * @param string $name Name to set in the entity.
+     * @param string $phoneNumber PhoneNumber to set in the entity.
      */
-    public function __construct(string $domain, string $name)
+    public function __construct(string $domain, string $name, string $phoneNumber)
     {
         $this->__domainConstruct($domain);
         $this->__nameConstruct($name);
+        $this->__phoneNumberConstruct($phoneNumber);
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -52,7 +60,8 @@ class Business extends AbstractORM implements BusinessInterface
     {
         return array_merge(
             $this->__domainToArray(),
-            $this->__nameToArray()
+            $this->__nameToArray(),
+            $this->__phoneNumberToArray()
         );
     }
 

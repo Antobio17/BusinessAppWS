@@ -3,22 +3,22 @@
 namespace App\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\Interfaces\HasNameInterface;
+use App\Entity\Traits\Interfaces\HasPhoneNumberInterface;
 
 /**
- * Trait to implement Name property.
+ * Trait to implement PhoneNumber property.
  *
- * @see HasNameInterface
+ * @see HasPhoneNumberInterface
  */
-trait NameTrait
+trait PhoneNumberTrait
 {
 
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=15, unique=true)
      */
-    private string $name;
+    private string $phoneNumber;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
@@ -26,18 +26,18 @@ trait NameTrait
      * @inheritDoc
      * @return string string
      */
-    public function getName(): string
+    public function getPhoneNumber(): string
     {
-        return $this->name;
+        return $this->phoneNumber;
     }
 
     /**
      * @inheritDoc
      * @return $this $this
      */
-    public function setName(string $name): self
+    public function setPhoneNumber(string $phoneNumber): self
     {
-        $this->name = $name;
+        $this->phoneNumber = $phoneNumber;
 
         return $this;
     }
@@ -47,11 +47,11 @@ trait NameTrait
     /**
      *  NameTrait constructor.
      *
-     * @param string $name Name of the Entity to set.
+     * @param string $phoneNumber PhoneNumber of the Entity to set.
      */
-    public function __construct(string $name)
+    public function __construct(string $phoneNumber)
     {
-        $this->setName($name);
+        $this->setPhoneNumber($phoneNumber);
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
@@ -63,7 +63,7 @@ trait NameTrait
     public function __toArray(): array
     {
         return array(
-            'name' => $this->getName()
+            'phoneNumber' => $this->getPhoneNumber()
         );
     }
 
