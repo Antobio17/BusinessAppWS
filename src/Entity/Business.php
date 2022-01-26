@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\NameTrait;
 use App\Entity\Traits\DomainTrait;
+use App\Repository\BusinessRepository;
 use App\Entity\Traits\PhoneNumberTrait;
 use App\Entity\Traits\PostalAddressTrait;
 use App\Entity\Interfaces\BusinessInterface;
