@@ -1,18 +1,30 @@
 <?php
 
-namespace App\Entity\Interfaces;
-
-use App\Entity\Traits\Interfaces\HasNameInterface;
-use App\Entity\Traits\Interfaces\HasDomainInterface;
-use App\Entity\Traits\Interfaces\HasPhoneNumberInterface;
+namespace App\Entity\Traits\Interfaces;
 
 /**
- * Business interface.
+ * PhoneNumberTrait interface
  */
-interface BusinessInterface extends HasDomainInterface, HasNameInterface, HasPhoneNumberInterface
+interface HasPhoneNumberInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
+
+    /**
+     * Gets the PhoneNumber property of the Entity.
+     *
+     * @return string string
+     */
+    public function getPhoneNumber(): string;
+
+    /**
+     * Sets the PhoneNumber property of the Entity.
+     *
+     * @param string $phoneNumber PhoneNumber of the Entity to set.
+     *
+     * @return $this $this
+     */
+    public function setPhoneNumber(string $phoneNumber): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 
@@ -20,8 +32,7 @@ interface BusinessInterface extends HasDomainInterface, HasNameInterface, HasPho
      * ToArray function of the property.
      *
      *      Returns array(
-     *          'domain' => $this->getDomain()
-     *          'name' => $this->getName()
+     *          'phoneNumber' => $this->getPhoneNumber()
      *      )
      *
      * @return array array

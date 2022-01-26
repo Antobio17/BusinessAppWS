@@ -16,7 +16,7 @@ trait DomainTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private string $domain;
 
@@ -46,6 +46,8 @@ trait DomainTrait
 
     /**
      *  DomainTrait constructor.
+     *
+     * @param string $domain Domain of the Entity to set.
      */
     public function __construct(string $domain)
     {
