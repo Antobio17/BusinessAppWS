@@ -11,7 +11,7 @@ use App\Repository\Interfaces\AppErrorRepositoryInterface;
 use App\Service\Traits\Interfaces\HasRepositoriesInterface;
 
 /**
- * Trait to implement _Template_ property.
+ * Trait to implement Repositories property.
  *
  * @see HasRepositoriesInterface
  */

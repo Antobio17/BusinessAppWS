@@ -33,25 +33,48 @@ class AppController extends AbstractController implements AppControllerInterface
 
     /**
      * @param array $data
+     * @param array $validationErrors
      * @param AppServiceInterface $service
+     * @param int $code
      *
      * @return Response Response
+     * @noinspection PhpMissingParamTypeInspection
      */
-    public function createJsonResponse(array $data, AppServiceInterface $service): Response
+    public function createJsonResponse($data, array $validationErrors, AppServiceInterface $service,
+                                       int $code = 200): Response
     {
-        $errors = $service->getErrors();
-        $response = array(
-            'data' => serialize($data),
-            'result' => empty($errors),
-            'code' => 200,
-        );
+        if ($validationErrors):
+            $serviceErrors = $service->getErrors();
+            $response = array(
+                'data' => $data,
+                'result' => empty($serviceErrors),
+                'code' => $code,
+            );
 
-        if (!empty($errors)):
-            $response['code'] = $errors[0]->getArrayData()['exceptionCode'];
-            $response['message'] = $errors[0]->getArrayData()['exceptionMessage'];
+            if (!empty($serviceErrors)):
+                $response['code'] = $serviceErrors[0]->getExceptionCode() ?? $serviceErrors[0]->getCode();
+                $response['message'] = $serviceErrors[0]->getExceptionMessage() ?? $serviceErrors[0]->getMessage();
+            endif;
+        else:
+            $response['code'] = Response::HTTP_BAD_REQUEST;
+            $response['message'] = 'Validation failed';
+            $response['errors'] = $validationErrors;
         endif;
 
         return new JsonResponse($response);
+    }
+
+    /**
+     * @param $data
+     * @param array $validationErrors
+     * @param AppServiceInterface $service
+     *
+     * @return Response Response
+     * @noinspection PhpMissingParamTypeInspection
+     */
+    public function createJsonResponse_Creation($data, array $validationErrors, AppServiceInterface $service): Response
+    {
+        return $this->createJsonResponse($data, $validationErrors, $service, Response::HTTP_CREATED);
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
