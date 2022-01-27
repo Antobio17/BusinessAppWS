@@ -49,6 +49,7 @@ class AppService extends AbstractController implements AppServiceInterface
      * AppService construct.
      *
      * @param ManagerRegistry $doctrine Doctrine to manage the ORM.
+     * @param TelegramService $telegramService Service of Telegram.
      * @param bool $testMode Boolean to set the Test Mode.
      */
     public function __construct(ManagerRegistry $doctrine, TelegramService $telegramService, bool $testMode = FALSE)
