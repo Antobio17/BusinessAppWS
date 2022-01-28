@@ -7,9 +7,10 @@ use App\Entity\AbstractORM;
 use App\Entity\Interfaces\ORMInterface;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Interfaces\AppErrorInterface;
+use App\Entity\Traits\Interfaces\HasBusinessInterface;
 use App\Service\Traits\Interfaces\HasRepositoriesInterface;
 
-interface AppServiceInterface extends HasRepositoriesInterface
+interface AppServiceInterface extends HasRepositoriesInterface, HasBusinessInterface
 {
 
     /************************************************** ROUTING ***************************************************/

@@ -5,11 +5,12 @@ namespace App\Service;
 use Exception;
 use App\Entity\AppError;
 use App\Helper\ToolsHelper;
+use App\Entity\Traits\BusinessTrait;
 use Doctrine\Persistence\ObjectManager;
+use App\Entity\Interfaces\ORMInterface;
 use App\Service\Traits\RepositoriesTrait;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Interfaces\AppErrorInterface;
-use App\Entity\Interfaces\ORMInterface;
 use App\Service\Interfaces\AppServiceInterface;
 use App\Service\Interfaces\TelegramServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,6 +41,8 @@ class AppService extends AbstractController implements AppServiceInterface
      * @var AppErrorInterface[]
      */
     protected array $errors;
+
+    use BusinessTrait;
 
     use RepositoriesTrait;
 
@@ -143,6 +146,28 @@ class AppService extends AbstractController implements AppServiceInterface
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
+
+    /**
+     * @param string $domain
+     * @return bool
+     * @noinspection PhpDocMissingThrowsInspection
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function setBusinessContext(string $domain): bool
+    {
+        $business = $this->getBusinessRepository()->findByDomain($domain);
+        if ($business === NULL):
+            $this->registerAppError(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
+                AppError::ERROR_BUSINESS_CONTEXT,
+                sprintf('Error al establecer el contexto de Business: Dominio %s no encontrado.', $domain)
+            );
+        else:
+            $this->setBusiness($business);
+        endif;
+
+        return $business !== NULL;
+    }
 
     /**
      * @inheritDoc
