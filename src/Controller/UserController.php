@@ -46,11 +46,12 @@ class UserController extends AppController implements UserControllerInterface
      */
     public function signup(Request $request): Response
     {
-        $email = $request->get('email');
-        $password = $request->get('password');
-        $phoneNumber = $request->get('phoneNumber');
-        $name = $request->get('name');
-        $surname = $request->get('surname');
+        $domain = $request->server->get('HTTP_HOST');
+        $email = $request->request->get('email');
+        $password = $request->request->get('password');
+        $phoneNumber = $request->request->get('phoneNumber');
+        $name = $request->request->get('name');
+        $surname = $request->request->get('surname');
 
         # Data Validation
         $validationErrors = array();
@@ -66,10 +67,30 @@ class UserController extends AppController implements UserControllerInterface
                 'message' => 'The password field cannot be empty'
             );
         endif;
+        if ($phoneNumber === NULL):
+            $validationErrors[] = array(
+                'field' => 'phoneNumber',
+                'message' => 'The phoneNumber field cannot be empty'
+            );
+        endif;
+        if ($name === NULL):
+            $validationErrors[] = array(
+                'field' => 'name',
+                'message' => 'The name field cannot be empty'
+            );
+        endif;
+        if ($surname === NULL):
+            $validationErrors[] = array(
+                'field' => 'surname',
+                'message' => 'The surname field cannot be empty'
+            );
+        endif;
 
         $data = NULL;
-        if (empty($errors)):
-            $data = $this->getUserService()->signup($email, $password, $phoneNumber, $name, $surname);
+        if (empty($validationErrors)):
+            if ($this->getUserService()->setBusinessContext($domain)):
+                $data = $this->getUserService()->signup($email, $password, $phoneNumber, $name, $surname);
+            endif;
         endif;
 
         return $this->createJsonResponse_Creation($data, $validationErrors, $this->getUserService());
