@@ -3,7 +3,7 @@
 namespace App\Service\Interfaces;
 
 
-interface UserServiceInterface
+interface UserServiceInterface extends AppServiceInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
