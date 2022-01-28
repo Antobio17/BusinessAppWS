@@ -2,8 +2,10 @@
 
 namespace App\Service\Traits\Interfaces;
 
-use App\Repository\Interfaces\AppErrorRepositoryInterface;
+use App\Repository\PostalAddressRepository;
 use App\Repository\UserRepository;
+use App\Repository\Interfaces\AppErrorRepositoryInterface;
+use App\Repository\Interfaces\BusinessRepositoryInterface;
 
 /**
  * RepositoriesTrait interface.
@@ -28,6 +30,20 @@ interface HasRepositoriesInterface
      * @return UserRepository UserRepository
      */
     public function getUserRepository(): UserRepository;
+
+    /**
+     * Facade that returns an instance of the BusinessRepository.
+     *
+     * @return BusinessRepositoryInterface BusinessRepositoryInterface
+     */
+    public function getBusinessRepository(): BusinessRepositoryInterface;
+
+    /**
+     * Facade that returns an instance of the PostalAddressRepository.
+     *
+     * @return PostalAddressRepository PostalAddressRepository
+     */
+    public function getPostalAddressRepository(): PostalAddressRepository;
 
     /*********************************************** STATIC METHODS ***********************************************/
 
