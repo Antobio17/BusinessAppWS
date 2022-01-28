@@ -43,7 +43,7 @@ class AppController extends AbstractController implements AppControllerInterface
     public function createJsonResponse($data, array $validationErrors, AppServiceInterface $service,
                                        int $code = 200): Response
     {
-        if ($validationErrors):
+        if (empty($validationErrors)):
             $serviceErrors = $service->getErrors();
             $response = array(
                 'data' => $data,

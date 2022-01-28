@@ -3,7 +3,8 @@
 namespace App\Entity\Traits;
 
 use App\Entity\PostalAddress;
-use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\JoinColumn;
 use App\Entity\Traits\Interfaces\HasPostalAddressInterface;
 
 /**
@@ -17,7 +18,8 @@ trait PostalAddressTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @OneToMany(targetEntity="PostalAddress", cascade={"persist", "remove"})
+     * @ManyToOne(targetEntity="App\Entity\PostalAddress", cascade={"persist"})
+     * @JoinColumn(name="postalAddress_id", referencedColumnName="id", nullable=true)
      */
     private PostalAddress $postalAddress;
 
@@ -25,9 +27,9 @@ trait PostalAddressTrait
 
     /**
      * @inheritDoc
-     * @return PostalAddress PostalAddress
+     * @return PostalAddress|null PostalAddress|null
      */
-    public function getPostalAddress(): PostalAddress
+    public function getPostalAddress(): ?PostalAddress
     {
         return $this->postalAddress;
     }

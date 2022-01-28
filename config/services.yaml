@@ -24,6 +24,7 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
             - '../src/**/_Template**.php'
+            - '../src/Controller/PruebasController.php'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

@@ -3,16 +3,19 @@
 namespace App\Entity;
 
 use App\Entity\Traits\NameTrait;
+use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\StateTrait;
 use App\Entity\Traits\AddressTrait;
 use App\Entity\Traits\ProvinceTrait;
 use App\Entity\Traits\PopulationTrait;
 use App\Entity\Traits\PostalCodeTrait;
 use App\Entity\Traits\NeighborhoodTrait;
+use App\Repository\PostalAddressRepository;
 use App\Entity\Interfaces\PostalAddressInterface;
 
 /**
  * Entity PostalAddress.
+ * @ORM\Entity(repositoryClass=PostalAddressRepository::class)
  */
 class PostalAddress extends AbstractORM implements PostalAddressInterface
 {

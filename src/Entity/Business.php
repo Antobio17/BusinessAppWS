@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\NameTrait;
+use Doctrine\ORM\Mapping\Column;
 use App\Entity\Traits\DomainTrait;
 use App\Repository\BusinessRepository;
 use App\Entity\Traits\PhoneNumberTrait;
 use App\Entity\Traits\PostalAddressTrait;
+use Doctrine\ORM\Mapping\AttributeOverride;
 use App\Entity\Interfaces\BusinessInterface;
 use Doctrine\ORM\Mapping\AttributeOverrides;
 
