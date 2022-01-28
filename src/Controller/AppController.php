@@ -52,7 +52,7 @@ class AppController extends AbstractController implements AppControllerInterface
             );
 
             if (!empty($serviceErrors)):
-                $response['code'] = $serviceErrors[0]->getExceptionCode() ?? $serviceErrors[0]->getCode();
+                $response['code'] = $serviceErrors[0]->getExceptionCode() ?? $serviceErrors[0]->getType();
                 $response['message'] = $serviceErrors[0]->getExceptionMessage() ?? $serviceErrors[0]->getMessage();
             endif;
         else:
