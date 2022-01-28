@@ -15,9 +15,9 @@ interface HasPostalAddressInterface
     /**
      * Gets the PostalAddress property of the Entity.
      *
-     * @return PostalAddress PostalAddress
+     * @return PostalAddress|null PostalAddress|null
      */
-    public function getPostalAddress(): PostalAddress;
+    public function getPostalAddress(): ?PostalAddress;
 
     /**
      * Sets the PostalAddress property of the Entity.
