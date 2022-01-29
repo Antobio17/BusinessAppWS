@@ -18,7 +18,7 @@ trait TypeTrait
     /**
      * @ORM\Column(type="integer", options={ "default": 0 })
      */
-    private int $type;
+    protected int $type;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 

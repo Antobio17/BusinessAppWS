@@ -21,7 +21,7 @@ trait PostalAddressTrait
      * @ManyToOne(targetEntity="App\Entity\PostalAddress", cascade={"persist"})
      * @JoinColumn(name="postalAddress_id", referencedColumnName="id", nullable=true)
      */
-    private PostalAddress $postalAddress;
+    protected ?PostalAddress $postalAddress;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
@@ -66,7 +66,7 @@ trait PostalAddressTrait
     public function __toArray(): array
     {
         return array(
-            'postalAddress' => $this->getPostalAddress()->__toArray()
+            'postalAddress' => $this->getPostalAddress() !== NULL ? $this->getPostalAddress()->__toArray() : NULL
         );
     }
 

@@ -20,7 +20,7 @@ trait CreatedAtTrait
      * @var DateTime
      * @ORM\Column(type="datetime")
      */
-    private DateTime $createdAt;
+    protected DateTime $createdAt;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 

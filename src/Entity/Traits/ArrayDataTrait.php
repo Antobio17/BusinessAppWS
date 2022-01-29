@@ -20,7 +20,7 @@ trait ArrayDataTrait
      * @var string|null
      * @ORM\Column(type="text", nullable=true)
      */
-    private string $arrayData;
+    protected string $arrayData;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
