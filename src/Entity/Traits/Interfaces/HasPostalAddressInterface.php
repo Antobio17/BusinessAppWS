@@ -2,7 +2,7 @@
 
 namespace App\Entity\Traits\Interfaces;
 
-use App\Entity\PostalAddress;
+use App\Entity\Interfaces\PostalAddressInterface;
 
 /**
  * PostalAddressTrait interface
@@ -15,18 +15,18 @@ interface HasPostalAddressInterface
     /**
      * Gets the PostalAddress property of the Entity.
      *
-     * @return PostalAddress|null PostalAddress|null
+     * @return PostalAddressInterface|null PostalAddressInterface|null
      */
-    public function getPostalAddress(): ?PostalAddress;
+    public function getPostalAddress(): ?PostalAddressInterface;
 
     /**
      * Sets the PostalAddress property of the Entity.
      *
-     * @param PostalAddress $postalAddress PostalAddress of the Entity to set.
+     * @param PostalAddressInterface $postalAddress PostalAddress of the Entity to set.
      *
      * @return $this $this
      */
-    public function setPostalAddress(PostalAddress $postalAddress): self;
+    public function setPostalAddress(PostalAddressInterface $postalAddress): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 
