@@ -15,6 +15,12 @@ class UserController extends AppController implements UserControllerInterface
 
     /************************************************* CONSTANTS **************************************************/
 
+    public const REQUEST_FIELD_EMAIL = 'email';
+    public const REQUEST_FIELD_PASSWORD = 'password';
+    public const REQUEST_FIELD_PHONENUMBER = 'phoneNumber';
+    public const REQUEST_FIELD_NAME = 'name';
+    public const REQUEST_FIELD_SURNAME = 'surname';
+
     /************************************************* PROPERTIES *************************************************/
 
     use UserServiceTrait;
@@ -47,44 +53,20 @@ class UserController extends AppController implements UserControllerInterface
     public function signup(Request $request): Response
     {
         $domain = $request->server->get('HTTP_HOST');
-        $email = $request->request->get('email');
-        $password = $request->request->get('password');
-        $phoneNumber = $request->request->get('phoneNumber');
-        $name = $request->request->get('name');
-        $surname = $request->request->get('surname');
+        $email = $request->request->get(static::REQUEST_FIELD_EMAIL);
+        $password = $request->request->get(static::REQUEST_FIELD_PASSWORD);
+        $phoneNumber = $request->request->get(static::REQUEST_FIELD_PHONENUMBER);
+        $name = $request->request->get(static::REQUEST_FIELD_NAME);
+        $surname = $request->request->get(static::REQUEST_FIELD_SURNAME);
 
         # Data Validation
-        $validationErrors = array();
-        if ($email === NULL):
-            $validationErrors[] = array(
-                'field' => 'email',
-                'message' => 'The email field cannot be empty'
-            );
-        endif;
-        if ($password === NULL):
-            $validationErrors[] = array(
-                'field' => 'password',
-                'message' => 'The password field cannot be empty'
-            );
-        endif;
-        if ($phoneNumber === NULL):
-            $validationErrors[] = array(
-                'field' => 'phoneNumber',
-                'message' => 'The phoneNumber field cannot be empty'
-            );
-        endif;
-        if ($name === NULL):
-            $validationErrors[] = array(
-                'field' => 'name',
-                'message' => 'The name field cannot be empty'
-            );
-        endif;
-        if ($surname === NULL):
-            $validationErrors[] = array(
-                'field' => 'surname',
-                'message' => 'The surname field cannot be empty'
-            );
-        endif;
+        $validationErrors = $this->validateRequiredRequestFields(array(
+            static::REQUEST_FIELD_EMAIL => $email,
+            static::REQUEST_FIELD_PASSWORD => $password,
+            static::REQUEST_FIELD_PHONENUMBER => $phoneNumber,
+            static::REQUEST_FIELD_NAME => $name,
+            static::REQUEST_FIELD_SURNAME => $surname,
+        ));
 
         $data = NULL;
         if (empty($validationErrors)):
