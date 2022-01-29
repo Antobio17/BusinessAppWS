@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Entity\Traits;
+namespace App\Service\Traits;
 
 use App\Entity\Interfaces\BusinessInterface;
 use App\Entity\Traits\Interfaces\HasBusinessInterface;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\ManyToOne;
 
 /**
  * Trait to implement BusinessTrait property.
@@ -18,18 +16,17 @@ trait BusinessTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ManyToOne(targetEntity="App\Entity\Business")
-     * @JoinColumn(name="business_id", referencedColumnName="id", nullable=false)
+     * @var BusinessInterface|null
      */
-    protected BusinessInterface $business;
+    protected ?BusinessInterface $business;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return BusinessInterface BusinessInterface
+     * @return BusinessInterface|null BusinessInterface|null
      */
-    public function getBusiness(): BusinessInterface
+    public function getBusiness(): ?BusinessInterface
     {
         return $this->business;
     }

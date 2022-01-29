@@ -2,31 +2,31 @@
 
 namespace App\Entity\Traits\Interfaces;
 
-use App\Entity\Interfaces\BusinessInterface;
+use App\Entity\Traits\StatusTrait;
 
 /**
- * BusinessTrait interface
+ * StatusTrait interface
  */
-interface HasBusinessInterface
+interface HasStatusInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
-     * Gets the Business property.
+     * Gets the Status property.
      *
-     * @return BusinessInterface BusinessInterface
+     * @return int int
      */
-    public function getBusiness(): BusinessInterface;
+    public function getStatus(): int;
 
     /**
-     * Sets the Business property.
+     * Sets the Status property.
      *
-     * @param BusinessInterface $business The Business to be set.
+     * @param int $status The Status to be set.
      *
      * @return $this $this
      */
-    public function setBusiness(BusinessInterface $business): self;
+    public function setStatus(int $status): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 
@@ -34,7 +34,7 @@ interface HasBusinessInterface
      * ToArray function of the property.
      *
      *      Returns array(
-     *          'business' => $this->>getBusiness()
+     *          'status' => $this->>getStatus()
      *      )
      *
      * @return array array

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Traits\Interfaces;
+namespace App\Service\Traits\Interfaces;
 
 use App\Entity\Interfaces\BusinessInterface;
 
@@ -15,9 +15,9 @@ interface HasBusinessInterface
     /**
      * Gets the Business property.
      *
-     * @return BusinessInterface BusinessInterface
+     * @return BusinessInterface|null BusinessInterface|null
      */
-    public function getBusiness(): BusinessInterface;
+    public function getBusiness(): ?BusinessInterface;
 
     /**
      * Sets the Business property.

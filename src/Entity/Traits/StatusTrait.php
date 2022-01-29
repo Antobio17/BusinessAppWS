@@ -2,45 +2,42 @@
 
 namespace App\Entity\Traits;
 
-use App\Entity\Interfaces\BusinessInterface;
-use App\Entity\Traits\Interfaces\HasBusinessInterface;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Traits\Interfaces\HasStatusInterface;
 
 /**
- * Trait to implement BusinessTrait property.
+ * Trait to implement StatusTrait property.
  *
- * @see HasBusinessInterface
+ * @see HasStatusInterface
  */
-trait BusinessTrait
+trait StatusTrait
 {
 
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ManyToOne(targetEntity="App\Entity\Business")
-     * @JoinColumn(name="business_id", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="integer", options={ "default": 0 })
      */
-    protected BusinessInterface $business;
+    protected int $status;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return BusinessInterface BusinessInterface
+     * @return int int
      */
-    public function getBusiness(): BusinessInterface
+    public function getStatus(): int
     {
-        return $this->business;
+        return $this->status;
     }
 
     /**
      * @inheritDoc
      * @return $this $this
      */
-    public function setBusiness(BusinessInterface $business): self
+    public function setStatus(int $status): self
     {
-        $this->business = $business;
+        $this->status = $status;
 
         return $this;
     }
@@ -48,11 +45,11 @@ trait BusinessTrait
     /************************************************* CONSTRUCT **************************************************/
 
     /**
-     *  BusinessTrait constructor.
+     *  StatusTrait constructor.
      */
-    public function __construct(BusinessInterface $business)
+    public function __construct(int $status)
     {
-        $this->setBusiness($business);
+        $this->setStatus($status);
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
@@ -64,7 +61,7 @@ trait BusinessTrait
     public function __toArray(): array
     {
         return array(
-            'business' => $this->getBusiness()->__toArray(),
+            'status' => $this->getStatus(),
         );
     }
 
