@@ -19,7 +19,7 @@ trait MethodTrait
      * @var string
      * @ORM\Column(type="string", length=512)
      */
-    private string $method;
+    protected string $method;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 

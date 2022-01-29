@@ -18,7 +18,7 @@ trait DomainTrait
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      */
-    private string $domain;
+    protected string $domain;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 

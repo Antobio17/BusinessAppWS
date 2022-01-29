@@ -16,9 +16,9 @@ trait BusinessTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     *
+     * @var BusinessInterface|null
      */
-    private ?BusinessInterface $business;
+    protected ?BusinessInterface $business;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 

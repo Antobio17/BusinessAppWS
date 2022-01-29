@@ -19,7 +19,7 @@ trait MessageTrait
      * @var string
      * @ORM\Column(type="string", length=1024)
      */
-    private string $message;
+    protected string $message;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 

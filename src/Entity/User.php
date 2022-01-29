@@ -2,25 +2,37 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\Interfaces\HasPostalAddressInterface;
-use App\Entity\Traits\PostalAddressTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
 use App\Entity\Traits\NameTrait;
 use App\Entity\Traits\EmailTrait;
 use App\Repository\UserRepository;
 use App\Entity\Traits\SurnameTrait;
 use App\Entity\Traits\PasswordTrait;
 use App\Entity\Traits\PhoneNumberTrait;
+use App\Entity\Traits\PostalAddressTrait;
+use Doctrine\ORM\Mapping\AttributeOverride;
+use Doctrine\ORM\Mapping\AttributeOverrides;
 use App\Entity\Traits\Interfaces\HasNameInterface;
 use App\Entity\Traits\Interfaces\HasEmailInterface;
 use App\Entity\Traits\Interfaces\HasSurnameInterface;
 use App\Entity\Traits\Interfaces\HasPasswordInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Entity\Traits\Interfaces\HasPhoneNumberInterface;
+use App\Entity\Traits\Interfaces\HasPostalAddressInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @AttributeOverrides({
+ *      @AttributeOverride(name="name",
+ *          column=@Column(
+ *              name   = "name",
+ *              unique = false,
+ *              length = 255
+ *          )
+ *      )
+ * })
  */
 class User extends AbstractORM implements UserInterface, PasswordAuthenticatedUserInterface, HasEmailInterface,
     HasPasswordInterface, HasPhoneNumberInterface, HasNameInterface, HasSurnameInterface,
@@ -170,6 +182,9 @@ class User extends AbstractORM implements UserInterface, PasswordAuthenticatedUs
             $this->__nameToArray(),
             $this->__surnameToArray(),
             $this->__postalAddressToArray(),
+            array(
+                'roles' => $this->getRoles(),
+            )
         );
     }
 }
