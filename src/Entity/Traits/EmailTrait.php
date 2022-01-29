@@ -17,7 +17,7 @@ trait EmailTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=1024, unique=true, nullable=false)
+     * @ORM\Column(type="string", length=512, unique=true, nullable=false)
      */
     protected string $email;
 
@@ -29,7 +29,7 @@ trait EmailTrait
      */
     public function getEmail(): string
     {
-        return ToolsHelper::decrypt($this->email, getenv(static::SECRET_ENCRYPTION_TOKEN));
+        return $this->email;
     }
 
     /**
@@ -38,7 +38,7 @@ trait EmailTrait
      */
     public function setEmail(string $email): self
     {
-        $this->email = ToolsHelper::encrypt($email, getenv(static::SECRET_ENCRYPTION_TOKEN));
+        $this->email = $email;
 
         return $this;
     }
