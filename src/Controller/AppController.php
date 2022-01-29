@@ -32,13 +32,37 @@ class AppController extends AbstractController implements AppControllerInterface
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
-     * @param array $data
-     * @param array $validationErrors
-     * @param AppServiceInterface $service
-     * @param int $code
-     *
+     * @inheritDoc
+     * @return array array
+     */
+    public function validateRequiredRequestFields(array $requestFields): array
+    {
+        $validationErrors = array();
+        foreach ($requestFields as $key => $value):
+            if ($value === NULL):
+                $validationErrors[] = array(
+                    'field' => $key,
+                    'message' => sprintf('The %s field cannot be empty', $key)
+                );
+            endif;
+        endforeach;
+
+        return $validationErrors;
+    }
+
+    /**
+     * @inheritDoc
      * @return Response Response
-     * @noinspection PhpMissingParamTypeInspection
+     */
+    public function createJsonResponse_Creation($data, array $validationErrors,
+                                                AppServiceInterface $service): Response
+    {
+        return $this->createJsonResponse($data, $validationErrors, $service, Response::HTTP_CREATED);
+    }
+
+    /**
+     * @inheritDoc
+     * @return Response Response
      */
     public function createJsonResponse($data, array $validationErrors, AppServiceInterface $service,
                                        int $code = 200): Response
@@ -62,19 +86,6 @@ class AppController extends AbstractController implements AppControllerInterface
         endif;
 
         return new JsonResponse($response);
-    }
-
-    /**
-     * @param $data
-     * @param array $validationErrors
-     * @param AppServiceInterface $service
-     *
-     * @return Response Response
-     * @noinspection PhpMissingParamTypeInspection
-     */
-    public function createJsonResponse_Creation($data, array $validationErrors, AppServiceInterface $service): Response
-    {
-        return $this->createJsonResponse($data, $validationErrors, $service, Response::HTTP_CREATED);
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
