@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Helper\ToolsHelper;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\Interfaces\HasStateInterface;
 
@@ -16,9 +17,9 @@ trait StateTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=1024)
      */
-    private string $state;
+    protected string $state;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
@@ -28,7 +29,7 @@ trait StateTrait
      */
     public function getState(): string
     {
-        return $this->state;
+        return ToolsHelper::decrypt($this->state, getenv(static::SECRET_ENCRYPTION_TOKEN));
     }
 
     /**
@@ -37,7 +38,7 @@ trait StateTrait
      */
     public function setState(string $state): self
     {
-        $this->state = $state;
+        $this->state = ToolsHelper::encrypt($state, getenv(static::SECRET_ENCRYPTION_TOKEN));
 
         return $this;
     }

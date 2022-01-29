@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Helper\ToolsHelper;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\Interfaces\HasEmailInterface;
 
@@ -16,7 +17,7 @@ trait EmailTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true, nullable=false)
+     * @ORM\Column(type="string", length=1024, unique=true, nullable=false)
      */
     protected string $email;
 
@@ -28,7 +29,7 @@ trait EmailTrait
      */
     public function getEmail(): string
     {
-        return $this->email;
+        return ToolsHelper::decrypt($this->email, getenv(static::SECRET_ENCRYPTION_TOKEN));
     }
 
     /**
@@ -37,7 +38,7 @@ trait EmailTrait
      */
     public function setEmail(string $email): self
     {
-        $this->email = $email;
+        $this->email = ToolsHelper::encrypt($email, getenv(static::SECRET_ENCRYPTION_TOKEN));
 
         return $this;
     }

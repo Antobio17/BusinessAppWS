@@ -13,6 +13,8 @@ abstract class AbstractORM implements ORMInterface
 
     /************************************************* CONSTANTS **************************************************/
 
+    public const SECRET_ENCRYPTION_TOKEN = 'SECRET_ENCRYPTION_TOKEN';
+
     /************************************************* PROPERTIES *************************************************/
 
     /**

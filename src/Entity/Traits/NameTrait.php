@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Helper\ToolsHelper;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\Interfaces\HasNameInterface;
 
@@ -16,9 +17,9 @@ trait NameTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=1024, unique=true)
      */
-    private string $name;
+    protected string $name;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
@@ -28,7 +29,7 @@ trait NameTrait
      */
     public function getName(): string
     {
-        return $this->name;
+        return ToolsHelper::decrypt($this->name, getenv(static::SECRET_ENCRYPTION_TOKEN));
     }
 
     /**
@@ -37,7 +38,7 @@ trait NameTrait
      */
     public function setName(string $name): self
     {
-        $this->name = $name;
+        $this->name = ToolsHelper::encrypt($name, getenv(static::SECRET_ENCRYPTION_TOKEN));
 
         return $this;
     }

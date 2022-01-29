@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Helper\ToolsHelper;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\Interfaces\HasSurnameInterface;
 
@@ -16,7 +17,7 @@ trait SurnameTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true, nullable=false)
+     * @ORM\Column(type="string", length=1024, nullable=false)
      */
     protected string $surname;
 
@@ -28,7 +29,7 @@ trait SurnameTrait
      */
     public function getSurname(): string
     {
-        return $this->surname;
+        return ToolsHelper::decrypt($this->surname, getenv(static::SECRET_ENCRYPTION_TOKEN));
     }
 
     /**
@@ -37,7 +38,7 @@ trait SurnameTrait
      */
     public function setSurname(string $surname): self
     {
-        $this->surname = $surname;
+        $this->surname = ToolsHelper::encrypt($surname, getenv(static::SECRET_ENCRYPTION_TOKEN));
 
         return $this;
     }
