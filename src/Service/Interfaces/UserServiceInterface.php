@@ -28,6 +28,7 @@ interface UserServiceInterface extends AppServiceInterface
     public function setUserPasswordHasher(UserPasswordHasherInterface $userPasswordHasher): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
+
     /**
      * Registers a new user in the application.
      *
