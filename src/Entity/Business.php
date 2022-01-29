@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping\AttributeOverrides;
  *          column=@Column(
  *              name   = "name",
  *              unique = false,
- *              length = 255
+ *              length = 1024
  *          )
  *      )
  * })

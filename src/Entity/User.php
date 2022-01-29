@@ -29,7 +29,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  *          column=@Column(
  *              name   = "name",
  *              unique = false,
- *              length = 255
+ *              length = 1024
  *          )
  *      )
  * })
