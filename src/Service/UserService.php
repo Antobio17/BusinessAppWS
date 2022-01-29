@@ -2,6 +2,9 @@
 
 namespace App\Service;
 
+use App\Entity\AppError;
+use App\Entity\User;
+use App\Helper\ToolsHelper;
 use App\Service\Interfaces\UserServiceInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -33,17 +36,34 @@ class UserService extends AppService implements UserServiceInterface
     /**
      * Registers a new user in the application.
      *
-     * @param string $email
-     * @param string $password
-     * @param string $phoneNumber
-     * @param string $name
-     * @param string $surname
+     * @param string $email The email of the new user.
+     * @param string $password The password of the new user.
+     * @param string $phoneNumber The phone number of the new user.
+     * @param string $name The name of the new user.
+     * @param string $surname The surname of the new user.
      *
      * @return bool bool
+     * @noinspection PhpDocMissingThrowsInspection
+     * @noinspection PhpUnhandledExceptionInspection
      */
     public function signup(string $email, string $password, string $phoneNumber, string $name, string $surname): bool
     {
-        return FALSE;
+        $user = $this->getUserRepository()->findByEmail($email);
+
+        if ($user === NULL):
+            $user = new User($email, $password, $phoneNumber, $name, $surname);
+            $this->persistAndFlush($user);
+        else:
+            $this->registerAppError(
+                    ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
+                    AppError::ERROR_BUSINESS_CONTEXT,
+                    'El introducido email ya existe.',
+                    NULL, NULL, array(),
+                    FALSE, FALSE
+            );
+        endif;
+
+        return empty($this->getErrors());
     }
 
     /********************************************** PROTECTED METHODS *********************************************/

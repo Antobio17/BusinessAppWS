@@ -2,59 +2,99 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\Interfaces\HasPostalAddressInterface;
+use App\Entity\Traits\PostalAddressTrait;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Traits\NameTrait;
+use App\Entity\Traits\EmailTrait;
 use App\Repository\UserRepository;
+use App\Entity\Traits\SurnameTrait;
+use App\Entity\Traits\PasswordTrait;
+use App\Entity\Traits\PhoneNumberTrait;
+use App\Entity\Traits\Interfaces\HasNameInterface;
+use App\Entity\Traits\Interfaces\HasEmailInterface;
+use App\Entity\Traits\Interfaces\HasSurnameInterface;
+use App\Entity\Traits\Interfaces\HasPasswordInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Entity\Traits\Interfaces\HasPhoneNumberInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User extends AbstractORM implements UserInterface, PasswordAuthenticatedUserInterface
+class User extends AbstractORM implements UserInterface, PasswordAuthenticatedUserInterface, HasEmailInterface,
+    HasPasswordInterface, HasPhoneNumberInterface, HasNameInterface, HasSurnameInterface,
+    HasPostalAddressInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
 
+    public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
+    public const ROLE_USER = 'ROLE_USER';
+
     /************************************************* PROPERTIES *************************************************/
 
-    /**
-     * @ORM\Column(type="string", length=180, unique=true, nullable=false)
-     */
-    protected string $email;
+    use EmailTrait {
+        EmailTrait::__construct as protected __emailConstruct;
+        EmailTrait::__toArray as protected __emailToArray;
+    }
+
+    use PasswordTrait {
+        PasswordTrait::__construct as protected __passwordConstruct;
+        PasswordTrait::__toArray as protected __passwordToArray;
+    }
+
+    use PhoneNumberTrait {
+        PhoneNumberTrait::__construct as protected __phoneNumberConstruct;
+        PhoneNumberTrait::__toArray as protected __phoneNumberToArray;
+    }
+
+    use NameTrait {
+        NameTrait::__construct as protected __nameConstruct;
+        NameTrait::__toArray as protected __nameToArray;
+    }
+
+    use SurnameTrait {
+        SurnameTrait::__construct as protected __surnameConstruct;
+        SurnameTrait::__toArray as protected __surnameToArray;
+    }
+
+    use PostalAddressTrait {
+        PostalAddressTrait::__toArray as protected __postalAddressToArray;
+    }
 
     /**
      * @ORM\Column(type="json")
      */
     protected array $roles = array();
 
-    /**
-     * @var string The hashed password
-     * @ORM\Column(type="string", length=512, nullable=false)
-     */
-    protected string $password;
-
     /************************************************* CONSTRUCT **************************************************/
 
-    public function __construct(string $email, string $password, array $roles = array('ROLE_USER'))
+    /**
+     * User Construct.
+     *
+     * @param string $email The email of the new user.
+     * @param string $password The password of the new user.
+     * @param string $phoneNumber The phone number of the new user.
+     * @param string $name The name of the new user.
+     * @param string $surname The surname of the new user.
+     * @param array $roles The roles of the new user.
+     *
+     */
+    public function __construct(string $email, string $password, string $phoneNumber, string $name,
+                                string $surname, array $roles = array())
     {
-        $this->setEmail($email)
-            ->setPassword($password)
-            ->setRoles($roles);
+        $this->__emailConstruct($email);
+        $this->__passwordConstruct($password);
+        $this->__phoneNumberConstruct($phoneNumber);
+        $this->__nameConstruct($name);
+        $this->__surnameConstruct($surname);
+
+        $this->setRoles(empty($roles) ? array(static::ROLE_USER) : $roles);
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
 
     /**
      * @see UserInterface
@@ -64,7 +104,7 @@ class User extends AbstractORM implements UserInterface, PasswordAuthenticatedUs
         $roles = $this->roles;
 
         # Guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = static::ROLE_USER;
 
         return array_unique($roles);
     }
@@ -72,21 +112,6 @@ class User extends AbstractORM implements UserInterface, PasswordAuthenticatedUs
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
-        return $this;
-    }
-
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
 
         return $this;
     }
@@ -129,5 +154,22 @@ class User extends AbstractORM implements UserInterface, PasswordAuthenticatedUs
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function __toArray(): array
+    {
+        return array_merge(
+            parent::__toArray(),
+            $this->__emailToArray(),
+            $this->__passwordToArray(),
+            $this->__phoneNumberToArray(),
+            $this->__nameToArray(),
+            $this->__surnameToArray(),
+            $this->__postalAddressToArray(),
+        );
     }
 }
