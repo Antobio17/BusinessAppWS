@@ -5,7 +5,7 @@ namespace App\Service;
 use Exception;
 use App\Entity\AppError;
 use App\Helper\ToolsHelper;
-use App\Entity\Traits\BusinessTrait;
+use App\Service\Traits\BusinessTrait;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Interfaces\ORMInterface;
 use App\Service\Traits\RepositoriesTrait;
