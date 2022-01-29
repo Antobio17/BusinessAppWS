@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Entity\Interfaces\PostalAddressInterface;
 use App\Entity\PostalAddress;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
@@ -21,15 +22,15 @@ trait PostalAddressTrait
      * @ManyToOne(targetEntity="App\Entity\PostalAddress", cascade={"persist"})
      * @JoinColumn(name="postalAddress_id", referencedColumnName="id", nullable=true)
      */
-    protected ?PostalAddress $postalAddress;
+    protected ?PostalAddressInterface $postalAddress;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return PostalAddress|null PostalAddress|null
+     * @return PostalAddressInterface|null PostalAddressInterface|null
      */
-    public function getPostalAddress(): ?PostalAddress
+    public function getPostalAddress(): ?PostalAddressInterface
     {
         return $this->postalAddress;
     }
@@ -38,7 +39,7 @@ trait PostalAddressTrait
      * @inheritDoc
      * @return $this $this
      */
-    public function setPostalAddress(PostalAddress $postalAddress): self
+    public function setPostalAddress(PostalAddressInterface $postalAddress): self
     {
         $this->postalAddress = $postalAddress;
 
@@ -50,9 +51,9 @@ trait PostalAddressTrait
     /**
      *  PostalAddressTrait constructor.
      *
-     * @param PostalAddress $postalAddress PostalAddress of the Entity to set.
+     * @param PostalAddressInterface $postalAddress PostalAddress of the Entity to set.
      */
-    public function __construct(PostalAddress $postalAddress)
+    public function __construct(PostalAddressInterface $postalAddress)
     {
         $this->setPostalAddress($postalAddress);
     }
