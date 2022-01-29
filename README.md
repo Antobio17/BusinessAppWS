@@ -46,3 +46,13 @@ php bin/console doctrine:migrations:execute --down DoctrineMigrations\VersionXXX
 ```
 
 ---
+
+### Generación de claves SSL
+
+Para la generación de claves SSL para la autenticación con JWT utilizaremos:
+
+```shell
+php bin/console lexik:jwt:generate-keypair
+```
+
+---
