@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Helper\ToolsHelper;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\Interfaces\HasPopulationInterface;
 
@@ -16,9 +17,9 @@ trait PopulationTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=1024)
      */
-    private string $population;
+    protected string $population;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
@@ -28,7 +29,7 @@ trait PopulationTrait
      */
     public function getPopulation(): string
     {
-        return $this->population;
+        return ToolsHelper::decrypt($this->population, getenv(static::SECRET_ENCRYPTION_TOKEN));
     }
 
     /**
@@ -37,7 +38,7 @@ trait PopulationTrait
      */
     public function setPopulation(string $population): self
     {
-        $this->population = $population;
+        $this->population = ToolsHelper::encrypt($population, getenv(static::SECRET_ENCRYPTION_TOKEN));
 
         return $this;
     }

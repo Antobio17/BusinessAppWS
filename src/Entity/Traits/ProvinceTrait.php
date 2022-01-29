@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Helper\ToolsHelper;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\Interfaces\HasProvinceInterface;
 
@@ -16,9 +17,9 @@ trait ProvinceTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=1024)
      */
-    private string $province;
+    protected string $province;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
@@ -28,7 +29,7 @@ trait ProvinceTrait
      */
     public function getProvince(): string
     {
-        return $this->province;
+        return ToolsHelper::decrypt($this->province, getenv(static::SECRET_ENCRYPTION_TOKEN));
     }
 
     /**
@@ -37,7 +38,7 @@ trait ProvinceTrait
      */
     public function setProvince(string $province): self
     {
-        $this->province = $province;
+        $this->province = ToolsHelper::encrypt($province, getenv(static::SECRET_ENCRYPTION_TOKEN));
 
         return $this;
     }

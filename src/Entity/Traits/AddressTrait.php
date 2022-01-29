@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Helper\ToolsHelper;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\Interfaces\HasAddressInterface;
 
@@ -16,9 +17,9 @@ trait AddressTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=512)
+     * @ORM\Column(type="string", length=1024, unique=true)
      */
-    private string $address;
+    protected string $address;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
@@ -28,7 +29,7 @@ trait AddressTrait
      */
     public function getAddress(): string
     {
-        return $this->address;
+        return ToolsHelper::decrypt($this->address, getenv(static::SECRET_ENCRYPTION_TOKEN));
     }
 
     /**
@@ -37,7 +38,7 @@ trait AddressTrait
      */
     public function setAddress(string $address): self
     {
-        $this->address = $address;
+        $this->address = ToolsHelper::encrypt($address, getenv(static::SECRET_ENCRYPTION_TOKEN));
 
         return $this;
     }

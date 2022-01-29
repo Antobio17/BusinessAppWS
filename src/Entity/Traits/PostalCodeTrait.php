@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Helper\ToolsHelper;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\Interfaces\HasPostalCodeInterface;
 
@@ -16,9 +17,9 @@ trait PostalCodeTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=1024)
      */
-    private string $postalCode;
+    protected string $postalCode;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
@@ -28,7 +29,7 @@ trait PostalCodeTrait
      */
     public function getPostalCode(): string
     {
-        return $this->postalCode;
+        return ToolsHelper::decrypt($this->postalCode, getenv(static::SECRET_ENCRYPTION_TOKEN));
     }
 
     /**
@@ -37,7 +38,7 @@ trait PostalCodeTrait
      */
     public function setPostalCode(string $postalCode): self
     {
-        $this->postalCode = $postalCode;
+        $this->postalCode = ToolsHelper::encrypt($postalCode, getenv(static::SECRET_ENCRYPTION_TOKEN));
 
         return $this;
     }

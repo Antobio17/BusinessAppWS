@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Helper\ToolsHelper;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\Interfaces\HasNeighborhoodInterface;
 
@@ -16,9 +17,9 @@ trait NeighborhoodTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=1024)
      */
-    private string $neighborhood;
+    protected string $neighborhood;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
@@ -28,7 +29,7 @@ trait NeighborhoodTrait
      */
     public function getNeighborhood(): string
     {
-        return $this->neighborhood;
+        return ToolsHelper::decrypt($this->neighborhood, getenv(static::SECRET_ENCRYPTION_TOKEN));
     }
 
     /**
@@ -37,7 +38,7 @@ trait NeighborhoodTrait
      */
     public function setNeighborhood(string $neighborhood): self
     {
-        $this->neighborhood = $neighborhood;
+        $this->neighborhood = ToolsHelper::encrypt($neighborhood, getenv(static::SECRET_ENCRYPTION_TOKEN));
 
         return $this;
     }

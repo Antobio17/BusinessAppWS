@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Helper\ToolsHelper;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\Interfaces\HasPhoneNumberInterface;
 
@@ -16,9 +17,9 @@ trait PhoneNumberTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=15, unique=true)
+     * @ORM\Column(type="string", length=1024, unique=true)
      */
-    private string $phoneNumber;
+    protected string $phoneNumber;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
@@ -28,7 +29,7 @@ trait PhoneNumberTrait
      */
     public function getPhoneNumber(): string
     {
-        return $this->phoneNumber;
+        return ToolsHelper::decrypt($this->phoneNumber, getenv(static::SECRET_ENCRYPTION_TOKEN));
     }
 
     /**
@@ -37,7 +38,7 @@ trait PhoneNumberTrait
      */
     public function setPhoneNumber(string $phoneNumber): self
     {
-        $this->phoneNumber = $phoneNumber;
+        $this->phoneNumber = ToolsHelper::encrypt($phoneNumber, getenv(static::SECRET_ENCRYPTION_TOKEN));
 
         return $this;
     }
