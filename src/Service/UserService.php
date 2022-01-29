@@ -66,14 +66,7 @@ class UserService extends AppService implements UserServiceInterface
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
-     * Registers a new user in the application.
-     *
-     * @param string $email The email of the new user.
-     * @param string $password The password of the new user.
-     * @param string $phoneNumber The phone number of the new user.
-     * @param string $name The name of the new user.
-     * @param string $surname The surname of the new user.
-     *
+     * @inheritDoc
      * @return bool bool
      * @noinspection PhpDocMissingThrowsInspection
      * @noinspection PhpUnhandledExceptionInspection
