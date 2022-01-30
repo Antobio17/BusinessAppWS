@@ -15,6 +15,19 @@ interface AppointmentInterface extends UserContextInterface
     /*********************************************** STATIC METHODS ***********************************************/
 
     /**
+     * Gets the status values of the entity.
+     *
+     *      return array(
+     *          static::STATUS_PENDING,
+     *          static::STATUS_CANCELLED,
+     *          static::STATUS_DONE
+     *      )
+     *
+     * @return array array
+     */
+    public static function getStatusValues(): array;
+
+    /**
      * Gets the status choices of the entity.
      *
      *      return array(

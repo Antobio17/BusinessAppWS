@@ -31,6 +31,23 @@ interface AppControllerInterface
     public function validateRequiredRequestFields(array $requestFields): array;
 
     /**
+     * Validates the fields of the request passed by parameters as an array of key => value.
+     *
+     *      return array(
+     *          array(
+     *              'field' => 'status',
+     *              'message' => sprintf('The status %s does not exist', $value)
+     *          )
+     *      )
+     *
+     * @param mixed $status The status from the request.
+     * @param array $statusChoices The valid status of the entity.
+     *
+     * @return array array
+     */
+    public function validateRequestStatusField(array $status, array $statusChoices): array;
+
+    /**
      * Creates a Json response for the WebService.
      * If the process is successful it will return the creation code 201.
      *
