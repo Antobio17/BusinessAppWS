@@ -12,13 +12,22 @@ interface AppointmentControllerInterface
     /************************************************** ROUTING ***************************************************/
 
     /**
-     * Route to access business' appointments of the application.
+     * Route to access to the business' appointments of the application.
      *
      * @param Request $request Request of the route.
      *
      * @return JsonResponse JsonResponse
      */
     public function getBusinessAppointments(Request $request): Response;
+
+    /**
+     * Route to access to the users' appointments of the application.
+     *
+     * @param Request $request Request of the route.
+     *
+     * @return JsonResponse JsonResponse
+     */
+    public function getUserAppointments(Request $request): Response;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 

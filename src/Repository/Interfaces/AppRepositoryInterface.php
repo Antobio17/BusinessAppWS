@@ -3,6 +3,7 @@
 namespace App\Repository\Interfaces;
 
 use App\Entity\Interfaces\BusinessInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Interface of AppRepository.
@@ -26,10 +27,11 @@ interface AppRepositoryInterface
      *
      * @param BusinessInterface $business Business to which the appointment belongs.
      * @param int|null $status Status of the entity.
+     * @param UserInterface|null $user User of the entity.
      *
      * @return array array
      */
-    public function findByStatus(BusinessInterface $business, ?int $status): array;
+    public function findByStatus(BusinessInterface $business, ?int $status = NULL, ?UserInterface $user = NULL): array;
 
     /*********************************************** STATIC METHODS ***********************************************/
 

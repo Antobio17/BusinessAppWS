@@ -65,6 +65,30 @@ class AppointmentController extends AppController implements AppointmentControll
         return $this->createJsonResponse($data, $validationErrors, $this->getAppointmentService());
     }
 
+    /**
+     * @Route("/api/get/user/appointments")
+     *
+     * @inheritDoc
+     * @return JsonResponse JsonResponse
+     */
+    public function getUserAppointments(Request $request): Response
+    {
+        $domain = $request->server->get('HTTP_HOST');
+        $status = $request->request->get(static::REQUEST_FIELD_APPOINTMENT_STATUS);
+
+        # Data Validation
+        $validationErrors = $this->validateRequestStatusField($status, Appointment::getStatusChoices());
+
+        $data = NULL;
+        if (empty($validationErrors)):
+            if ($this->getAppointmentService()->setBusinessContext($domain)):
+                $data = $this->getAppointmentService()->getUserAppointments($status);
+            endif;
+        endif;
+
+        return $this->createJsonResponse($data, $validationErrors, $this->getAppointmentService());
+    }
+
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /********************************************** PROTECTED METHODS *********************************************/

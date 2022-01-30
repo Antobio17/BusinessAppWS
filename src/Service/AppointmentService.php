@@ -54,7 +54,37 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
             $appointments = $this->getAppointmentRepository()->findByStatus($this->getBusiness(), $status);
         else:
             $appointments = NULL;
-            $this->registerAppError_BusinessContextNotSet(
+            $this->registerAppError_BusinessContextUndefined(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__)
+            );
+        endif;
+
+        return $appointments;
+    }
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function getUserAppointments($status): ?array
+    {
+        if (is_numeric($status)):
+            $status = (int)$status;
+        elseif ($status !== NULL):
+            $status = Appointment::getStatusChoices()[$status];
+        endif;
+
+        $appointments = NULL;
+        if ($this->getBusiness() !== NULL && $this->getUser() !== NULL):
+            $appointments = $this->getAppointmentRepository()->findByStatus(
+                $this->getBusiness(), $status, $this->getUser()
+            );
+        elseif ($this->getBusiness() === NULL):
+            $this->registerAppError_BusinessContextUndefined(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__)
+            );
+        else:
+            $this->registerAppError_BusinessContextUndefined(
                 ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__)
             );
         endif;
