@@ -2,36 +2,39 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\BusinessTrait;
+use App\Entity\Traits\UserTrait;
 use App\Entity\Interfaces\BusinessInterface;
-use App\Entity\Interfaces\BusinessContextInterface;
+use App\Entity\Interfaces\UserContextInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * AbstractBusinessContext entity.
+ * AbstractUserContext entity.
  */
-abstract class AbstractBusinessContext extends AbstractORM implements BusinessContextInterface
+abstract class AbstractUserContext extends AbstractBusinessContext implements UserContextInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
 
     /************************************************* PROPERTIES *************************************************/
 
-    use BusinessTrait {
-        BusinessTrait::__construct as protected __businessConstruct;
-        BusinessTrait::__toArray as protected __businessToArray;
+    use UserTrait {
+        UserTrait::__construct as protected __userConstruct;
+        UserTrait::__toArray as protected __userToArray;
     }
 
     /************************************************* CONSTRUCT **************************************************/
 
     /**
-     * BusinessContext construct.
+     * UserContext construct.
      *
-     * @param BusinessInterface $business The business to set in the entity.
+     * @param UserInterface $user The user to set in the entity.
      *
      */
-    public function __construct(BusinessInterface $business)
+    public function __construct(BusinessInterface $business, UserInterface $user)
     {
-        $this->__businessConstruct($business);
+        parent::__construct($business);
+
+        $this->__userConstruct($user);
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -46,7 +49,7 @@ abstract class AbstractBusinessContext extends AbstractORM implements BusinessCo
     {
         return array_merge(
             parent::__toArray(),
-            $this->__businessToArray()
+            $this->__userToArray()
         );
     }
 

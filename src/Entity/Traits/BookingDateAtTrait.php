@@ -2,45 +2,45 @@
 
 namespace App\Entity\Traits;
 
+use DateTime;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
-use App\Entity\Interfaces\BusinessInterface;
-use App\Entity\Traits\Interfaces\HasBusinessInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Trait to implement BusinessTrait property.
+ * Trait to implement BookingDateAtTrait property.
  *
- * @see HasBusinessInterface
+ * @see HasBookingDateAtInterface
  */
-trait BusinessTrait
+trait BookingDateAtTrait
 {
 
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ManyToOne(targetEntity="App\Entity\Business")
-     * @JoinColumn(name="business_id", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="datetime", nullable=false)
      */
-    protected BusinessInterface $business;
+    protected DateTime $bookingDateAt;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return BusinessInterface BusinessInterface
+     * @return DateTime DateTime
      */
-    public function getBusiness(): BusinessInterface
+    public function getBookingDateAt(): DateTime
     {
-        return $this->business;
+        return $this->bookingDateAt;
     }
 
     /**
      * @inheritDoc
      * @return $this $this
      */
-    public function setBusiness(BusinessInterface $business): self
+    public function setBookingDateAt(DateTime $bookingDateAt): self
     {
-        $this->business = $business;
+        $this->bookingDateAt = $bookingDateAt;
 
         return $this;
     }
@@ -48,11 +48,11 @@ trait BusinessTrait
     /************************************************* CONSTRUCT **************************************************/
 
     /**
-     *  BusinessTrait constructor.
+     *  BookingDateAtTrait constructor.
      */
-    public function __construct(BusinessInterface $business)
+    public function __construct(DateTime $bookingDateAt)
     {
-        $this->setBusiness($business);
+        $this->setBookingDateAt($bookingDateAt);
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
@@ -64,7 +64,7 @@ trait BusinessTrait
     public function __toArray(): array
     {
         return array(
-            'business' => $this->getBusiness()->__toArray(),
+            'bookingDateAt' => $this->getBookingDateAt(),
         );
     }
 
