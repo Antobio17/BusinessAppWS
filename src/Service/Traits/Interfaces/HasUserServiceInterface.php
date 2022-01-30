@@ -2,10 +2,7 @@
 
 namespace App\Service\Traits\Interfaces;
 
-use App\Repository\UserRepository;
-use App\Repository\Interfaces\AppErrorRepositoryInterface;
 use App\Service\Interfaces\UserServiceInterface;
-use App\Service\Traits\UserServiceTrait;
 
 /**
  * UserServiceTrait interface.
