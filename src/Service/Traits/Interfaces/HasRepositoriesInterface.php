@@ -2,8 +2,8 @@
 
 namespace App\Service\Traits\Interfaces;
 
-use App\Repository\PostalAddressRepository;
 use App\Repository\UserRepository;
+use App\Repository\PostalAddressRepository;
 use App\Repository\Interfaces\AppErrorRepositoryInterface;
 use App\Repository\Interfaces\BusinessRepositoryInterface;
 

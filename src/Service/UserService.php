@@ -25,7 +25,7 @@ class UserService extends AppService implements UserServiceInterface
     /************************************************* CONSTRUCT **************************************************/
 
     /**
-     * AppService construct.
+     * UserService construct.
      *
      * @param ManagerRegistry $doctrine Doctrine to manage the ORM.
      * @param TelegramService $telegramService Service of Telegram.
