@@ -84,6 +84,19 @@ class Appointment extends AbstractUserContext implements AppointmentInterface
      * @inheritDoc
      * @return array array
      */
+    public static function getStatusValues(): array
+    {
+        return array(
+            static::STATUS_PENDING,
+            static::STATUS_CANCELLED,
+            static::STATUS_DONE,
+        );
+    }
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
     public static function getStatusChoices(): array
     {
         return array(

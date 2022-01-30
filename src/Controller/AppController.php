@@ -52,6 +52,30 @@ class AppController extends AbstractController implements AppControllerInterface
 
     /**
      * @inheritDoc
+     * @return array array
+     */
+    public function validateRequestStatusField($status, array $statusChoices): array
+    {
+        $validationErrors = array();
+
+        if (
+            (is_numeric($status) && !in_array((int)$status, $statusChoices))
+            || (
+                !is_numeric($status)
+                && !in_array(strtolower($status), array_keys(array_change_key_case($statusChoices)))
+            )
+        ):
+            $validationErrors[] = array(
+                'field' => 'status',
+                'message' => sprintf('The status %s does not exist', $status)
+            );
+        endif;
+
+        return $validationErrors;
+    }
+
+    /**
+     * @inheritDoc
      * @return Response Response
      */
     public function createJsonResponse_Creation($data, array $validationErrors,
