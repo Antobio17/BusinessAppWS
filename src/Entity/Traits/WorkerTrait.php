@@ -4,43 +4,42 @@ namespace App\Entity\Traits;
 
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
-use App\Entity\Interfaces\BusinessInterface;
-use App\Entity\Traits\Interfaces\HasBusinessInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Trait to implement BusinessTrait property.
+ * Trait to implement WorkerTrait property.
  *
- * @see HasBusinessInterface
+ * @see HasWorkerInterface
  */
-trait BusinessTrait
+trait WorkerTrait
 {
 
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ManyToOne(targetEntity="App\Entity\Business")
-     * @JoinColumn(name="business_id", referencedColumnName="id", nullable=false)
+     * @ManyToOne(targetEntity="App\Entity\User")
+     * @JoinColumn(name="worker_id", referencedColumnName="id", nullable=false)
      */
-    protected BusinessInterface $business;
+    protected UserInterface $worker;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return BusinessInterface BusinessInterface
+     * @return UserInterface UserInterface
      */
-    public function getBusiness(): BusinessInterface
+    public function getWorker(): UserInterface
     {
-        return $this->business;
+        return $this->worker;
     }
 
     /**
      * @inheritDoc
      * @return $this $this
      */
-    public function setBusiness(BusinessInterface $business): self
+    public function setWorker(UserInterface $worker): self
     {
-        $this->business = $business;
+        $this->worker = $worker;
 
         return $this;
     }
@@ -48,11 +47,11 @@ trait BusinessTrait
     /************************************************* CONSTRUCT **************************************************/
 
     /**
-     *  BusinessTrait constructor.
+     *  WorkerTrait constructor.
      */
-    public function __construct(BusinessInterface $business)
+    public function __construct(UserInterface $worker)
     {
-        $this->setBusiness($business);
+        $this->setWorker($worker);
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
@@ -64,7 +63,7 @@ trait BusinessTrait
     public function __toArray(): array
     {
         return array(
-            'business' => $this->getBusiness()->__toArray(),
+            'worker' => $this->getWorker()->getUserIdentifier(),
         );
     }
 

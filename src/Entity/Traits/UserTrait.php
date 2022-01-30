@@ -4,43 +4,43 @@ namespace App\Entity\Traits;
 
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
-use App\Entity\Interfaces\BusinessInterface;
-use App\Entity\Traits\Interfaces\HasBusinessInterface;
+use App\Entity\Traits\Interfaces\HasUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Trait to implement BusinessTrait property.
+ * Trait to implement UserTrait property.
  *
- * @see HasBusinessInterface
+ * @see HasUserInterface
  */
-trait BusinessTrait
+trait UserTrait
 {
 
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ManyToOne(targetEntity="App\Entity\Business")
-     * @JoinColumn(name="business_id", referencedColumnName="id", nullable=false)
+     * @ManyToOne(targetEntity="App\Entity\User")
+     * @JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
-    protected BusinessInterface $business;
+    protected UserInterface $user;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return BusinessInterface BusinessInterface
+     * @return UserInterface UserInterface
      */
-    public function getBusiness(): BusinessInterface
+    public function getUser(): UserInterface
     {
-        return $this->business;
+        return $this->user;
     }
 
     /**
      * @inheritDoc
      * @return $this $this
      */
-    public function setBusiness(BusinessInterface $business): self
+    public function setUser(UserInterface $user): self
     {
-        $this->business = $business;
+        $this->user = $user;
 
         return $this;
     }
@@ -48,11 +48,11 @@ trait BusinessTrait
     /************************************************* CONSTRUCT **************************************************/
 
     /**
-     *  BusinessTrait constructor.
+     *  UserTrait constructor.
      */
-    public function __construct(BusinessInterface $business)
+    public function __construct(UserInterface $user)
     {
-        $this->setBusiness($business);
+        $this->setUser($user);
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
@@ -64,7 +64,7 @@ trait BusinessTrait
     public function __toArray(): array
     {
         return array(
-            'business' => $this->getBusiness()->__toArray(),
+            'user' => $this->getUser()->getUserIdentifier(),
         );
     }
 

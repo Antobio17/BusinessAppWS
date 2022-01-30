@@ -2,14 +2,22 @@
 
 namespace App\Entity;
 
-use App\Entity\Interfaces\AppointmentInterface;
-use App\Entity\Interfaces\BusinessInterface;
+use DateTime;
+use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Traits\WorkerTrait;
 use App\Entity\Traits\StatusTrait;
+use App\Entity\Traits\BookingDateAtTrait;
+use App\Repository\AppointmentRepository;
+use App\Entity\Interfaces\BusinessInterface;
+use App\Entity\Interfaces\AppointmentInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
+ * Appointment entity.
  *
+ * @ORM\Entity(repositoryClass=AppointmentRepository::class)
  */
-class Appointment extends AbstractBusinessContext implements AppointmentInterface
+class Appointment extends AbstractUserContext implements AppointmentInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
@@ -20,6 +28,15 @@ class Appointment extends AbstractBusinessContext implements AppointmentInterfac
 
     /************************************************* PROPERTIES *************************************************/
 
+    use WorkerTrait {
+        WorkerTrait::__construct as protected __workerConstruct;
+        WorkerTrait::__toArray as protected __workerToArray;
+    }
+
+    use BookingDateAtTrait {
+        BookingDateAtTrait::__construct as protected __bookingDateAtConstruct;
+        BookingDateAtTrait::__toArray as protected __bookingDateAtToArray;
+    }
 
     use StatusTrait {
         StatusTrait::__construct as protected __statusConstruct;
@@ -31,10 +48,13 @@ class Appointment extends AbstractBusinessContext implements AppointmentInterfac
     /**
      *  Appointment constructor.
      */
-    public function __construct(BusinessInterface $business, int $status = 0)
+    public function __construct(BusinessInterface $business, UserInterface $user, UserInterface $worker,
+                                DateTime $bookingDateAt, int $status = 0)
     {
-        parent::__construct($business);
+        parent::__construct($business, $user);
 
+        $this->__workerConstruct($worker);
+        $this->__bookingDateAtConstruct($bookingDateAt);
         $this->__statusConstruct($status);
     }
 
@@ -42,8 +62,35 @@ class Appointment extends AbstractBusinessContext implements AppointmentInterfac
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function __toArray(): array
+    {
+        return array_merge(
+            parent::__toArray(),
+            $this->__workerToArray(),
+            $this->__bookingDateAtToArray(),
+            $this->__statusToArray(),
+        );
+    }
+
     /********************************************** PROTECTED METHODS *********************************************/
 
     /*********************************************** STATIC METHODS ***********************************************/
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public static function getStatusChoices(): array
+    {
+        return array(
+            'Pendiente' => static::STATUS_PENDING,
+            'Cancelada' => static::STATUS_CANCELLED,
+            'Terminada' => static::STATUS_DONE,
+        );
+    }
 
 }
