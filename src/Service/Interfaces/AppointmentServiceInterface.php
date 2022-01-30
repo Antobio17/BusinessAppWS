@@ -18,6 +18,15 @@ interface AppointmentServiceInterface extends AppServiceInterface
      */
     public function getBusinessAppointments($status): ?array;
 
+    /**
+     * Gets the appointments of a user according to the status.
+     *
+     * @param mixed $status The status of the appointments.
+     *
+     * @return array array
+     */
+    public function getUserAppointments($status): ?array;
+
     /*********************************************** STATIC METHODS ***********************************************/
 
 }

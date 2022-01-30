@@ -7,6 +7,7 @@ use App\Entity\Interfaces\BusinessInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\Interfaces\AppRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Repository of App.
@@ -49,14 +50,23 @@ abstract class AppRepository extends ServiceEntityRepository implements AppRepos
      * @inheritDoc
      * @return array array
      */
-    public function findByStatus(BusinessInterface $business, ?int $status): array
+    public function findByStatus(BusinessInterface $business, ?int $status = NULL, ?UserInterface $user = NULL): array
     {
         $alias = 'ety';
 
-        $queryBuilder = $this->createQueryBuilder($alias);
+        $queryBuilder = $this->createQueryBuilder($alias)
+            ->andWhere($alias . '.business = :business')
+            ->setParameter('business', $business->getID());
+
+        # Add optionals parameters.
         if ($status !== NULL):
             $queryBuilder->andWhere($alias . '.status = :status')
                 ->setParameter('status', $status);
+        endif;
+        if ($user !== NULL):
+            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+            $queryBuilder->andWhere($alias . '.user = :user')
+                ->setParameter('user', $user->getID());
         endif;
 
         return $queryBuilder->orderBy($alias . '.id', 'ASC')

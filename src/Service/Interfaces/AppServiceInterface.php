@@ -129,7 +129,16 @@ interface AppServiceInterface extends HasRepositoriesInterface, HasBusinessInter
      *
      * @return AppErrorInterface AppErrorInterface
      */
-    public function registerAppError_BusinessContextNotSet(string  $method): AppErrorInterface;
+    public function registerAppError_BusinessContextUndefined(string $method): AppErrorInterface;
+
+    /**
+     * Logs an error when the context of the user is not set.
+     *
+     * @param string $method Method where the error occurred.
+     *
+     * @return AppErrorInterface AppErrorInterface
+     */
+    public function registerAppError_UserContextUndefined(string $method): AppErrorInterface;
 
     /*********************************************** STATIC METHODS ***********************************************/
 
