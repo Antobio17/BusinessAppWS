@@ -2,16 +2,15 @@
 
 namespace App\Service\Traits;
 
+use App\Entity\User;
 use App\Entity\AppError;
 use App\Entity\Business;
+use App\Entity\Appointment;
 use App\Entity\PostalAddress;
-use App\Entity\User;
-use App\Repository\BusinessRepository;
-use App\Repository\Interfaces\BusinessRepositoryInterface;
-use App\Repository\PostalAddressRepository;
 use App\Repository\UserRepository;
-use Doctrine\ORM\Mapping as ORM;
-use App\Repository\AppErrorRepository;
+use App\Repository\BusinessRepository;
+use App\Repository\AppointmentRepository;
+use App\Repository\PostalAddressRepository;
 use App\Repository\Interfaces\AppErrorRepositoryInterface;
 use App\Service\Traits\Interfaces\HasRepositoriesInterface;
 
@@ -65,6 +64,15 @@ trait RepositoriesTrait
     public function getPostalAddressRepository(): PostalAddressRepository
     {
         return $this->getEntityManager()->getRepository(PostalAddress::class);
+    }
+
+    /**
+     * @inheritDoc
+     * @return AppointmentRepository AppointmentRepository
+     */
+    public function getAppointmentRepository(): AppointmentRepository
+    {
+        return $this->getEntityManager()->getRepository(Appointment::class);
     }
 
     /********************************************** PROTECTED METHODS *********************************************/

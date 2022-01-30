@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\AppError;
+use App\Entity\Appointment;
 use App\Entity\User;
 use App\Helper\ToolsHelper;
 use App\Service\Interfaces\AppointmentServiceInterface;
@@ -36,6 +37,30 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /*********************************************** PUBLIC METHODS ***********************************************/
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function getBusinessAppointments($status): ?array
+    {
+        if (is_numeric($status)):
+            $status = (int)$status;
+        elseif ($status !== NULL):
+            $status = Appointment::getStatusChoices()[$status];
+        endif;
+
+        if ($this->getBusiness() !== NULL):
+            $appointments = $this->getAppointmentRepository()->findByStatus($this->getBusiness(), $status);
+        else:
+            $appointments = NULL;
+            $this->registerAppError_BusinessContextNotSet(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__)
+            );
+        endif;
+
+        return $appointments;
+    }
 
     /********************************************** PROTECTED METHODS *********************************************/
 

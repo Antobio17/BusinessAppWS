@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\AppError;
+use App\Entity\Interfaces\BusinessInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\Interfaces\AppRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -40,6 +41,25 @@ abstract class AppRepository extends ServiceEntityRepository implements AppRepos
             ->andWhere($alias . '.type = :type')
             ->setParameter('type', $type)
             ->orderBy($alias . '.id', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function findByStatus(BusinessInterface $business, ?int $status): array
+    {
+        $alias = 'ety';
+
+        $queryBuilder = $this->createQueryBuilder($alias);
+        if ($status !== NULL):
+            $queryBuilder->andWhere($alias . '.status = :status')
+                ->setParameter('status', $status);
+        endif;
+
+        return $queryBuilder->orderBy($alias . '.id', 'ASC')
             ->getQuery()
             ->getArrayResult();
     }
