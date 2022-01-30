@@ -59,11 +59,12 @@ class AppController extends AbstractController implements AppControllerInterface
         $validationErrors = array();
 
         if (
-            (is_numeric($status) && !in_array((int)$status, $statusChoices))
+            $status !== NULL
+            && ((is_numeric($status) && !in_array((int)$status, $statusChoices))
             || (
                 !is_numeric($status)
                 && !in_array(strtolower($status), array_keys(array_change_key_case($statusChoices)))
-            )
+            ))
         ):
             $validationErrors[] = array(
                 'field' => 'status',

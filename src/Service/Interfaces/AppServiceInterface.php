@@ -122,6 +122,15 @@ interface AppServiceInterface extends HasRepositoriesInterface, HasBusinessInter
                                      ?string $exceptionMessage = NULL, array $exceptionTrace = array(),
                                      bool    $notify = TRUE, bool $persist = TRUE): AppErrorInterface;
 
+    /**
+     * Logs an error when the context of the business is not set.
+     *
+     * @param string $method Method where the error occurred.
+     *
+     * @return AppErrorInterface AppErrorInterface
+     */
+    public function registerAppError_BusinessContextNotSet(string  $method): AppErrorInterface;
+
     /*********************************************** STATIC METHODS ***********************************************/
 
 }

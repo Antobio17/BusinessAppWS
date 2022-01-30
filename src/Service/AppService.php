@@ -238,6 +238,19 @@ class AppService extends AbstractController implements AppServiceInterface
         return $appError;
     }
 
+    /**
+     * @inheritDoc
+     * @return AppErrorInterface AppErrorInterface
+     */
+    public function registerAppError_BusinessContextNotSet(string  $method): AppErrorInterface
+    {
+        return $this->registerAppError(
+            $method,
+            AppError::ERROR_BUSINESS_CONTEXT,
+            'Contexto de Business no establecido.'
+        );
+    }
+
     /********************************************** PROTECTED METHODS *********************************************/
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Service\Traits\Interfaces;
 
+use App\Repository\AppointmentRepository;
 use App\Repository\UserRepository;
 use App\Repository\PostalAddressRepository;
 use App\Repository\Interfaces\AppErrorRepositoryInterface;
@@ -44,6 +45,13 @@ interface HasRepositoriesInterface
      * @return PostalAddressRepository PostalAddressRepository
      */
     public function getPostalAddressRepository(): PostalAddressRepository;
+
+    /**
+     * Facade that returns an instance of the AppointmentRepository.
+     *
+     * @return AppointmentRepository AppointmentRepository
+     */
+    public function getAppointmentRepository(): AppointmentRepository;
 
     /*********************************************** STATIC METHODS ***********************************************/
 
