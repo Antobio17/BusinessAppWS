@@ -50,8 +50,8 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
 
     /************************************************* CONSTANTS **************************************************/
 
-    public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
+    public const ROLE_WORKER = 'ROLE_WORKER';
     public const ROLE_USER = 'ROLE_USER';
 
     /************************************************* PROPERTIES *************************************************/

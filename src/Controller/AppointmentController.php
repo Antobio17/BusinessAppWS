@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Appointment;
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -83,6 +84,32 @@ class AppointmentController extends AppController implements AppointmentControll
         if (empty($validationErrors)):
             if ($this->getAppointmentService()->setBusinessContext($domain)):
                 $data = $this->getAppointmentService()->getUserAppointments($status);
+            endif;
+        endif;
+
+        return $this->createJsonResponse($data, $validationErrors, $this->getAppointmentService());
+    }
+
+    /**
+     * @Route("/api/get/worker/appointments")
+     *
+     * @inheritDoc
+     * @return JsonResponse JsonResponse
+     */
+    public function getWorkerAppointments(Request $request): Response
+    {
+        $domain = $request->server->get('HTTP_HOST');
+        $status = $request->request->get(static::REQUEST_FIELD_APPOINTMENT_STATUS);
+
+        # Data Validation
+        $validationErrors = $this->validateRequestStatusField($status, Appointment::getStatusChoices());
+
+        $data = NULL;
+        if (empty($validationErrors)):
+            if ($this->getAppointmentService()->setBusinessContext($domain)):
+                $data = $this->getAppointmentService()->getUserAppointments(
+                    $status, in_array(User::ROLE_WORKER, $this->getUser()->getRoles())
+                );
             endif;
         endif;
 

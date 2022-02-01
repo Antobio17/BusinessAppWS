@@ -66,7 +66,7 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
      * @inheritDoc
      * @return array array
      */
-    public function getUserAppointments($status): ?array
+    public function getUserAppointments($status, bool $isWorker = FALSE): ?array
     {
         if (is_numeric($status)):
             $status = (int)$status;
@@ -77,14 +77,14 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
         $appointments = NULL;
         if ($this->getBusiness() !== NULL && $this->getUser() !== NULL):
             $appointments = $this->getAppointmentRepository()->findByStatus(
-                $this->getBusiness(), $status, $this->getUser()
+                $this->getBusiness(), $status, $this->getUser(), $isWorker
             );
         elseif ($this->getBusiness() === NULL):
             $this->registerAppError_BusinessContextUndefined(
                 ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__)
             );
         else:
-            $this->registerAppError_BusinessContextUndefined(
+            $this->registerAppError_UserContextUndefined(
                 ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__)
             );
         endif;

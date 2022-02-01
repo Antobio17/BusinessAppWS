@@ -34,6 +34,9 @@ security:
   access_control:
     - { path: ^/api/signin, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/api/signup, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/api/update/worker, roles: ROLE_WORKER }
+    - { path: ^/api/get/worker, roles: ROLE_WORKER }
+    - { path: ^/api/set/worker, roles: ROLE_WORKER }
     - { path: ^/api, roles: ROLE_USER }
 
 

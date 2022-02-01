@@ -50,26 +50,32 @@ abstract class AppRepository extends ServiceEntityRepository implements AppRepos
      * @inheritDoc
      * @return array array
      */
-    public function findByStatus(BusinessInterface $business, ?int $status = NULL, ?UserInterface $user = NULL): array
+    public function findByStatus(BusinessInterface $business, ?int $status = NULL, ?UserInterface $user = NULL,
+                                 bool              $isWorker = FALSE): array
     {
         $alias = 'ety';
 
         $queryBuilder = $this->createQueryBuilder($alias)
-            ->andWhere($alias . '.business = :business')
+            ->andWhere(sprintf('%s.business = :business', $alias))
             ->setParameter('business', $business->getID());
 
         # Add optionals parameters.
         if ($status !== NULL):
-            $queryBuilder->andWhere($alias . '.status = :status')
+            $queryBuilder->andWhere(sprintf('%s.status = :status', $alias))
                 ->setParameter('status', $status);
         endif;
         if ($user !== NULL):
-            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-            $queryBuilder->andWhere($alias . '.user = :user')
-                ->setParameter('user', $user->getID());
+            if ($isWorker):
+                $property = 'worker';
+            else:
+                $property = 'user';
+            endif;
+            /** @noinspection PhpUndefinedMethodInspection */
+            $queryBuilder->andWhere(sprintf('%s.%s = :%s', $alias, $property, $property))
+                ->setParameter($property, $user->getID());
         endif;
 
-        return $queryBuilder->orderBy($alias . '.id', 'ASC')
+        return $queryBuilder->orderBy(sprintf('%s.id', $alias), 'ASC')
             ->getQuery()
             ->getArrayResult();
     }
