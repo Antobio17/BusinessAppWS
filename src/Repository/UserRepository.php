@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Interfaces\BusinessInterface;
 use App\Entity\User;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -46,16 +47,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * Finds a User searching by the email passed.
      *
+     * @param BusinessInterface $business Business to which the user belongs.
      * @param string $email Email to the searching.
      *
-     * @return UserInterface|null UserInterface|null
+     * @return User|null User|null
      * @throws NonUniqueResultException
      */
-    public function findByEmail(string $email): ?UserInterface
+    public function findByEmail(BusinessInterface $business, string $email): ?UserInterface
     {
         $alias = 'use';
 
         return $this->createQueryBuilder($alias)
+            ->andWhere($alias . '.business = :business')
+            ->setParameter('business', $business)
             ->andWhere($alias . '.email = :email')
             ->setParameter('email', $email)
             ->orderBy($alias . '.id', 'ASC')

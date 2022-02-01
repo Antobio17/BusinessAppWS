@@ -21,6 +21,15 @@ interface UserControllerInterface extends HasUserServiceInterface
      */
     public function signup(Request $request): Response;
 
+    /**
+     * Route to access user login in the application.
+     *
+     * @param Request $request Request of the route.
+     *
+     * @return JsonResponse JsonResponse
+     */
+    public function signin(Request $request): Response;
+
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /*********************************************** PUBLIC METHODS ***********************************************/

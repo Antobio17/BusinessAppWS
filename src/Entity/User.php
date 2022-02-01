@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Interfaces\BusinessContextInterface;
+use App\Entity\Interfaces\BusinessInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use App\Entity\Traits\NameTrait;
@@ -25,7 +27,14 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @AttributeOverrides({
- *      @AttributeOverride(name="name",
+ *      @AttributeOverride(name="email",
+ *          column=@Column(
+ *              name   = "email",
+ *              unique = false,
+ *              length = 1024
+ *          )
+ *      ),
+ *     @AttributeOverride(name="name",
  *          column=@Column(
  *              name   = "name",
  *              unique = false,
@@ -34,9 +43,9 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  *      )
  * })
  */
-class User extends AbstractORM implements UserInterface, PasswordAuthenticatedUserInterface, HasEmailInterface,
-    HasPasswordInterface, HasPhoneNumberInterface, HasNameInterface, HasSurnameInterface,
-    HasPostalAddressInterface
+class User extends AbstractBusinessContext implements BusinessContextInterface, UserInterface,
+    PasswordAuthenticatedUserInterface, HasEmailInterface, HasPasswordInterface, HasPhoneNumberInterface,
+    HasNameInterface, HasSurnameInterface, HasPostalAddressInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
@@ -86,6 +95,7 @@ class User extends AbstractORM implements UserInterface, PasswordAuthenticatedUs
     /**
      * User Construct.
      *
+     * @param BusinessInterface $business Business to which the user belongs.
      * @param string $email The email of the new user.
      * @param string $password The password of the new user.
      * @param string $phoneNumber The phone number of the new user.
@@ -94,9 +104,11 @@ class User extends AbstractORM implements UserInterface, PasswordAuthenticatedUs
      * @param array $roles The roles of the new user.
      *
      */
-    public function __construct(string $email, string $password, string $phoneNumber, string $name,
-                                string $surname, array $roles = array())
+    public function __construct(BusinessInterface $business, string $email, string $password, string $phoneNumber,
+                                string $name, string $surname, array $roles = array())
     {
+        parent::__construct($business);
+
         $this->__emailConstruct($email);
         $this->__passwordConstruct($password);
         $this->__phoneNumberConstruct($phoneNumber);

@@ -2,13 +2,14 @@
 
 namespace App\Service;
 
-use App\Entity\AppError;
 use App\Entity\User;
 use App\Helper\ToolsHelper;
-use App\Service\Interfaces\UserServiceInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
+use App\Service\Interfaces\UserServiceInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 
 class UserService extends AppService implements UserServiceInterface
 {
@@ -22,6 +23,13 @@ class UserService extends AppService implements UserServiceInterface
      */
     protected UserPasswordHasherInterface $userPasswordHasher;
 
+    /**
+     * @var AuthenticationSuccessHandler
+     */
+    protected AuthenticationSuccessHandler $authenticationSuccessHandler;
+
+    protected PasswordHasherFactoryInterface $passwordHasherFactory;
+
     /************************************************* CONSTRUCT **************************************************/
 
     /**
@@ -29,16 +37,21 @@ class UserService extends AppService implements UserServiceInterface
      *
      * @param ManagerRegistry $doctrine Doctrine to manage the ORM.
      * @param TelegramService $telegramService Service of Telegram.
-     * @param bool $testMode Boolean to set the Test Mode.
      * @param UserPasswordHasherInterface $userPasswordHasher Hasher to encode the user password.
-     *
+     * @param AuthenticationSuccessHandler $authenticationSuccessHandler Handler to return a response with user's token.
+     * @param PasswordHasherFactoryInterface $passwordHasherFactory The Factory PasswordHasher.
+     * @param bool $testMode Boolean to set the Test Mode.
      */
-    public function __construct(ManagerRegistry $doctrine, TelegramService $telegramService,
-        UserPasswordHasherInterface $userPasswordHasher, bool $testMode = FALSE)
+    public function __construct(ManagerRegistry              $doctrine, TelegramService $telegramService,
+                                UserPasswordHasherInterface  $userPasswordHasher,
+                                AuthenticationSuccessHandler $authenticationSuccessHandler,
+                                PasswordHasherFactoryInterface $passwordHasherFactory, bool $testMode = FALSE)
     {
         parent::__construct($doctrine, $telegramService, $testMode);
 
         $this->setUserPasswordHasher($userPasswordHasher);
+        $this->setAuthenticationSuccessHandler($authenticationSuccessHandler);
+        $this->setPasswordHasherFactoryInterface($passwordHasherFactory);
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -63,6 +76,46 @@ class UserService extends AppService implements UserServiceInterface
         return $this;
     }
 
+    /**
+     * @inheritDoc
+     * @return AuthenticationSuccessHandler AuthenticationSuccessHandler
+     */
+    public function getAuthenticationSuccessHandler(): AuthenticationSuccessHandler
+    {
+        return $this->authenticationSuccessHandler;
+    }
+
+    /**
+     * @inheritDoc
+     * @return $this $this
+     */
+    public function setAuthenticationSuccessHandler(AuthenticationSuccessHandler $authenticationSuccessHandler): self
+    {
+        $this->authenticationSuccessHandler = $authenticationSuccessHandler;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     * @return PasswordHasherFactoryInterface PasswordHasherFactoryInterface
+     */
+    public function getPasswordHasherFactoryInterface(): PasswordHasherFactoryInterface
+    {
+        return $this->passwordHasherFactory;
+    }
+
+    /**
+     * @inheritDoc
+     * @return $this $this
+     */
+    public function setPasswordHasherFactoryInterface(PasswordHasherFactoryInterface $passwordHasherFactory): self
+    {
+        $this->passwordHasherFactory = $passwordHasherFactory;
+
+        return $this;
+    }
+
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
@@ -73,24 +126,49 @@ class UserService extends AppService implements UserServiceInterface
      */
     public function signup(string $email, string $password, string $phoneNumber, string $name, string $surname): bool
     {
-        $user = $this->getUserRepository()->findByEmail($email);
+        $business = $this->getBusiness();
+        $user = $this->getUserRepository()->findByEmail($business, $email);
 
         if ($user === NULL):
-            $user = new User($email, $password, $phoneNumber, $name, $surname);
+            $user = new User($business, $email, $password, $phoneNumber, $name, $surname);
             $encodedPassword = $this->getUserPasswordHasher()->hashPassword($user, $password);
             $user->setPassword($encodedPassword);
             $this->persistAndFlush($user);
         else:
             $this->registerAppError(
-                    ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
-                    Response::HTTP_CONFLICT,
-                    'El email introducido ya existe.',
-                    NULL, NULL, array(),
-                    FALSE, FALSE
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
+                Response::HTTP_CONFLICT,
+                'El email introducido ya existe.',
+                NULL, NULL, array(),
+                FALSE, FALSE
             );
         endif;
 
         return empty($this->getErrors());
+    }
+
+    /**
+     * @inheritDoc
+     * @return array array
+     * @noinspection PhpDocMissingThrowsInspection
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function signin(string $email, string $password): ?array
+    {
+        $business = $this->getBusiness();
+        $user = $this->getUserRepository()->findByEmail(
+            $business, ToolsHelper::encrypt($email, $this->getParameter('app.secret_encryption_token'))
+        );
+
+        $token = NULL;
+        if ($user !== NULL):
+            if ($this->passwordHasherFactory->getPasswordHasher($user)->verify($user->getPassword(), $password)):
+                $JSONToken = $this->getAuthenticationSuccessHandler()->handleAuthenticationSuccess($user)->getContent();
+                $token = json_decode($JSONToken, TRUE);
+            endif;
+        endif;
+
+        return $token;
     }
 
     /********************************************** PROTECTED METHODS *********************************************/

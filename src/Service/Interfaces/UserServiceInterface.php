@@ -4,6 +4,8 @@ namespace App\Service\Interfaces;
 
 
 use App\Service\UserService;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 interface UserServiceInterface extends AppServiceInterface
@@ -27,6 +29,38 @@ interface UserServiceInterface extends AppServiceInterface
      */
     public function setUserPasswordHasher(UserPasswordHasherInterface $userPasswordHasher): self;
 
+    /**
+     * Gets the AuthenticationSuccessHandler to return a response with the user's token.
+     *
+     * @return AuthenticationSuccessHandler AuthenticationSuccessHandler
+     */
+    public function getAuthenticationSuccessHandler(): AuthenticationSuccessHandler;
+
+    /**
+     * Sets the AuthenticationSuccessHandler to return a response with the user's token.
+     *
+     * @param AuthenticationSuccessHandler $authenticationSuccessHandler Handler to return a response with user's token.
+     *
+     * @return $this $this
+     */
+    public function setAuthenticationSuccessHandler(AuthenticationSuccessHandler $authenticationSuccessHandler): self;
+
+    /**
+     * Gets the PasswordHasherFactoryInterface to check the user logging.
+     *
+     * @return PasswordHasherFactoryInterface PasswordHasherFactoryInterface
+     */
+    public function getPasswordHasherFactoryInterface(): PasswordHasherFactoryInterface;
+
+    /**
+     * Sets the PasswordHasherFactoryInterface to check the user logging.
+     *
+     * @param PasswordHasherFactoryInterface $passwordHasherFactory Factory of PasswordHasher.
+     *
+     * @return $this $this
+     */
+    public function setPasswordHasherFactoryInterface(PasswordHasherFactoryInterface $passwordHasherFactory): self;
+
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
@@ -41,6 +75,20 @@ interface UserServiceInterface extends AppServiceInterface
      * @return bool bool
      */
     public function signup(string $email, string $password, string $phoneNumber, string $name, string $surname): bool;
+
+    /**
+     * Checks if the logging of the user is correct.
+     *
+     *      return (
+     *          'token' => 'the token'
+     *      )
+     *
+     * @param string $email The email of the new user.
+     * @param string $password The password of the new user.
+     *
+     * @return array|null array|null
+     */
+    public function signin(string $email, string $password): ?array;
 
     /*********************************************** STATIC METHODS ***********************************************/
 
