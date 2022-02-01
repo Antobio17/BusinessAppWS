@@ -42,9 +42,9 @@ class UserService extends AppService implements UserServiceInterface
      * @param PasswordHasherFactoryInterface $passwordHasherFactory The Factory PasswordHasher.
      * @param bool $testMode Boolean to set the Test Mode.
      */
-    public function __construct(ManagerRegistry              $doctrine, TelegramService $telegramService,
-                                UserPasswordHasherInterface  $userPasswordHasher,
-                                AuthenticationSuccessHandler $authenticationSuccessHandler,
+    public function __construct(ManagerRegistry                $doctrine, TelegramService $telegramService,
+                                UserPasswordHasherInterface    $userPasswordHasher,
+                                AuthenticationSuccessHandler   $authenticationSuccessHandler,
                                 PasswordHasherFactoryInterface $passwordHasherFactory, bool $testMode = FALSE)
     {
         parent::__construct($doctrine, $telegramService, $testMode);
@@ -157,7 +157,7 @@ class UserService extends AppService implements UserServiceInterface
     {
         $business = $this->getBusiness();
         $user = $this->getUserRepository()->findByEmail(
-            $business, ToolsHelper::encrypt($email, $this->getParameter('app.secret_encryption_token'))
+            $business, $email
         );
 
         $token = NULL;
@@ -166,6 +166,16 @@ class UserService extends AppService implements UserServiceInterface
                 $JSONToken = $this->getAuthenticationSuccessHandler()->handleAuthenticationSuccess($user)->getContent();
                 $token = json_decode($JSONToken, TRUE);
             endif;
+        endif;
+
+        if ($token === NULL):
+            $this->registerAppError(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
+                Response::HTTP_UNAUTHORIZED,
+                'El email o contraseña no son correctos.',
+                NULL, NULL, array(),
+                FALSE, FALSE
+            );
         endif;
 
         return $token;

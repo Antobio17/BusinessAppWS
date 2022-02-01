@@ -29,7 +29,7 @@ trait EmailTrait
      */
     public function getEmail(): string
     {
-        return ToolsHelper::decrypt($this->email, getenv(static::SECRET_ENCRYPTION_TOKEN));
+        return $this->email;
     }
 
     /**
@@ -38,7 +38,7 @@ trait EmailTrait
      */
     public function setEmail(string $email): self
     {
-        $this->email = ToolsHelper::encrypt($email, getenv(static::SECRET_ENCRYPTION_TOKEN));
+        $this->email = $email;
 
         return $this;
     }
