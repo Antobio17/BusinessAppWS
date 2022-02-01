@@ -29,6 +29,15 @@ interface AppointmentControllerInterface
      */
     public function getUserAppointments(Request $request): Response;
 
+    /**
+     * Route to access to the workers' appointments of the application.
+     *
+     * @param Request $request Request of the route.
+     *
+     * @return JsonResponse JsonResponse
+     */
+    public function getWorkerAppointments(Request $request): Response;
+
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /*********************************************** PUBLIC METHODS ***********************************************/

@@ -28,10 +28,12 @@ interface AppRepositoryInterface
      * @param BusinessInterface $business Business to which the appointment belongs.
      * @param int|null $status Status of the entity.
      * @param UserInterface|null $user User of the entity.
+     * @param bool $isWorker Boolean to know if the user is a worker.
      *
      * @return array array
      */
-    public function findByStatus(BusinessInterface $business, ?int $status = NULL, ?UserInterface $user = NULL): array;
+    public function findByStatus(BusinessInterface $business, ?int $status = NULL, ?UserInterface $user = NULL,
+                                 bool $isWorker = FALSE): array;
 
     /*********************************************** STATIC METHODS ***********************************************/
 
