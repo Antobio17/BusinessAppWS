@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Service\Interfaces\UserServiceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Controller\Interfaces\UserControllerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 
 class UserController extends AppController implements UserControllerInterface
 {
@@ -76,6 +77,34 @@ class UserController extends AppController implements UserControllerInterface
         endif;
 
         return $this->createJsonResponse_Creation($data, $validationErrors, $this->getUserService());
+    }
+
+    /**
+     * @Route("/api/signin")
+     *
+     * @inheritDoc
+     * @return JsonResponse JsonResponse
+     */
+    public function signin(Request $request): Response
+    {
+        $domain = $request->server->get('HTTP_HOST');
+        $email = $request->request->get(static::REQUEST_FIELD_EMAIL);
+        $password = $request->request->get(static::REQUEST_FIELD_PASSWORD);
+
+        # Data Validation
+        $validationErrors = $this->validateRequiredRequestFields(array(
+            static::REQUEST_FIELD_EMAIL => $email,
+            static::REQUEST_FIELD_PASSWORD => $password,
+        ));
+
+        $data = NULL;
+        if (empty($validationErrors)):
+            if ($this->getUserService()->setBusinessContext($domain)):
+                $data = $this->getUserService()->signin($email, $password);
+            endif;
+        endif;
+
+        return $this->createJsonResponse($data, $validationErrors, $this->getUserService());
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
