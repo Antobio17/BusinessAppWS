@@ -13,6 +13,10 @@ class AppController extends AbstractController implements AppControllerInterface
 
     /************************************************* CONSTANTS **************************************************/
 
+    public const REQUEST_FIELD_STATUS = 'status';
+    public const REQUEST_FIELD_START_DATE = 'startDate';
+    public const REQUEST_FIELD_END_DATE = 'endDate';
+
     /************************************************* PROPERTIES *************************************************/
 
     /************************************************** ROUTING ***************************************************/
@@ -38,11 +42,11 @@ class AppController extends AbstractController implements AppControllerInterface
     public function validateRequiredRequestFields(array $requestFields): array
     {
         $validationErrors = array();
-        foreach ($requestFields as $key => $value):
+        foreach ($requestFields as $fieldName => $value):
             if ($value === NULL):
                 $validationErrors[] = array(
-                    'field' => $key,
-                    'message' => sprintf('The %s field cannot be empty', $key)
+                    'field' => $fieldName,
+                    'message' => sprintf('The %s field cannot be empty', $fieldName)
                 );
             endif;
         endforeach;
@@ -57,7 +61,6 @@ class AppController extends AbstractController implements AppControllerInterface
     public function validateRequestStatusField($status, array $statusChoices): array
     {
         $validationErrors = array();
-
         if (
             $status !== NULL
             && ((is_numeric($status) && !in_array((int)$status, $statusChoices))
@@ -71,6 +74,25 @@ class AppController extends AbstractController implements AppControllerInterface
                 'message' => sprintf('The status %s does not exist', $status)
             );
         endif;
+
+        return $validationErrors;
+    }
+
+    /**
+     * @param array $dates
+     * @return array array
+     */
+    public function validateRequestDateFields(array $dates): array
+    {
+        $validationErrors = array();
+        foreach ($dates as $fieldName => $date):
+            if ($date !== NULL && !is_numeric($date)):
+                $validationErrors[] = array(
+                    'field' => $fieldName,
+                    'message' => sprintf('The %s field must be an integer (timestamp) or null', $fieldName)
+                );
+            endif;
+        endforeach;
 
         return $validationErrors;
     }

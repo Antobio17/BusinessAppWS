@@ -2,6 +2,7 @@
 
 namespace App\Repository\Interfaces;
 
+use DateTime;
 use App\Entity\Interfaces\BusinessInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -33,7 +34,8 @@ interface AppRepositoryInterface
      * @return array array
      */
     public function findByStatus(BusinessInterface $business, ?int $status = NULL, ?UserInterface $user = NULL,
-                                 bool $isWorker = FALSE): array;
+                                 bool              $isWorker = FALSE, ?DateTime $startDate = NULL,
+                                 ?DateTime         $endDate = NULL): array;
 
     /*********************************************** STATIC METHODS ***********************************************/
 

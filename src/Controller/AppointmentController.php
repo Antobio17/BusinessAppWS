@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Appointment;
 use App\Entity\User;
+use App\Entity\Appointment;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,8 +16,6 @@ class AppointmentController extends AppController implements AppointmentControll
 {
 
     /************************************************* CONSTANTS **************************************************/
-
-    public const REQUEST_FIELD_APPOINTMENT_STATUS = 'status';
 
     /************************************************* PROPERTIES *************************************************/
 
@@ -51,15 +49,23 @@ class AppointmentController extends AppController implements AppointmentControll
     public function getBusinessAppointments(Request $request): Response
     {
         $domain = $request->server->get('HTTP_HOST');
-        $status = $request->request->get(static::REQUEST_FIELD_APPOINTMENT_STATUS);
+        $status = $request->request->get(static::REQUEST_FIELD_STATUS);
+        $startDate = $request->request->get(static::REQUEST_FIELD_START_DATE);
+        $endDate = $request->request->get(static::REQUEST_FIELD_END_DATE);
 
         # Data Validation
         $validationErrors = $this->validateRequestStatusField($status, Appointment::getStatusChoices());
+        $validationErrors = array_merge($validationErrors, $this->validateRequestDateFields(array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        )));
 
         $data = NULL;
         if (empty($validationErrors)):
+            $startDate = $startDate !== NULL ? date_create()->setTimestamp($startDate) : NULL;
+            $endDate = $endDate !== NULL ? date_create()->setTimestamp($endDate) : NULL;
             if ($this->getAppointmentService()->setBusinessContext($domain)):
-                $data = $this->getAppointmentService()->getBusinessAppointments($status);
+                $data = $this->getAppointmentService()->getBusinessAppointments($status, $startDate, $endDate);
             endif;
         endif;
 
@@ -75,7 +81,7 @@ class AppointmentController extends AppController implements AppointmentControll
     public function getUserAppointments(Request $request): Response
     {
         $domain = $request->server->get('HTTP_HOST');
-        $status = $request->request->get(static::REQUEST_FIELD_APPOINTMENT_STATUS);
+        $status = $request->request->get(static::REQUEST_FIELD_STATUS);
 
         # Data Validation
         $validationErrors = $this->validateRequestStatusField($status, Appointment::getStatusChoices());
@@ -99,7 +105,7 @@ class AppointmentController extends AppController implements AppointmentControll
     public function getWorkerAppointments(Request $request): Response
     {
         $domain = $request->server->get('HTTP_HOST');
-        $status = $request->request->get(static::REQUEST_FIELD_APPOINTMENT_STATUS);
+        $status = $request->request->get(static::REQUEST_FIELD_STATUS);
 
         # Data Validation
         $validationErrors = $this->validateRequestStatusField($status, Appointment::getStatusChoices());

@@ -2,6 +2,8 @@
 
 namespace App\Service\Interfaces;
 
+use DateTime;
+
 interface AppointmentServiceInterface extends AppServiceInterface
 {
 
@@ -13,10 +15,12 @@ interface AppointmentServiceInterface extends AppServiceInterface
      * Gets the appointments of a business according to the status.
      *
      * @param mixed $status The status of the appointments.
+     * @param DateTime|null $startDate The start date to filter the query.
+     * @param DateTime|null $endDate The end date to filter the query.
      *
      * @return array array
      */
-    public function getBusinessAppointments($status): ?array;
+    public function getBusinessAppointments($status, ?DateTime $startDate = NULL, ?DateTime $endDate = NULL): ?array;
 
     /**
      * Gets the appointments of a user/worker according to the status.
