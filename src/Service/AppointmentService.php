@@ -2,15 +2,11 @@
 
 namespace App\Service;
 
-use App\Entity\AppError;
+use DateTime;
 use App\Entity\Appointment;
-use App\Entity\User;
 use App\Helper\ToolsHelper;
-use App\Service\Interfaces\AppointmentServiceInterface;
-use App\Service\Interfaces\UserServiceInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Service\Interfaces\AppointmentServiceInterface;
 
 class AppointmentService extends AppService implements AppointmentServiceInterface
 {
@@ -42,7 +38,7 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
      * @inheritDoc
      * @return array array
      */
-    public function getBusinessAppointments($status): ?array
+    public function getBusinessAppointments($status, ?DateTime $startDate = NULL, ?DateTime $endDate = NULL): ?array
     {
         if (is_numeric($status)):
             $status = (int)$status;
@@ -51,7 +47,9 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
         endif;
 
         if ($this->getBusiness() !== NULL):
-            $appointments = $this->getAppointmentRepository()->findByStatus($this->getBusiness(), $status);
+            $appointments = $this->getAppointmentRepository()->findByStatus(
+                $this->getBusiness(), $status, NULL, FALSE, $startDate, $endDate
+            );
         else:
             $appointments = NULL;
             $this->registerAppError_BusinessContextUndefined(

@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\AppError;
+use DateTime;
 use App\Entity\Interfaces\BusinessInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\Interfaces\AppRepositoryInterface;
@@ -51,7 +51,8 @@ abstract class AppRepository extends ServiceEntityRepository implements AppRepos
      * @return array array
      */
     public function findByStatus(BusinessInterface $business, ?int $status = NULL, ?UserInterface $user = NULL,
-                                 bool              $isWorker = FALSE): array
+                                 bool              $isWorker = FALSE, ?DateTime $startDate = NULL,
+                                 ?DateTime         $endDate = NULL): array
     {
         $alias = 'ety';
 
@@ -73,6 +74,14 @@ abstract class AppRepository extends ServiceEntityRepository implements AppRepos
             /** @noinspection PhpUndefinedMethodInspection */
             $queryBuilder->andWhere(sprintf('%s.%s = :%s', $alias, $property, $property))
                 ->setParameter($property, $user->getID());
+        endif;
+        if ($startDate !== NULL):
+            $queryBuilder->andWhere(sprintf('%s.startDate >= :startDate', $alias))
+                ->setParameter('startDate', $startDate);
+        endif;
+        if ($endDate !== NULL):
+            $queryBuilder->andWhere(sprintf('%s.endDate <= :endDate', $alias))
+                ->setParameter('endDate', $endDate);
         endif;
 
         return $queryBuilder->orderBy(sprintf('%s.id', $alias), 'ASC')
