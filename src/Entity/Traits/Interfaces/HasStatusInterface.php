@@ -2,8 +2,6 @@
 
 namespace App\Entity\Traits\Interfaces;
 
-use App\Entity\Traits\StatusTrait;
-
 /**
  * StatusTrait interface
  */
