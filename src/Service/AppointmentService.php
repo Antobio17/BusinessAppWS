@@ -40,6 +40,7 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
      */
     public function getBusinessAppointments($status, ?DateTime $startDate = NULL, ?DateTime $endDate = NULL): ?array
     {
+        # Parsing status
         if (is_numeric($status)):
             $status = (int)$status;
         elseif ($status !== NULL):
@@ -66,6 +67,7 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
      */
     public function getUserAppointments($status, bool $isWorker = FALSE): ?array
     {
+        # Parsing status
         if (is_numeric($status)):
             $status = (int)$status;
         elseif ($status !== NULL):

@@ -2,10 +2,14 @@
 
 namespace App\Entity\Interfaces;
 
+use App\Entity\Traits\Interfaces\HasStatusInterface;
+use App\Entity\Traits\Interfaces\HasWorkerInterface;
+use App\Entity\Traits\Interfaces\HasBookingDateAtInterface;
+
 /**
  * Appointment interface.
  */
-interface AppointmentInterface extends UserContextInterface
+interface AppointmentInterface extends HasWorkerInterface, HasBookingDateAtInterface, HasStatusInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
