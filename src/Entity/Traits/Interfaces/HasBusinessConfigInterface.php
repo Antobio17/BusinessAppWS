@@ -3,9 +3,9 @@
 namespace App\Entity\Traits\Interfaces;
 
 /**
- * _TemplateTrait_ interface
+ * BusinessConfig interface
  */
-interface _HasTemplateInterface_
+interface HasBusinessConfigInterface extends HasOpensAtInterface, HasClosesAtInterface, HasAppointmentDurationInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -16,7 +16,7 @@ interface _HasTemplateInterface_
      * ToArray function of the property.
      *
      *      Returns array(
-     *          '_Template_' => $this->getTemplate()
+     *          'businessConfig' => $this->getBusinessConfig()
      *      )
      *
      * @return array array
