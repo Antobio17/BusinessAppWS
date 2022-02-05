@@ -4,14 +4,17 @@ namespace App\Entity\Interfaces;
 
 use App\Entity\Traits\Interfaces\HasNameInterface;
 use App\Entity\Traits\Interfaces\HasDomainInterface;
+use App\Entity\Traits\Interfaces\HasOpensAtInterface;
+use App\Entity\Traits\Interfaces\HasClosesAtInterface;
 use App\Entity\Traits\Interfaces\HasPhoneNumberInterface;
 use App\Entity\Traits\Interfaces\HasPostalAddressInterface;
+use App\Entity\Traits\Interfaces\HasBusinessConfigInterface;
 
 /**
  * Business interface.
  */
 interface BusinessInterface extends HasDomainInterface, HasNameInterface, HasPhoneNumberInterface,
-    HasPostalAddressInterface
+    HasPostalAddressInterface, HasBusinessConfigInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
