@@ -2,6 +2,7 @@
 
 namespace App\Service\Interfaces;
 
+use App\Entity\Appointment;
 use DateTime;
 
 interface AppointmentServiceInterface extends AppServiceInterface
@@ -31,6 +32,17 @@ interface AppointmentServiceInterface extends AppServiceInterface
      * @return array array
      */
     public function getUserAppointments($status, bool $isWorker = FALSE): ?array;
+
+    /**
+     * Book a user's appointment if it is a valid date for the reservation
+     *
+     * @param DateTime $bookingDateAt The dato of the book.
+     * @param string|null $userEmail User's email in case the reservation is made by the worker.
+     *
+     * @return Appointment|null Appointment|null
+     */
+    public function bookUserAppointment(DateTime $bookingDateAt, ?string $userEmail = NULL): ?Appointment;
+
 
     /*********************************************** STATIC METHODS ***********************************************/
 

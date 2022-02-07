@@ -25,7 +25,14 @@ class AppError extends AbstractORM implements AppErrorInterface
     public const ERROR_ORM_PERSIST = 0;
     public const ERROR_BUSINESS_CONTEXT = 1;
     public const ERROR_USER_CONTEXT = 2;
+
     public const ERROR_TELEGRAM_API = 10;
+
+    public const ERROR_APPOINTMENT_BOOK_USER_UNDEFINED = 20;
+    public const ERROR_APPOINTMENT_BOOK_USER_NOT_EXIST = 21;
+    public const ERROR_APPOINTMENT_BOOK_ALREADY_EXIST = 22;
+    public const ERROR_APPOINTMENT_BOOK_DATE_INTERVAL = 23;
+    public const ERROR_APPOINTMENT_BOOK_ERROR = 24;
 
     /************************************************* PROPERTIES *************************************************/
 

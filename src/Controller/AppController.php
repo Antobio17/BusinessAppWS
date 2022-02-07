@@ -13,6 +13,8 @@ class AppController extends AbstractController implements AppControllerInterface
 
     /************************************************* CONSTANTS **************************************************/
 
+    public const REQUEST_SERVER_HTTP_HOST = 'HTTP_HOST';
+
     public const REQUEST_FIELD_STATUS = 'status';
     public const REQUEST_FIELD_START_DATE = 'startDate';
     public const REQUEST_FIELD_END_DATE = 'endDate';

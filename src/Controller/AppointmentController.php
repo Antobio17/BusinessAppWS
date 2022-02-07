@@ -17,6 +17,9 @@ class AppointmentController extends AppController implements AppointmentControll
 
     /************************************************* CONSTANTS **************************************************/
 
+    public const REQUEST_FIELD_BOOKING_DATE_AT = 'bookingDateAt';
+    public const REQUEST_FIELD_USER_EMAIL = 'userEmail';
+
     /************************************************* PROPERTIES *************************************************/
 
     use AppointmentServiceTrait;
@@ -48,7 +51,7 @@ class AppointmentController extends AppController implements AppointmentControll
      */
     public function getBusinessAppointments(Request $request): Response
     {
-        $domain = $request->server->get('HTTP_HOST');
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
         $status = $request->request->get(static::REQUEST_FIELD_STATUS);
         $startDate = $request->request->get(static::REQUEST_FIELD_START_DATE);
         $endDate = $request->request->get(static::REQUEST_FIELD_END_DATE);
@@ -80,7 +83,7 @@ class AppointmentController extends AppController implements AppointmentControll
      */
     public function getUserAppointments(Request $request): Response
     {
-        $domain = $request->server->get('HTTP_HOST');
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
         $status = $request->request->get(static::REQUEST_FIELD_STATUS);
 
         # Data Validation
@@ -104,7 +107,7 @@ class AppointmentController extends AppController implements AppointmentControll
      */
     public function getWorkerAppointments(Request $request): Response
     {
-        $domain = $request->server->get('HTTP_HOST');
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
         $status = $request->request->get(static::REQUEST_FIELD_STATUS);
 
         # Data Validation
@@ -120,6 +123,32 @@ class AppointmentController extends AppController implements AppointmentControll
         endif;
 
         return $this->createJsonResponse($data, $validationErrors, $this->getAppointmentService());
+    }
+
+    /**
+     * @Route("/api/book/user/appointment")
+     *
+     * @inheritDoc
+     * @return JsonResponse JsonResponse
+     */
+    public function bookUserAppointment(Request $request): Response
+    {
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+        $bookingDateAt = $request->request->get(static::REQUEST_FIELD_BOOKING_DATE_AT);
+        $userEmail = $request->request->get(static::REQUEST_FIELD_USER_EMAIL);
+
+        # Data Validation
+        $validationErrors = $this->validateRequestDateFields(array('bookingDateAt' => $bookingDateAt));
+
+        $data = NULL;
+        if (empty($validationErrors)):
+            if ($this->getAppointmentService()->setBusinessContext($domain)):
+                $bookingDateAt = date_create()->setTimestamp($bookingDateAt);
+                $data = $this->getAppointmentService()->bookUserAppointment($bookingDateAt, $userEmail);
+            endif;
+        endif;
+
+        return $this->createJsonResponse_Creation($data, $validationErrors, $this->getAppointmentService());
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
