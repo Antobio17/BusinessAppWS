@@ -2,11 +2,12 @@
 
 namespace App\Controller\Interfaces;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Service\Traits\Interfaces\HasAppointmentServiceInterface;
 
-interface AppointmentControllerInterface
+interface AppointmentControllerInterface extends HasAppointmentServiceInterface
 {
 
     /************************************************** ROUTING ***************************************************/
@@ -37,6 +38,15 @@ interface AppointmentControllerInterface
      * @return JsonResponse JsonResponse
      */
     public function getWorkerAppointments(Request $request): Response;
+
+    /**
+     * Route to book an appointment to a user.
+     *
+     * @param Request $request Request of the route.
+     *
+     * @return JsonResponse JsonResponse
+     */
+    public function bookUserAppointment(Request $request): Response;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 

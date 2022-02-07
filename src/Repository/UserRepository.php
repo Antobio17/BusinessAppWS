@@ -51,19 +51,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      * @param string $email Email to the searching.
      *
      * @return User|null User|null
-     * @throws NonUniqueResultException
      */
     public function findByEmail(BusinessInterface $business, string $email): ?UserInterface
     {
         $alias = 'use';
 
-        return $this->createQueryBuilder($alias)
-            ->andWhere($alias . '.business = :business')
-            ->setParameter('business', $business)
-            ->andWhere($alias . '.email = :email')
-            ->setParameter('email', $email)
-            ->orderBy($alias . '.id', 'ASC')
-            ->getQuery()
-            ->getOneOrNullResult();
+        try {
+            $user = $this->createQueryBuilder($alias)
+                ->andWhere($alias . '.business = :business')
+                ->setParameter('business', $business)
+                ->andWhere($alias . '.email = :email')
+                ->setParameter('email', $email)
+                ->orderBy($alias . '.id', 'ASC')
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {}
+
+        return $user ?? NULL;
     }
 }

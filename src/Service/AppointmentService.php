@@ -2,11 +2,15 @@
 
 namespace App\Service;
 
+use App\Entity\AppError;
+use App\Entity\User;
+use DateInterval;
 use DateTime;
 use App\Entity\Appointment;
 use App\Helper\ToolsHelper;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Service\Interfaces\AppointmentServiceInterface;
+use Exception;
 
 class AppointmentService extends AppService implements AppointmentServiceInterface
 {
@@ -90,6 +94,96 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
         endif;
 
         return $appointments;
+    }
+
+    /**
+     * @inheritDoc
+     * @return Appointment|null Appointment|null
+     */
+    public function bookUserAppointment(DateTime $bookingDateAt, ?string $userEmail = NULL): ?Appointment
+    {
+        $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
+        $user = NULL;
+        $worker = NULL;
+
+        # User validations
+        if (in_array(User::ROLE_WORKER, $this->getUser()->getRoles()) && $userEmail !== NULL):
+            $worker = $this->getUser();
+            $user = $this->getUserRepository()->findByEmail($this->getBusiness(), $userEmail);
+            if ($user === NULL):
+                $this->registerAppError(
+                    $method,
+                    AppError::ERROR_APPOINTMENT_BOOK_USER_UNDEFINED,
+                    'Error al intentar reservar una cita por trabajador: 
+                    el email introducido no pertenece a ningún usuario'
+                );
+            endif;
+        elseif (in_array(User::ROLE_WORKER, $this->getUser()->getRoles())):
+            $this->registerAppError(
+                $method,
+                AppError::ERROR_APPOINTMENT_BOOK_USER_NOT_EXIST,
+                'Error al intentar reservar una cita por trabajador: 
+                no se indicó el email de usuario'
+            );
+        else:
+            $user = $this->getUser();
+            if (
+                !empty($this->getAppointmentRepository()->findByStatus(
+                    $this->getBusiness(), Appointment::STATUS_PENDING, $this->getUser()
+                ))
+            ):
+                $this->registerAppError(
+                    $method,
+                    AppError::ERROR_APPOINTMENT_BOOK_ALREADY_EXIST,
+                    'Error al intentar reservar una cita: 
+                    ya existe una cita pendiente para el usuario'
+                );
+            endif;
+        endif;
+
+        $appointment = NULL;
+        if ($user !== NULL && $worker !== NULL):
+            # BookingDate validations
+            $appointmentDuration = $this->getBusiness()->getAppointmentDuration();
+            $businessAppointments = NULL;
+            try {
+                $businessAppointments = $this->getAppointmentRepository()->findByStatus(
+                    $this->getBusiness(),
+                    NULL,
+                    NULL,
+                    FALSE,
+                    $bookingDateAt->sub(new DateInterval(sprintf('PT%dM', $appointmentDuration - 1))),
+                    $bookingDateAt->add(new DateInterval(sprintf('PT%dM', $appointmentDuration - 1)))
+                );
+            } catch (Exception $e) {
+                $this->registerAppError(
+                    $method,
+                    AppError::ERROR_APPOINTMENT_BOOK_DATE_INTERVAL,
+                    'Error al calcular un intervalo para las comprobaciones de reserva de cita',
+                    $e->getCode(),
+                    $e->getMessage(),
+                    $e->getTrace()
+                );
+            }
+
+            if (empty($businessAppointments)):
+                $appointment = new Appointment(
+                    $this->getBusiness(),
+                    $user,
+                    $worker,
+                    $bookingDateAt
+                );
+                $this->persistAndFlush($appointment);
+            else:
+                $this->registerAppError(
+                    $method,
+                    AppError::ERROR_APPOINTMENT_BOOK_ERROR,
+                    'Error reservar la cita: no hay margen suficiente para reservar la cita',
+                );
+            endif;
+        endif;
+
+        return empty($this->getErrors()) ? $appointment : NULL;
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
