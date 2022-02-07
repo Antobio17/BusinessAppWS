@@ -144,17 +144,29 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
         $appointment = NULL;
         if ($user !== NULL && $worker !== NULL):
             # BookingDate validations
-            $appointmentDuration = $this->getBusiness()->getAppointmentDuration();
+            $appointmentDuration = $this->getBusiness()->getAppointmentDuration() - 1;
             $businessAppointments = NULL;
             try {
-                $businessAppointments = $this->getAppointmentRepository()->findByStatus(
-                    $this->getBusiness(),
-                    NULL,
-                    NULL,
-                    FALSE,
-                    $bookingDateAt->sub(new DateInterval(sprintf('PT%dM', $appointmentDuration - 1))),
-                    $bookingDateAt->add(new DateInterval(sprintf('PT%dM', $appointmentDuration - 1)))
-                );
+                if (
+                    $bookingDateAt < $this->getBusiness()->getOpensAt()
+                    || $bookingDateAt > $this->getBusiness()->getClosesAt()
+                ):
+                    $this->registerAppError(
+                        $method,
+                        AppError::ERROR_APPOINTMENT_BOOK_ERROR,
+                        'Error al intentar reservar la cita: 
+                        la hora de reserva está fuera de horario de trabajo',
+                    );
+                else:
+                    $businessAppointments = $this->getAppointmentRepository()->findByStatus(
+                        $this->getBusiness(),
+                        NULL,
+                        NULL,
+                        FALSE,
+                        $bookingDateAt->sub(new DateInterval(sprintf('PT%dM', $appointmentDuration))),
+                        $bookingDateAt->add(new DateInterval(sprintf('PT%dM', $appointmentDuration)))
+                    );
+                endif;
             } catch (Exception $e) {
                 $this->registerAppError(
                     $method,
@@ -174,11 +186,11 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
                     $bookingDateAt
                 );
                 $this->persistAndFlush($appointment);
-            else:
+            elseif (empty($this->getErrors())):
                 $this->registerAppError(
                     $method,
                     AppError::ERROR_APPOINTMENT_BOOK_ERROR,
-                    'Error reservar la cita: no hay margen suficiente para reservar la cita',
+                    'Error al intentar reservar la cita: no hay margen suficiente para reservar la cita',
                 );
             endif;
         endif;
