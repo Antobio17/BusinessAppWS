@@ -142,16 +142,19 @@ class AppointmentController extends AppController implements AppointmentControll
             static::REQUEST_FIELD_BOOKING_DATE_AT => $bookingDateAt
         ));
 
-        $data = NULL;
+        $appointment = NULL;
         if (empty($validationErrors)):
             if ($this->getAppointmentService()->setBusinessContext($domain)):
                 $bookingDateAt = date_create()->setTimestamp($bookingDateAt);
-                $data = $this->getAppointmentService()->bookUserAppointment($bookingDateAt, $userEmail);
-//                dd($data);
+                $appointment = $this->getAppointmentService()->bookUserAppointment($bookingDateAt, $userEmail);
             endif;
         endif;
 
-        return $this->createJsonResponse_Creation($data, $validationErrors, $this->getAppointmentService());
+        return $this->createJsonResponse_Creation(
+            $appointment !== NULL ? $appointment->__toArray() : NULL,
+            $validationErrors,
+            $this->getAppointmentService()
+        );
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/

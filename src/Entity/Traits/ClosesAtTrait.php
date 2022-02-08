@@ -60,7 +60,9 @@ trait ClosesAtTrait
      */
     public function __toArray(): array
     {
-        return array();
+        return array(
+            'closesAt' => $this->getClosesAt()
+        );
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
