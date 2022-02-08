@@ -115,16 +115,14 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
                 $this->registerAppError(
                     $method,
                     AppError::ERROR_APPOINTMENT_BOOK_USER_UNDEFINED,
-                    'Error al intentar reservar una cita por trabajador: 
-                    el email introducido no pertenece a ningún usuario'
+                    'Error al intentar reservar una cita por trabajador: el email introducido no pertenece a ningún usuario'
                 );
             endif;
         elseif (in_array(User::ROLE_WORKER, $this->getUser()->getRoles())):
             $this->registerAppError(
                 $method,
                 AppError::ERROR_APPOINTMENT_BOOK_USER_NOT_EXIST,
-                'Error al intentar reservar una cita por trabajador: 
-                no se indicó el email de usuario'
+                'Error al intentar reservar una cita por trabajador: no se indicó el email de usuario'
             );
         else:
             $user = $this->getUser();
@@ -136,8 +134,7 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
                 $this->registerAppError(
                     $method,
                     AppError::ERROR_APPOINTMENT_BOOK_ALREADY_EXIST,
-                    'Error al intentar reservar una cita: 
-                    ya existe una cita pendiente para el usuario'
+                    'Error al intentar reservar una cita: ya existe una cita pendiente para el usuario'
                 );
             endif;
         endif;
@@ -152,8 +149,7 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
                 $this->registerAppError(
                     $method,
                     AppError::ERROR_APPOINTMENT_BOOK_ERROR,
-                    'Error al intentar reservar la cita: 
-                        la hora de reserva está fuera de horario de trabajo',
+                    'Error al intentar reservar la cita: la hora de reserva está fuera de horario de trabajo',
                 );
             elseif (($worker = $this->_getAvailableWorker($bookingDateAt, $worker)) === NULL):
                 $this->registerAppError(
@@ -199,14 +195,18 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
 
         try {
             foreach ($workers as $businessWorker):
+                $startAt = date_create()->setTimestamp($bookingDateAt->getTimestamp());
+                $startAt = $startAt->sub(new DateInterval(sprintf('PT%dM', $appointmentDuration)));
+                $endAt = date_create()->setTimestamp($bookingDateAt->getTimestamp());
+                $endAt = $endAt->add(new DateInterval(sprintf('PT%dM', $appointmentDuration)));
                 if (
                     empty($this->getAppointmentRepository()->findByStatus(
                         $this->getBusiness(),
                         NULL,
                         $businessWorker,
                         TRUE,
-                        $bookingDateAt->sub(new DateInterval(sprintf('PT%dM', $appointmentDuration))),
-                        $bookingDateAt->add(new DateInterval(sprintf('PT%dM', $appointmentDuration)))
+                        $startAt,
+                        $endAt
                     ))
                 ):
                     $availableWorker = $businessWorker;
