@@ -147,6 +147,7 @@ class AppointmentController extends AppController implements AppointmentControll
             if ($this->getAppointmentService()->setBusinessContext($domain)):
                 $bookingDateAt = date_create()->setTimestamp($bookingDateAt);
                 $data = $this->getAppointmentService()->bookUserAppointment($bookingDateAt, $userEmail);
+//                dd($data);
             endif;
         endif;
 
