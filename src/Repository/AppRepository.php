@@ -76,11 +76,11 @@ abstract class AppRepository extends ServiceEntityRepository implements AppRepos
                 ->setParameter($property, $user->getID());
         endif;
         if ($startDate !== NULL):
-            $queryBuilder->andWhere(sprintf('%s.startDate >= :startDate', $alias))
+            $queryBuilder->andWhere(sprintf('%s.bookingDateAt >= :startDate', $alias))
                 ->setParameter('startDate', $startDate);
         endif;
         if ($endDate !== NULL):
-            $queryBuilder->andWhere(sprintf('%s.endDate <= :endDate', $alias))
+            $queryBuilder->andWhere(sprintf('%s.bookingDateAt <= :endDate', $alias))
                 ->setParameter('endDate', $endDate);
         endif;
 

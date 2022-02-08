@@ -2,20 +2,31 @@
 
 namespace App\Entity\Traits\Interfaces;
 
+use Symfony\Component\Security\Core\User\UserInterface;
+
 /**
- * WorkersTrait interface
+ * IsWorkerTrait interface
  */
-interface HasWorkersInterface
+interface HasIsWorkerInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
-     * Gets the Workers property of the Entity.
+     * Gets the IsWorker property.
      *
-     * @return array array
+     * @return bool bool
      */
-    public function getWorkers(): array;
+    public function getIsWorker(): bool;
+
+    /**
+     * Sets the IsWorker property.
+     *
+     * @param bool $isWorker The IsWorker to be set.
+     *
+     * @return $this $this
+     */
+    public function setIsWorker(bool $isWorker): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 
@@ -23,7 +34,7 @@ interface HasWorkersInterface
      * ToArray function of the property.
      *
      *      Returns array(
-     *          'workers' => $this->getWorkers()
+     *          'isWorker' => $this->>getIsWorker()
      *      )
      *
      * @return array array

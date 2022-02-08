@@ -2,47 +2,55 @@
 
 namespace App\Entity\Traits;
 
-use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-use App\Entity\Traits\Interfaces\HasWorkersInterface;
 
 /**
- * Trait to implement WorkersTrait property.
+ * Trait to implement IsWorkerTrait property.
  *
- * @see HasWorkersInterface
+ * @see HasIsWorkerInterface
  */
-trait WorkersTrait
+trait IsWorkerTrait
 {
 
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="business", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\Column(type="boolean", options={ "default": false })
      */
-    protected Collection $workers;
+    protected bool $isWorker;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return Collection Collection
+     * @return bool bool
      */
-    public function getWorkers(): Collection
+    public function getIsWorker(): bool
     {
-        return $this->workers;
+        return $this->isWorker;
+    }
+
+    /**
+     * @inheritDoc
+     * @return $this $this
+     */
+    public function setIsWorker(bool $isWorker): self
+    {
+        $this->isWorker = $isWorker;
+
+        return $this;
     }
 
     /************************************************* CONSTRUCT **************************************************/
 
     /**
-     *  WorkersTrait constructor.
+     * IsWorkerTrait constructor.
      *
+     * @param bool $isWorker Boolean to know if the user is worker.
      */
-    public function __construct()
+    public function __construct(bool $isWorker)
     {
-        $this->workers = new ArrayCollection();
+        $this->setIsWorker($isWorker);
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
@@ -54,7 +62,7 @@ trait WorkersTrait
     public function __toArray(): array
     {
         return array(
-            'workers' => $this->getWorkers()
+            'isWorker' => $this->getIsWorker(),
         );
     }
 
