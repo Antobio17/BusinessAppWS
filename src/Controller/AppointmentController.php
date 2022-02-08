@@ -59,8 +59,8 @@ class AppointmentController extends AppController implements AppointmentControll
         # Data Validation
         $validationErrors = $this->validateRequestStatusField($status, Appointment::getStatusChoices());
         $validationErrors = array_merge($validationErrors, $this->validateRequestDateFields(array(
-            'startDate' => $startDate,
-            'endDate' => $endDate,
+            static::REQUEST_FIELD_START_DATE => $startDate,
+            static::REQUEST_FIELD_END_DATE => $endDate,
         )));
 
         $data = NULL;
@@ -138,7 +138,9 @@ class AppointmentController extends AppController implements AppointmentControll
         $userEmail = $request->request->get(static::REQUEST_FIELD_USER_EMAIL);
 
         # Data Validation
-        $validationErrors = $this->validateRequestDateFields(array('bookingDateAt' => $bookingDateAt));
+        $validationErrors = $this->validateRequestDateFields(array(
+            static::REQUEST_FIELD_BOOKING_DATE_AT => $bookingDateAt
+        ));
 
         $data = NULL;
         if (empty($validationErrors)):

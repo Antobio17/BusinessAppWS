@@ -2,12 +2,13 @@
 
 namespace App\Repository;
 
+use DateTime;
 use App\Entity\Appointment;
-use App\Repository\Interfaces\AppointmentRepositoryInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\NonUniqueResultException;
 use App\Entity\Interfaces\BusinessInterface;
-use App\Repository\Interfaces\BusinessRepositoryInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use App\Repository\Interfaces\AppointmentRepositoryInterface;
 
 /**
  * @method Appointment|null find($id, $lockMode = null, $lockVersion = null)
@@ -31,6 +32,42 @@ class AppointmentRepository extends AppRepository implements AppointmentReposito
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
+
+    /**
+     * @inheritDoc
+     * @return Appointment Appointment
+     */
+    public function findByBookingDate(BusinessInterface $business, DateTime $bookingDateAt,
+                                      ?UserInterface    $user = NULL, bool $isWorker = FALSE): ?Appointment
+    {
+        $alias = 'app';
+
+        $queryBuilder = $this->createQueryBuilder($alias)
+            ->andWhere(sprintf('%s.business = :business', $alias))
+            ->setParameter('business', $business->getID())
+            ->andWhere(sprintf('%s.bookingDateAt = :bookingDateAt', $alias))
+            ->setParameter('bookingDateAt', $bookingDateAt);
+
+        if ($user !== NULL):
+            if ($isWorker):
+                $property = 'worker';
+            else:
+                $property = 'user';
+            endif;
+            /** @noinspection PhpUndefinedMethodInspection */
+            $queryBuilder->andWhere(sprintf('%s.%s = :%s', $alias, $property, $property))
+                ->setParameter($property, $user->getID());
+        endif;
+
+        try {
+            $appointment = $queryBuilder->orderBy(sprintf('%s.id', $alias), 'ASC')
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+        }
+
+        return $appointment ?? NULL;
+    }
 
     /*********************************************** STATIC METHODS ***********************************************/
 

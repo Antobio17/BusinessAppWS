@@ -2,15 +2,16 @@
 
 namespace App\Service;
 
-use App\Entity\AppError;
-use App\Entity\User;
-use DateInterval;
+use Exception;
 use DateTime;
+use DateInterval;
+use App\Entity\User;
+use App\Entity\AppError;
 use App\Entity\Appointment;
 use App\Helper\ToolsHelper;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Service\Interfaces\AppointmentServiceInterface;
-use Exception;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class AppointmentService extends AppService implements AppointmentServiceInterface
 {
@@ -142,43 +143,27 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
         endif;
 
         $appointment = NULL;
-        if ($user !== NULL && $worker !== NULL):
+        if ($user !== NULL):
             # BookingDate validations
-            $appointmentDuration = $this->getBusiness()->getAppointmentDuration() - 1;
-            $businessAppointments = NULL;
-            try {
-                if (
-                    $bookingDateAt < $this->getBusiness()->getOpensAt()
-                    || $bookingDateAt > $this->getBusiness()->getClosesAt()
-                ):
-                    $this->registerAppError(
-                        $method,
-                        AppError::ERROR_APPOINTMENT_BOOK_ERROR,
-                        'Error al intentar reservar la cita: 
-                        la hora de reserva está fuera de horario de trabajo',
-                    );
-                else:
-                    $businessAppointments = $this->getAppointmentRepository()->findByStatus(
-                        $this->getBusiness(),
-                        NULL,
-                        NULL,
-                        FALSE,
-                        $bookingDateAt->sub(new DateInterval(sprintf('PT%dM', $appointmentDuration))),
-                        $bookingDateAt->add(new DateInterval(sprintf('PT%dM', $appointmentDuration)))
-                    );
-                endif;
-            } catch (Exception $e) {
+            if (
+                $bookingDateAt->format("h:m:s") < $this->getBusiness()->getOpensAt()
+                || $bookingDateAt->format("h:m:s") > $this->getBusiness()->getClosesAt()
+            ):
                 $this->registerAppError(
                     $method,
-                    AppError::ERROR_APPOINTMENT_BOOK_DATE_INTERVAL,
-                    'Error al calcular un intervalo para las comprobaciones de reserva de cita',
-                    $e->getCode(),
-                    $e->getMessage(),
-                    $e->getTrace()
+                    AppError::ERROR_APPOINTMENT_BOOK_ERROR,
+                    'Error al intentar reservar la cita: 
+                        la hora de reserva está fuera de horario de trabajo',
                 );
-            }
+            elseif (($worker = $this->_getAvailableWorker($bookingDateAt, $worker)) === NULL):
+                $this->registerAppError(
+                    $method,
+                    AppError::ERROR_APPOINTMENT_BOOK_ERROR,
+                    'Error al intentar reservar la cita: trabajador no disponible',
+                );
+            endif;
 
-            if (empty($businessAppointments)):
+            if ($worker !== NULL):
                 $appointment = new Appointment(
                     $this->getBusiness(),
                     $user,
@@ -186,12 +171,6 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
                     $bookingDateAt
                 );
                 $this->persistAndFlush($appointment);
-            elseif (empty($this->getErrors())):
-                $this->registerAppError(
-                    $method,
-                    AppError::ERROR_APPOINTMENT_BOOK_ERROR,
-                    'Error al intentar reservar la cita: no hay margen suficiente para reservar la cita',
-                );
             endif;
         endif;
 
@@ -199,6 +178,54 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
+
+    /**
+     * Check if there is an available worker in the business for appointment booking.
+     * If a worker is specified as a parameter, it is checked if that worker is available.
+     *
+     * @param DateTime $bookingDateAt Date of the book.
+     * @param UserInterface|null $worker Worker in charge of the appointment.
+     *
+     * @return UserInterface|null UserInterface|null
+     */
+    protected function _getAvailableWorker(DateTime $bookingDateAt, ?UserInterface $worker = NULL): ?UserInterface
+    {
+        $appointmentDuration = $this->getBusiness()->getAppointmentDuration() - 1;
+        if ($worker === NULL):
+            $workers = $this->getBusiness()->getWorkers();
+        else:
+            $workers = array($worker);
+        endif;
+
+        try {
+            foreach ($workers as $businessWorker):
+                if (
+                    empty($this->getAppointmentRepository()->findByStatus(
+                        $this->getBusiness(),
+                        NULL,
+                        $businessWorker,
+                        TRUE,
+                        $bookingDateAt->sub(new DateInterval(sprintf('PT%dM', $appointmentDuration))),
+                        $bookingDateAt->add(new DateInterval(sprintf('PT%dM', $appointmentDuration)))
+                    ))
+                ):
+                    $availableWorker = $businessWorker;
+                    break;
+                endif;
+            endforeach;
+        } catch (Exception $e) {
+            $this->registerAppError(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
+                AppError::ERROR_APPOINTMENT_BOOK_ERROR,
+                'Error al calcular un intervalo para las comprobaciones de reserva de cita',
+                $e->getCode(),
+                $e->getMessage(),
+                $e->getTrace()
+            );
+        }
+
+        return $availableWorker ?? NULL;
+    }
 
     /*********************************************** STATIC METHODS ***********************************************/
 
