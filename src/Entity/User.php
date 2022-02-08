@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Entity\Interfaces\BusinessContextInterface;
 use App\Entity\Interfaces\BusinessInterface;
+use App\Entity\Traits\Interfaces\HasIsWorkerInterface;
+use App\Entity\Traits\IsWorkerTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use App\Entity\Traits\NameTrait;
@@ -45,7 +47,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  */
 class User extends AbstractBusinessContext implements BusinessContextInterface, UserInterface,
     PasswordAuthenticatedUserInterface, HasEmailInterface, HasPasswordInterface, HasPhoneNumberInterface,
-    HasNameInterface, HasSurnameInterface, HasPostalAddressInterface
+    HasNameInterface, HasSurnameInterface, HasPostalAddressInterface, HasIsWorkerInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
@@ -85,6 +87,11 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
         PostalAddressTrait::__toArray as protected __postalAddressToArray;
     }
 
+    use IsWorkerTrait {
+        IsWorkerTrait::__construct as protected __isWorkerConstruct;
+        IsWorkerTrait::__toArray as protected __isWorkerToArray;
+    }
+
     /**
      * @ORM\Column(type="json")
      */
@@ -105,7 +112,7 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
      *
      */
     public function __construct(BusinessInterface $business, string $email, string $password, string $phoneNumber,
-                                string $name, string $surname, array $roles = array())
+                                string $name, string $surname, array $roles = array(), bool $isWorker = FALSE)
     {
         parent::__construct($business);
 
@@ -114,6 +121,7 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
         $this->__phoneNumberConstruct($phoneNumber);
         $this->__nameConstruct($name);
         $this->__surnameConstruct($surname);
+        $this->__isWorkerConstruct($isWorker);
 
         $this->setRoles(empty($roles) ? array(static::ROLE_USER) : $roles);
     }
@@ -194,6 +202,7 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
             $this->__nameToArray(),
             $this->__surnameToArray(),
             $this->__postalAddressToArray(),
+            $this->__isWorkerToArray(),
             array(
                 'roles' => $this->getRoles(),
             )

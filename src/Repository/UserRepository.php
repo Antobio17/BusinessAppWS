@@ -2,11 +2,11 @@
 
 namespace App\Repository;
 
-use App\Entity\Interfaces\BusinessInterface;
 use App\Entity\User;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\NonUniqueResultException;
+use App\Entity\Interfaces\BusinessInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -65,8 +65,31 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
                 ->orderBy($alias . '.id', 'ASC')
                 ->getQuery()
                 ->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {}
+        } catch (NonUniqueResultException $e) {
+        }
 
         return $user ?? NULL;
     }
+
+    /**
+     * Finds the users of the business specified.
+     *
+     * @param BusinessInterface $business Business to which the user belongs.
+     * @param bool $isWorkers Boolean to get only the workers of the business.
+     *
+     * @return array array
+     */
+    public function findByBusiness(BusinessInterface $business, bool $isWorkers): array
+    {
+        $alias = 'usr';
+
+        return $this->createQueryBuilder($alias)
+            ->andWhere(sprintf('%s.business = :business', $alias))
+            ->setParameter('business', $business)
+            ->andWhere(sprintf('%s.isWorker = :isWorker', $alias))
+            ->setParameter('isWorker', $isWorkers)
+            ->getQuery()
+            ->execute();
+    }
+
 }

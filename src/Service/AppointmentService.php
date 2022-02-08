@@ -192,7 +192,7 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
     {
         $appointmentDuration = $this->getBusiness()->getAppointmentDuration() - 1;
         if ($worker === NULL):
-            $workers = $this->getBusiness()->getWorkers();
+            $workers = $this->getUserRepository()->findByBusiness($this->getBusiness(), TRUE);
         else:
             $workers = array($worker);
         endif;
