@@ -125,12 +125,13 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
                 'Error al intentar reservar una cita por trabajador: no se indicó el email de usuario'
             );
         else:
-            $user = $this->getUser();
             if (
-                !empty($this->getAppointmentRepository()->findByStatus(
+                empty($this->getAppointmentRepository()->findByStatus(
                     $this->getBusiness(), Appointment::STATUS_PENDING, $this->getUser()
                 ))
             ):
+                $user = $this->getUser();
+            else:
                 $this->registerAppError(
                     $method,
                     AppError::ERROR_APPOINTMENT_BOOK_ALREADY_EXIST,
@@ -140,11 +141,11 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
         endif;
 
         $appointment = NULL;
-        if ($user !== NULL):
+        if ($user !== NULL && empty($this->getErrors())):
             # BookingDate validations
             if (
-                $bookingDateAt->format("h:m:s") < $this->getBusiness()->getOpensAt()
-                || $bookingDateAt->format("h:m:s") > $this->getBusiness()->getClosesAt()
+                $bookingDateAt->format("H:m:s") < $this->getBusiness()->getOpensAt()
+                && $bookingDateAt->format("H:m:s") > $this->getBusiness()->getClosesAt()
             ):
                 $this->registerAppError(
                     $method,
@@ -159,7 +160,7 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
                 );
             endif;
 
-            if ($worker !== NULL):
+            if ($worker !== NULL && empty($this->getErrors())):
                 $appointment = new Appointment(
                     $this->getBusiness(),
                     $user,
