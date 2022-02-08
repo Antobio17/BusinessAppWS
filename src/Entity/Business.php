@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\NameTrait;
 use Doctrine\ORM\Mapping\Column;
 use App\Entity\Traits\DomainTrait;
+use App\Entity\Traits\WorkersTrait;
 use App\Repository\BusinessRepository;
 use App\Entity\Traits\PhoneNumberTrait;
 use App\Entity\Traits\PostalAddressTrait;
@@ -56,6 +56,10 @@ class Business extends AbstractORM implements BusinessInterface
         PostalAddressTrait::__toArray as protected __postalAddressToArray;
     }
 
+    use WorkersTrait {
+        WorkersTrait::__construct as protected __workersConstruct;
+    }
+
     use BusinessConfigTrait {
         BusinessConfigTrait::__construct as protected __configConstruct;
         BusinessConfigTrait::__toArray as protected __configToArray;
@@ -82,6 +86,7 @@ class Business extends AbstractORM implements BusinessInterface
         $this->__nameConstruct($name);
         $this->__phoneNumberConstruct($phoneNumber);
         $this->__postalAddressConstruct($postalAddress);
+        $this->__workersConstruct();
         $this->__configConstruct($opensAt, $closesAt, $appointmentDuration);
     }
 

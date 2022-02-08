@@ -9,12 +9,13 @@ use App\Entity\Traits\Interfaces\HasClosesAtInterface;
 use App\Entity\Traits\Interfaces\HasPhoneNumberInterface;
 use App\Entity\Traits\Interfaces\HasPostalAddressInterface;
 use App\Entity\Traits\Interfaces\HasBusinessConfigInterface;
+use App\Entity\Traits\Interfaces\HasWorkersInterface;
 
 /**
  * Business interface.
  */
 interface BusinessInterface extends HasDomainInterface, HasNameInterface, HasPhoneNumberInterface,
-    HasPostalAddressInterface, HasBusinessConfigInterface
+    HasPostalAddressInterface, HasBusinessConfigInterface, HasWorkersInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
