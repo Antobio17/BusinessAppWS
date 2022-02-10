@@ -52,7 +52,7 @@ abstract class AppRepository extends ServiceEntityRepository implements AppRepos
      */
     public function findByStatus(BusinessInterface $business, ?int $status = NULL, ?UserInterface $user = NULL,
                                  bool              $isWorker = FALSE, ?DateTime $startDate = NULL,
-                                 ?DateTime         $endDate = NULL): array
+                                 ?DateTime         $endDate = NULL, bool $resultAsArray = TRUE): array
     {
         $alias = 'ety';
 
@@ -71,7 +71,7 @@ abstract class AppRepository extends ServiceEntityRepository implements AppRepos
             else:
                 $property = 'user';
             endif;
-            /** @noinspection PhpUndefinedMethodInspection */
+            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
             $queryBuilder->andWhere(sprintf('%s.%s = :%s', $alias, $property, $property))
                 ->setParameter($property, $user->getID());
         endif;
@@ -84,9 +84,16 @@ abstract class AppRepository extends ServiceEntityRepository implements AppRepos
                 ->setParameter('endDate', $endDate);
         endif;
 
-        return $queryBuilder->orderBy(sprintf('%s.id', $alias), 'ASC')
-            ->getQuery()
-            ->getArrayResult();
+        $query = $queryBuilder->orderBy(sprintf('%s.id', $alias), 'ASC')
+            ->getQuery();
+
+        if ($resultAsArray):
+            $result = $query->getArrayResult();
+        else:
+            $result = $query->execute();
+        endif;
+
+        return $result;
     }
 
     /*********************************************** STATIC METHODS ***********************************************/

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Interfaces\AppointmentInterface;
 use Exception;
 use DateTime;
 use DateInterval;
@@ -107,38 +108,8 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
         $user = NULL;
         $worker = NULL;
 
-        # User validations
-        if (in_array(User::ROLE_WORKER, $this->getUser()->getRoles()) && $userEmail !== NULL):
-            $worker = $this->getUser();
-            $user = $this->getUserRepository()->findByEmail($this->getBusiness(), $userEmail);
-            if ($user === NULL):
-                $this->registerAppError(
-                    $method,
-                    AppError::ERROR_APPOINTMENT_BOOK_USER_UNDEFINED,
-                    'Error al intentar reservar una cita por trabajador: el email introducido no pertenece a ningún usuario'
-                );
-            endif;
-        elseif (in_array(User::ROLE_WORKER, $this->getUser()->getRoles())):
-            $this->registerAppError(
-                $method,
-                AppError::ERROR_APPOINTMENT_BOOK_USER_NOT_EXIST,
-                'Error al intentar reservar una cita por trabajador: no se indicó el email de usuario'
-            );
-        else:
-            if (
-                empty($this->getAppointmentRepository()->findByStatus(
-                    $this->getBusiness(), Appointment::STATUS_PENDING, $this->getUser()
-                ))
-            ):
-                $user = $this->getUser();
-            else:
-                $this->registerAppError(
-                    $method,
-                    AppError::ERROR_APPOINTMENT_BOOK_ALREADY_EXIST,
-                    'Error al intentar reservar una cita: ya existe una cita pendiente para el usuario'
-                );
-            endif;
-        endif;
+        # User validation
+        $this->_validateUsersForBookAppointment($user, $worker, $userEmail);
 
         $appointment = NULL;
         if ($user !== NULL && empty($this->getErrors())):
@@ -171,7 +142,24 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
             endif;
         endif;
 
-        return empty($this->getErrors()) ? $appointment : NULL;
+        return $appointment;
+    }
+
+    /**
+     * @inheritDoc
+     * @return bool bool
+     */
+    public function cancelUserBookedAppointment(?string $userEmail = NULL): bool
+    {
+        $appointment = $this->_getAppointmentForCancellation($userEmail);
+
+        $cancelled = FALSE;
+        if ($appointment !== NULL):
+            $appointment->setStatus(Appointment::STATUS_CANCELLED);
+            $cancelled = $this->persistAndFlush($appointment);
+        endif;
+
+        return $cancelled;
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
@@ -226,6 +214,118 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
         }
 
         return $availableWorker ?? NULL;
+    }
+
+    /**
+     * Validates the users of an appointment (client and worker) and returns them by reference.
+     *
+     * @param UserInterface|null $user The client of the appointment.
+     * @param UserInterface|null $worker The worker of the appointment.
+     * @param string|null $userEmail User's email in case the management is made by the worker.
+     */
+    protected function _validateUsersForBookAppointment(?UserInterface &$user, ?UserInterface &$worker, ?string $userEmail)
+    {
+        $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
+
+        if (in_array(User::ROLE_WORKER, $this->getUser()->getRoles()) && $userEmail !== NULL):
+            $worker = $this->getUser();
+            $user = $this->getUserRepository()->findByEmail($this->getBusiness(), $userEmail);
+            if ($user === NULL):
+                $this->registerAppError(
+                    $method,
+                    AppError::ERROR_APPOINTMENT_BOOK_USER_UNDEFINED,
+                    'Error al intentar reservar una cita por trabajador: el email introducido no pertenece a ningún usuario'
+                );
+            endif;
+        elseif (in_array(User::ROLE_WORKER, $this->getUser()->getRoles())):
+            $this->registerAppError(
+                $method,
+                AppError::ERROR_APPOINTMENT_BOOK_USER_NOT_EXIST,
+                'Error al intentar reservar una cita por trabajador: no se indicó el email de usuario'
+            );
+        else:
+            $user = $this->getUser();
+        endif;
+
+        if ($user !== NULL):
+            if (
+                empty($this->getAppointmentRepository()->findByStatus(
+                    $this->getBusiness(), Appointment::STATUS_PENDING, $user
+                ))
+            ):
+                $user = $this->getUser();
+            else:
+                $this->registerAppError(
+                    $method,
+                    AppError::ERROR_APPOINTMENT_BOOK_ALREADY_EXIST,
+                    'Error al intentar reservar una cita: ya existe una cita pendiente para el usuario'
+                );
+            endif;
+        endif;
+    }
+
+    /**
+     * Get the appointment of a user to cancel it.
+     *
+     * @param string|null $userEmail User's email in case the management is made by the worker.
+     *
+     * @return AppointmentInterface|null AppointmentInterface|null
+     */
+    protected function _getAppointmentForCancellation(?string $userEmail): ?Appointment
+    {
+        $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
+
+        $appointment = NULL;
+        $worker = NULL;
+        if (in_array(User::ROLE_WORKER, $this->getUser()->getRoles()) && $userEmail !== NULL):
+            $worker = $this->getUser();
+            $user = $this->getUserRepository()->findByEmail($this->getBusiness(), $userEmail);
+            if ($user === NULL):
+                $this->registerAppError(
+                    $method,
+                    AppError::ERROR_APPOINTMENT_BOOK_USER_UNDEFINED,
+                    'Error al intentar cancelar una cita por trabajador: el email introducido no pertenece a ningún usuario'
+                );
+            endif;
+        elseif (in_array(User::ROLE_WORKER, $this->getUser()->getRoles())):
+            $user = NULL;
+            $this->registerAppError(
+                $method,
+                AppError::ERROR_APPOINTMENT_BOOK_USER_NOT_EXIST,
+                'Error al intentar cancelar una cita por trabajador: no se indicó el email de usuario'
+            );
+        else:
+            $user = $this->getUser();
+        endif;
+
+        if ($user !== NULL):
+            if (
+                !empty($appointments = $this->getAppointmentRepository()->findByStatus(
+                    $this->getBusiness(), Appointment::STATUS_PENDING, $user,
+                    FALSE, NULL, NULL, FALSE
+                ))
+            ):
+                $appointment = $appointments[0];
+                if (
+                    $worker !== NULL
+                    && $worker->getUserIdentifier() !== $appointment->getWorker()->getUserIdentifier()
+                ):
+                    $this->registerAppError(
+                        $method,
+                        AppError::ERROR_APPOINTMENT_BOOK_ALREADY_EXIST,
+                        'Error al intentar cancelar una cita por trabajador: el trabajador asignado a la cita no corresponde con el actual'
+                    );
+                endif;
+            else:
+                $this->registerAppError(
+                    $method,
+                    AppError::ERROR_APPOINTMENT_BOOK_ALREADY_EXIST,
+                    'Error al intentar cancelar una cita: el usuario no tiene citas reservadas para cancelar'
+                );
+            endif;
+        endif;
+
+        return $appointment;
     }
 
     /*********************************************** STATIC METHODS ***********************************************/

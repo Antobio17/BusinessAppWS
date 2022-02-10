@@ -48,6 +48,15 @@ interface AppointmentControllerInterface extends HasAppointmentServiceInterface
      */
     public function bookUserAppointment(Request $request): Response;
 
+    /**
+     * Route to cancel a user's booked appointment.
+     *
+     * @param Request $request Request of the route.
+     *
+     * @return JsonResponse JsonResponse
+     */
+    public function cancelUserBookedAppointment(Request $request): Response;
+
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /*********************************************** PUBLIC METHODS ***********************************************/
