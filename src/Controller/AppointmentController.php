@@ -157,6 +157,25 @@ class AppointmentController extends AppController implements AppointmentControll
         );
     }
 
+    /**
+     * @Route("/api/cancel/book/user/appointment")
+     *
+     * @inheritDoc
+     * @return JsonResponse JsonResponse
+     */
+    public function cancelUserBookedAppointment(Request $request): Response
+    {
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+        $userEmail = $request->request->get(static::REQUEST_FIELD_USER_EMAIL);
+
+        $cancelled = FALSE;
+        if ($this->getAppointmentService()->setBusinessContext($domain)):
+            $cancelled = $this->getAppointmentService()->cancelUserBookedAppointment($userEmail);
+        endif;
+
+        return $this->createJsonResponse($cancelled, array(), $this->getAppointmentService());
+    }
+
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /********************************************** PROTECTED METHODS *********************************************/

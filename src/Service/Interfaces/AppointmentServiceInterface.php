@@ -34,7 +34,7 @@ interface AppointmentServiceInterface extends AppServiceInterface
     public function getUserAppointments($status, bool $isWorker = FALSE): ?array;
 
     /**
-     * Book a user's appointment if it is a valid date for the reservation
+     * Book a user's appointment if it is a valid date for the reservation.
      *
      * @param DateTime $bookingDateAt The dato of the book.
      * @param string|null $userEmail User's email in case the reservation is made by the worker.
@@ -43,6 +43,14 @@ interface AppointmentServiceInterface extends AppServiceInterface
      */
     public function bookUserAppointment(DateTime $bookingDateAt, ?string $userEmail = NULL): ?Appointment;
 
+    /**
+     * Cancel a user's book appointment in case the user have one.
+     *
+     * @param string|null $userEmail User's email in case the cancellation is made by the worker.
+     *
+     * @return bool bool
+     */
+    public function cancelUserBookedAppointment(?string $userEmail = NULL): bool;
 
     /*********************************************** STATIC METHODS ***********************************************/
 

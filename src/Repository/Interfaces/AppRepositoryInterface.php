@@ -30,12 +30,15 @@ interface AppRepositoryInterface
      * @param int|null $status Status of the entity.
      * @param UserInterface|null $user User of the entity.
      * @param bool $isWorker Boolean to know if the user is a worker.
+     * @param DateTime|null $startDate The start date to search.
+     * @param DateTime|null $endDate The end date to search.
+     * @param bool $resultAsArray Boolean to return the result as array or as an entity.
      *
      * @return array array
      */
     public function findByStatus(BusinessInterface $business, ?int $status = NULL, ?UserInterface $user = NULL,
                                  bool              $isWorker = FALSE, ?DateTime $startDate = NULL,
-                                 ?DateTime         $endDate = NULL): array;
+                                 ?DateTime         $endDate = NULL, bool $resultAsArray = TRUE): array;
 
     /*********************************************** STATIC METHODS ***********************************************/
 
