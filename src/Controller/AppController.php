@@ -91,7 +91,10 @@ class AppController extends AbstractController implements AppControllerInterface
             if ($date !== NULL && !is_numeric($date)):
                 $validationErrors[] = array(
                     'field' => $fieldName,
-                    'message' => sprintf('The %s field must be an integer (timestamp) or null', $fieldName)
+                    'message' => sprintf(
+                        'El campo %s debe de ser de tipo entero (timestamp) o nulo',
+                        $fieldName
+                    )
                 );
             endif;
         endforeach;
