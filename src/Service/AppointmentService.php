@@ -123,6 +123,12 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
                     AppError::ERROR_APPOINTMENT_BOOK_ERROR,
                     'Error al intentar reservar la cita: la hora de reserva está fuera de horario de trabajo',
                 );
+            elseif ($bookingDateAt < date_create()):
+                $this->registerAppError(
+                    $method,
+                    AppError::ERROR_APPOINTMENT_BOOK_ERROR,
+                    'Error al intentar reservar la cita: no se puede reservar una cita anterior a la actual',
+                );
             elseif (($worker = $this->_getAvailableWorker($bookingDateAt, $worker)) === NULL):
                 $this->registerAppError(
                     $method,
