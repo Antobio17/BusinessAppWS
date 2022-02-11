@@ -197,7 +197,7 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
                 if (
                     empty($this->getAppointmentRepository()->findByStatus(
                         $this->getBusiness(),
-                        NULL,
+                        Appointment::STATUS_PENDING,
                         $businessWorker,
                         TRUE,
                         $startAt,
@@ -255,12 +255,10 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
 
         if ($user !== NULL):
             if (
-                empty($this->getAppointmentRepository()->findByStatus(
+                !empty($this->getAppointmentRepository()->findByStatus(
                     $this->getBusiness(), Appointment::STATUS_PENDING, $user
                 ))
             ):
-                $user = $this->getUser();
-            else:
                 $this->registerAppError(
                     $method,
                     AppError::ERROR_APPOINTMENT_BOOK_ALREADY_EXIST,
