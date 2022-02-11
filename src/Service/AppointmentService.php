@@ -314,6 +314,7 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
                     $worker !== NULL
                     && $worker->getUserIdentifier() !== $appointment->getWorker()->getUserIdentifier()
                 ):
+                    $appointment = NULL;
                     $this->registerAppError(
                         $method,
                         AppError::ERROR_APPOINTMENT_BOOK_ALREADY_EXIST,
