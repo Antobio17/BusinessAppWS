@@ -2,3 +2,72 @@
 
 El software libre y sus licencias \cite{gplv3} ha permitido llevar a cabo una expansión del
 aprendizaje de la informática sin precedentes.
+
+\section{Aplicaciones actuales}
+
+En la actualidad existen diversas páginas para la reserva de citas en distintos negocios de cita previa:
+
+\vspace{-0.5em}
+\begin{itemize}
+    \item \textbf{miCita}: Aplicación móvil desarrollada con el propósito de gestionar el apartado de citas de un
+    negocio o empresa. En ella se rellenaran los datos del propio negocio con un asistente de configuración donde
+    se completará información como los servicios ofrecidos y horarios. Los clientes podrán reservar su cita y
+    observar el calendario en tiempo real desde la aplicación. Para acceder a está funcionalidades como cliente
+    se debera abonar una cuota mensual de \textbf{19,90\euro/mes (IVA no incluido)}.\cite{micita}
+
+    \item \textbf{Reservio}: Aplicación web para la gestión de reservas o citas en un negocio.
+    Con un calendario para la reservas se podrá acceder como trabajador o como cliente permitiendo la reserva online.
+    Además tendrá la posibilidad de gestionar los perfiles de los clientes  y estos podrán ser recompensados
+    con pases en bas a la fidelidad. Esta aplicación también incluye asistencia de negocio con estadísticas y
+    recordatorios via SMS.\cite{reservio}
+
+    \item \textbf{Barberius}: Barberius es una tienda online de venta de productos de barbería.
+    Dispone de un gran catálogo de productos a los que se podrán aplicar filtros a nuestras búsquedas
+    para encontrar fácilmente lo que necesitemos. Se podrán hacer pedidos de los productos seleccionados
+    teniendo un seguimiento de nuestras compras gracias al inicio de sesión con un perfil personal.\cite{barberius}
+\end{itemize}
+
+\subsection{Crítica al estado del arte}
+
+Las aplicaciones mencionadas en el apartado anterior son los subconjuntos necesario para la creación de este proyecto.
+Las dos primeras incluyen la gestión de citas, y usuario (en el caso de \textit{Reservio}). La tercera web constituye
+la parte de la venta online, donde se gestiona todo lo relacionado con pedidos, pagos, envíos, etc:
+
+\vspace{-0.5em}
+
+\begin{itemize}
+    \item \textbf{miCita}: un punto negativo al usar una aplicación como esta es que no tienes una interfaz propia
+    que te diferencie de otras tiendas que usen esta mismo medio.
+
+    \item \textbf{Reservio}: .
+
+    \item \textbf{Barberius}: .
+\end{itemize}
+
+\section{Propuesta}
+Teniendo en cuenta la situación actual sobre el estado del arte en lo referente a aplicaciones para
+gestión de negocios de cita previa, se propone crear un sistema genérico que permita la administración
+de estos. La principal finalidad del proyecto es conseguir un sistema sólido y unificado, en el que se
+puedan integrar todos los negocios que se deseen (de características similares) de una manera sencilla.
+
+No obstante al hacer una separación entre Front-End y Back-End será posible hacer única cada web si se
+desea aunque internamente estén montadas con la misma estructura de datos.
+
+Además de la gestión de citas se incluirán las funcionalidades necesarias para la implementación de una
+tienda online en el que cada negocio podrá vender sus productos sin necesidad de atarse únicamente
+a sus clientes locales.
+
+Para la parte del Back-End se creara una vista de administración con roles de usuario:
+
+\vspace{-0.5em}
+\begin{itemize}
+    \item Cada negocio deberá tener un usuario \textbf{administrador} que podrá acceder a los datos
+    almacenados referentes únicamente a su negocio.
+
+    \item Existirá un \textbf{super administrador} que acceda al total de los datos del aplicativo
+    para su gestión y control de errores.
+\end{itemize}
+
+En este tipo de administración se podrán crear funcionalidades al gusto para hacer correcciones o
+cualquier tipo de necesidad, siendo también posible la accesibilidad por roles de usuario.
+Los clientes solo podrán acceder a sus datos desde los diferentes sitios webs creados.
