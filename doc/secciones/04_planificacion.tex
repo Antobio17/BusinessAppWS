@@ -2,7 +2,51 @@
 
 \section{Metodología utilizada}
 
+Para el desarrollo de este proyecto se ha elegido como metodología el \textbf{Desarrollo Ágil}.
+En mi opinión, ete tipo de enfoque se acerca más al que desarrollan las empresas en la actualidad, donde se
+definen sprints en los que los requisitos y soluciones van evolucionando según la necesidad del proyecto.
+No obstante cada iteración deberá tener su planificación, análisis de requisitos, diseño, tests, etc.
 
 \section{Temporización}
 
+La temporización general de este proyecto va a estar dividida en dos: construcción del Web Service para la
+gestión de los datos del aplicativo y la creación de un entorno Front-End para los usuarios. A su vez estos dos
+objetivos principales estarán divididos en diferentes hitos para realizar un desarrollo progresivo.
+
+\vspace{0.5em}
+\begin{itemize}
+    \item \textbf{Web Service}:
+        \begin{itemize}
+            \item \textbf{Gestión de citas previas}: En este primer hito se completará toda la funcionalidad referente
+            a la gestión de cita previa. Contendrá todo lo necesario para que desde la aplicación Webs se puedan
+            realizar operaciones como reserva de citas por parte de usuarios; obtención de histórico de citas ya
+            sea del negocio, usuarios o trabajadores; cancelación de citas; así como todas las comprobaciones y
+            controles para la gestión de estas citas. De la mano de este hito se completará también la gestión
+            de inicio de sesión de usuario y la encriptación de datos privados en la base de datos del aplicativo.
+
+            \item \textbf{Dockerización e Integración Continua}: Este hito no hace aportación de nueva funcionalidad
+            para el Web Service en construcción pero si es una parte esencial del proyecto. El objetivo de desplegar un
+            contenedor docker de \textbf{tests} es poder tener una batería de test para la aplicación y mediante
+            Github Actions, que será el Sistema de Integración Continua elegido, lanzar estos tests en los commits
+            que se vayan realizando en el desarrollo del proyecto. Así nos aseguraremos que en toda nueva funcionalidad
+            creada o mejoras de código se realizan las acciones deseadas.
+
+            \item \textbf{Gestión de venta de productos online}: Una vez finalizadas las dos etapas anteriores
+            pasaremos a desarrollar otro de los puntos principales del problema, la gestión de venta online de
+            productos. En este hito se deberá implementar la gestión de los pedidos que lleguen desde la aplicación
+            Front-End de los usuarios de las Webs.
+
+            \item \textbf{Administración Back-End}: Por último se va a añadir para el Back-End desarrollado una vista
+            de administración para poder acceder a todos los datos registrados por cada negocio. Además se podrán
+            añadir funcionalidades para los trabajadores o un panel de estadísticas donde ver información relevante.
+        \end{itemize}
+    \item \textbf{Aplicación Web/Móvil}:
+    \begin{itemize}
+                \item \textbf{Interfaz para la reserva de citas}:
+
+                \item \textbf{Interfaz para las compras online de productos}:
+
+                \item \textbf{Interfaz para perfil de usuario}:
+            \end{itemize}
+\end{itemize}
 \section{Seguimiento del desarrollo}
