@@ -76,4 +76,4 @@ jobs:
       - name: Run functionnal and unit tests
         run: |
           chmod a+x bin/phpunit
-          bin/phpunit
+          bin/phpunit tests
