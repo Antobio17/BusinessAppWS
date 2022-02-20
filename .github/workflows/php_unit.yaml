@@ -10,16 +10,6 @@ jobs:
     name: Symfony 5.4 (PHP ${{ matrix.php-versions }})
     # https://hub.docker.com/_/ubuntu/
     runs-on: ubuntu-20.04
-    services:
-      # https://docs.docker.com/samples/library/mysql/
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: root
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-      # https://hub.docker.com/_/elasticsearch/
     strategy:
       fail-fast: true
       matrix:
@@ -60,6 +50,12 @@ jobs:
         run: |
           chmod a+x bin/console
           bin/console about
+
+      ## —— Doctrine 🎵 —————————————————————————————————————————————————————————————
+      - name: Create BBDD
+        run: |
+          bin/console doctrine:database:create --env=test
+          bin/console doctrine:schema:update --env=test --force
 
       ## —— JWT 💫 —————————————————————————————————————————————————————————————
       - name: Generate the SSL keys
