@@ -1,3 +1,5 @@
+![Tests](https://github.com/Antobio17/BusinessAppWS/actions/workflows/php_unit.yaml/badge.svg)
+
 # Trabajo de Fin de Grado: Herramienta de gestión de negocios de cita previa y venta de productos
 
 ## BusinessApp - Web Service
