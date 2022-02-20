@@ -51,7 +51,10 @@ jobs:
 
       # —— Composer 🧙‍️ —————————————————————————————————————————————————————————
       - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest --ignore-platform-req=ext-json --ignore-platform-req=ext-openssl
+        run: |
+          cp .env.ci .env.test
+          cp .env.ci .env
+          composer install --prefer-dist --no-progress --no-suggest --ignore-platform-req=ext-json --ignore-platform-req=ext-openssl
 
       # —— Symfony 🎵 ——————————————————————————————————————————————————————————
       - name: Check Symfony requirements
