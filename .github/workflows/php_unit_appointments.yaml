@@ -75,4 +75,4 @@ jobs:
 
       - name: Run functionnal and unit tests
         run: |
-          php bin/phpunit
+          bin/phpunit
