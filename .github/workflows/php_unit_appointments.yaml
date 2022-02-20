@@ -75,4 +75,4 @@ jobs:
 
       - name: Run functionnal and unit tests
         run: |
-          ./vendor/bin/phpunit --testsuite='main'
+          php bin/phpunit
