@@ -59,6 +59,7 @@ jobs:
       # —— Symfony 🎵 ——————————————————————————————————————————————————————————
       - name: Check the Symfony console
         run: |
+          chmod a+x bin/console
           bin/console about
           bin/console strangebuzz:version
 
