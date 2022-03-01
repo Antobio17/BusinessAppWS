@@ -1,2 +1,150 @@
 \chapter{Análisis del problema}
- 
+
+\section{Implicados}
+
+En esta sección vamos a centrarnos en los implicados del problema a resolver ya que estos serán los usuarios finales de
+la aplicación. Definiremos a continuación los distintos tipos de usuario:
+
+\subsection{Tipos de usuario}
+
+Los usuarios de la aplicación a desarrollar son:
+
+\begin{itemize}
+    \item Super-Administrador. Su función es gestionar la totalidad del aplicativo, teniendo acceso total a los datos
+    almacenados por cada uno de los negocios. Podrá monitorizar el correcto funcionamiento de la aplicación y realizar
+    correcciones o registrar incidencias si es necesario.
+
+    \item Administrador. Su función es gestionar los datos de un negocio. En este caso existiría un usuario
+    administrador por negocio y este tendrá acceso a los datos del mismo. Si detecta posibles errores también
+    podrá registrar incidencias.
+
+    \item Usuarios. Podrán consultar y reservar citas, así realizar pedidos en la tienda online.
+    Además tendrán acceso a todos su datos como histórico de citas o histórico de pedidos.
+\end{itemize}
+
+\subsection{Resumen de implicados}
+
+\begin{table}[H]
+\begin{tabular}{|c|l|c|l|}
+\hline
+\textbf{Nombre} & \multicolumn{1}{c|}{\textbf{Descripción}} & \textbf{Tipo} & \multicolumn{1}{c|}{\textbf{Responsabilidad}} \\ \hline
+Super-Administrador & \begin{tabular}[c]{@{}l@{}}Administrador \\ del sistema\end{tabular} & \begin{tabular}[c]{@{}c@{}}Usuario\\ producto\end{tabular} & \begin{tabular}[c]{@{}l@{}}Gestionar el sistema, moniro- \\ rizar sistema, gestionar inci- \\ dencias.\end{tabular} \\ \hline
+Administrador & \begin{tabular}[c]{@{}l@{}}Administrador \\ del negocio\end{tabular} & \begin{tabular}[c]{@{}c@{}}Usuario\\ producto\end{tabular} & \begin{tabular}[c]{@{}l@{}}Gestionar el negocio, modificar \\ datos del negocio (citas, \\ productos,...), registrar \\ incidencias.\end{tabular} \\ \hline
+Usuario & \begin{tabular}[c]{@{}l@{}}Cliente que \\ usa el sistema \\ de manera \\ convencional.\end{tabular} & \begin{tabular}[c]{@{}c@{}}Usuario\\ producto\end{tabular} & \begin{tabular}[c]{@{}l@{}}Reservar/modificar/cancelar \\ citas, realizar pedidos, \\ gestionar perfil de usuario.\end{tabular} \\ \hline
+\end{tabular}
+\caption{Resumen de implicados}
+\end{table}
+
+\subsection{Perfiles de los implicados}
+
+\textbf{Administrador}
+
+\begin{table}[H]
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Representante} & Nombre Apellidos \\ \hline
+\textbf{Descripción} & Super-Administrador \\ \hline
+\textbf{Tipo} & \begin{tabular}[c]{@{}l@{}}
+Encargado del sistema completo, con responsabilidades\\ de gestión sobre el mismo.
+\end{tabular} \\ \hline
+\textbf{Responsabilidades} & \begin{tabular}[c]{@{}l@{}}
+Gestionar el sistema correctamente: supervisar\\ los errores que puedan surgir en el aplicativo y controlar\\
+el funcionamiento.
+\end{tabular} \\ \hline
+\textbf{Criterios de éxito} & \begin{tabular}[c]{@{}l@{}}
+Que el sistema funcione adecuadamente con los pará-\\ metros óptimos y no exista información incorrecta.
+\end{tabular} \\ \hline
+\textbf{Implicación} &
+Total, pues es el encargado principal del sistema. \\ \hline
+\end{tabular}
+\caption{Perfil de implicado: Super-Administrador}
+\end{table}
+
+\textbf{Trabajador}
+
+\begin{table}[H]
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Representante} & Nombre Apellidos \\ \hline
+\textbf{Descripción} & Administrador de negocio \\ \hline
+\textbf{Tipo} & \begin{tabular}[c]{@{}l@{}}
+Encargado del negocio al que pertenece, \\
+con responsabilidades de gestión sobre el mismo.
+\end{tabular} \\ \hline
+\textbf{Responsabilidades} & \begin{tabular}[c]{@{}l@{}}
+Gestionar su negocio: supervisar\\ y controlar los datos referentes a su negocio\\ para que no aparezcan incongruencias.
+\end{tabular} \\ \hline
+\textbf{Criterios de éxito} & \begin{tabular}[c]{@{}l@{}}
+Que no se detecten errores en los datos almacenados.
+\end{tabular} \\ \hline
+\textbf{Implicación} &
+Total a nivel de negocio. \\ \hline
+\end{tabular}
+\caption{Perfil de implicado: Trabajador}
+\end{table}
+
+\textbf{Cliente}
+
+\begin{table}[H]
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Representante} & Nombre Apellidos \\ \hline
+\textbf{Descripción} & Cliente de un negocio \\ \hline
+\textbf{Tipo} & \begin{tabular}[c]{@{}l@{}}
+Hace uso del aplicativo\\ Front-End sin tener\\ conocimiento inicial de uso.
+\end{tabular} \\ \hline
+\textbf{Responsabilidades} & \begin{tabular}[c]{@{}l@{}}
+Crear su cuenta de usuario.\\
+Reservar citas.\\
+Realizar pedidos.\\
+Gestionar su perfil de usuario.\\
+\end{tabular} \\ \hline
+\textbf{Criterios de éxito} & \begin{tabular}[c]{@{}l@{}}
+Poder realizar sus\\ responsabilidades sin errores\\ y de forma sencilla.
+\end{tabular} \\ \hline
+\textbf{Implicación} &
+Total a nivel de negocio. Sin clientes no hay negocio.\\ \hline
+\end{tabular}
+\caption{Perfil de implicado: Cliente}
+\end{table}
+
+\section{Especificación de requisitos}
+
+\subsection{Requisitos funcionales}
+
+Desarrollaremos aquí los requisitos funcionales para la definición de funcionalidades del sistema de software.
+
+\begin{enumerate}[leftmargin=1.75cm,start=1,label={\bfseries RF-\arabic*.}]
+\setlength\itemsep{1em} % Aumenta el interlineado entre ítems
+    \item \textbf{Gestión de trabajadores.} Se permitirá el alta/baja con el rol de trabajador de negocio,
+    así como consultar y modificar sus datos. También podrá acceder a los datos de los clientes dados de alta
+    en el mismo negocio.
+    \begin{enumerate}[start=1,label={\bfseries RF-1.\arabic*.}]
+        \item \textbf{Alta de trabajador.} Se dará de alta a cada trabajador con sus datos personales.
+        \item \textbf{Baja de trabajador.} Se dará de baja al trabajador y la información relativa a él será eliminada.
+        \item \textbf{Consultar datos de trabajador.} Se podrá consultar los datos relativos a un determinado
+        trabajador (datos personales, citas asignadas, etc.).
+        \item \textbf{Modificar datos de trabajador.} Se podrán modificar modificar los datos personales de un
+        trabajador.
+        \item \textbf{Consultar citas de trabajador.} Se podrá consultar los citas previas asignadas al trabajador.
+    \end{enumerate}
+
+    \item \textbf{Gestión de clientes.} Se permitirá el alta/baja con el rol de usuario del sistema, así como consultar y modificar sus datos.
+    \begin{enumerate}[start=1,label={\bfseries RF-2.\arabic*.}]
+        \item \textbf{Alta de cliente.} Un cliente potencial se podrá dar de alta en un negocio determinado.
+        \item \textbf{Baja de trabajador.} Un cliente se podrá dar de baja de un negocio determinado.
+        \item \textbf{Consultar datos de cliente.} Un cliente podrá consultar sus datos de un respectivo negocio.
+        \item \textbf{Modificar datos de trabajador.} Se podrán modificar modificar los datos personales de un
+        trabajador.
+        \item \textbf{Consultar citas de trabajador.} Se podrá consultar los citas previas asignadas al trabajador.
+    \end{enumerate}
+
+    \item \textbf{Gestión de citas previas.} Se permitirá añadir uno o varios contactos favoritos y eliminarlos, así como consultar cuáles son, ordenarlos, aceptar/rechazar ser contacto favorito de otro usuario, consultar de quién se es contacto favorito y eliminarse como tal.
+    \begin{enumerate}[start=1,label={\bfseries RF-3.\arabic*.}]
+        \item \textbf{Reserva de cita previa.} Podrá reservar una cita previa para un cliente usando un identificador.
+        \item \textbf{Cancelación de cita previa.} Podrá cancelar una cita previa de un cliente en caso de que él sea
+        el trabajador asignado.
+    \end{enumerate}
+
+\end{enumerate}
+
