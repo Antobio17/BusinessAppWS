@@ -24,9 +24,9 @@ objetivos principales estarán divididos en diferentes hitos para realizar un de
             controles para la gestión de estas citas. De la mano de este hito se completará también la gestión
             de inicio de sesión de usuario y la encriptación de datos privados en la base de datos del aplicativo.
 
-            \item \textbf{Dockerización e Integración Continua}: Este hito no hace aportación de nueva funcionalidad
-            para el Web Service en construcción pero si es una parte esencial del proyecto. El objetivo de desplegar un
-            contenedor docker de \textbf{tests} es poder tener una batería de test para la aplicación y mediante
+            \item \textbf{Integración Continua}: Este hito no hace aportación de nueva funcionalidad
+            para el Web Service en construcción pero si es una parte esencial del proyecto. El objetivo
+            es poder tener una batería de test para la aplicación y mediante
             Github Actions, que será el Sistema de Integración Continua elegido, lanzar estos tests en los commits
             que se vayan realizando en el desarrollo del proyecto. Así nos aseguraremos que en toda nueva funcionalidad
             creada o mejoras de código se realizan las acciones deseadas.
@@ -42,13 +42,20 @@ objetivos principales estarán divididos en diferentes hitos para realizar un de
         \end{itemize}
     \item \textbf{Aplicación Web/Móvil}:
     \begin{itemize}
-                \item \textbf{Esqueleto y Home}:
+                \item \textbf{Esqueleto y Home}: El primer hito correspondiente al desarrollo Front-End del aplicativo
+                será la construcción del esqueleto Web (header, barra de navegación, footer, etc.) Junto con la Home
+                con información y presentación del negocio.
 
-                \item \textbf{Interfaz para la reserva de citas}:
+                \item \textbf{Interfaz para la reserva de citas}: Una vez cumplido el primer hito pasaremos al
+                desarrollo de lo referente a las citas previas. Se creará una vista donde ver las citas disponibles del
+                negocio y poder reservarlas como usuario autenticado, además de una vista individual donde ver
+                un histórico de citas reservadas y próximas citas.
 
-                \item \textbf{Interfaz para las compras online de productos}:
+                \item \textbf{Interfaz para las compras online de productos}: Por último finalizaremos este trabajo con
+                el desarrollo de la interfaz para la tienda online. Se creará una vista donde se muestren los productos
+                del negocio con los filtros correspondientes para los productos. Se podrán añadir productos al carrito
+                de compra y realizar el pago de los productos deseados para realizar los pedidos.
 
-                \item \textbf{Interfaz para perfil de usuario}:
             \end{itemize}
 \end{itemize}
 \section{Seguimiento del desarrollo}
