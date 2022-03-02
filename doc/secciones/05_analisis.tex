@@ -116,10 +116,20 @@ Desarrollaremos aquí los requisitos funcionales para la definición de funciona
 
 \begin{enumerate}[leftmargin=1.75cm,start=1,label={\bfseries RF-\arabic*.}]
 \setlength\itemsep{1em} % Aumenta el interlineado entre ítems
+    \item \textbf{Gestión de super-administradores.} Se permitirá el alta/baja con el rol de super-administrador del
+    sistema. Podrá acceder a todos los datos almacenados en este.
+    \begin{enumerate}[start=1,label={\bfseries RF-1.\arabic*.}]
+        \item \textbf{Alta de super-administrador.} Se dará de alta a cada super-administrador con sus datos personales.
+        \item \textbf{Baja de super-administrador.} Se dará de baja al super-administrador y la información relativa a
+        él será eliminada.
+        \item \textbf{Consultar datos del sistema.} Se podrán consultar todos los datos almacenados en el sistema.
+        \item \textbf{Modificar datos del sistema.} Se podrán modificar todos los datos almacenados en el sistema.
+    \end{enumerate}
+
     \item \textbf{Gestión de trabajadores.} Se permitirá el alta/baja con el rol de trabajador de negocio,
     así como consultar y modificar sus datos. También podrá acceder a los datos de los clientes dados de alta
     en el mismo negocio.
-    \begin{enumerate}[start=1,label={\bfseries RF-1.\arabic*.}]
+    \begin{enumerate}[start=1,label={\bfseries RF-2.\arabic*.}]
         \item \textbf{Alta de trabajador.} Se dará de alta a cada trabajador con sus datos personales.
         \item \textbf{Baja de trabajador.} Se dará de baja al trabajador y la información relativa a él será eliminada.
         \item \textbf{Consultar datos de trabajador.} Se podrá consultar los datos relativos a un determinado
@@ -129,22 +139,55 @@ Desarrollaremos aquí los requisitos funcionales para la definición de funciona
         \item \textbf{Consultar citas de trabajador.} Se podrá consultar los citas previas asignadas al trabajador.
     \end{enumerate}
 
-    \item \textbf{Gestión de clientes.} Se permitirá el alta/baja con el rol de usuario del sistema, así como consultar y modificar sus datos.
-    \begin{enumerate}[start=1,label={\bfseries RF-2.\arabic*.}]
+    \item \textbf{Gestión de clientes.} Se permitirá el alta/baja con el rol de usuario del negocio,
+    así como consultar y modificar sus datos.
+    \begin{enumerate}[start=1,label={\bfseries RF-3.\arabic*.}]
         \item \textbf{Alta de cliente.} Un cliente potencial se podrá dar de alta en un negocio determinado.
-        \item \textbf{Baja de trabajador.} Un cliente se podrá dar de baja de un negocio determinado.
+        \item \textbf{Baja de cliente.} Un cliente se podrá dar de baja de un negocio determinado.
         \item \textbf{Consultar datos de cliente.} Un cliente podrá consultar sus datos de un respectivo negocio.
-        \item \textbf{Modificar datos de trabajador.} Se podrán modificar modificar los datos personales de un
-        trabajador.
-        \item \textbf{Consultar citas de trabajador.} Se podrá consultar los citas previas asignadas al trabajador.
+        \item \textbf{Modificar datos de cliente.} Un cliente podrá modificar sus datos personales con los que se ha
+        registrado en un negocio.
+        \item \textbf{Consultar citas de trabajador.} Un cliente podrá consultar su historial de citas previas
+        reservadas.
     \end{enumerate}
 
-    \item \textbf{Gestión de citas previas.} Se permitirá añadir uno o varios contactos favoritos y eliminarlos, así como consultar cuáles son, ordenarlos, aceptar/rechazar ser contacto favorito de otro usuario, consultar de quién se es contacto favorito y eliminarse como tal.
-    \begin{enumerate}[start=1,label={\bfseries RF-3.\arabic*.}]
-        \item \textbf{Reserva de cita previa.} Podrá reservar una cita previa para un cliente usando un identificador.
-        \item \textbf{Cancelación de cita previa.} Podrá cancelar una cita previa de un cliente en caso de que él sea
-        el trabajador asignado.
+    \item \textbf{Gestión de citas previas.} Se permitirá realizar reservas o cancelaciones de citas previas así como
+    acceder a un histórico de estas según el tipo de usuario.
+    \begin{enumerate}[start=1,label={\bfseries RF-4.\arabic*.}]
+        \item \textbf{Reserva de cita previa por cliente.} Una cita previa podrá ser reservada por un cliente siempre
+        que la fecha sea válida y haya trabajadores disponibles en el negocio.
+        \item \textbf{Cancelación de cita previa por cliente.} Una cita previa podrá ser cancelada por un cliente
+        siempre que esté pendiente.
+        \item \textbf{Reserva de cita previa por trabajador.} Una cita previa podrá ser reservada por un trabajador
+        siempre que la fecha sea válida, el trabajador pueda atenderla y el cliente no tenga una cita ya pendiente.
+        \item \textbf{Cancelación de cita previa por cliente.} Una cita previa podrá ser cancelada por un trabajador
+        siempre que la cita a cancelar esté asignada a él y esté en estado pendiente.
     \end{enumerate}
+
+\end{enumerate}
+
+\subsection{Requisitos de información}
+
+Requisitos de información, describen la información que debe almacenar y gestionar el sistema para dar soporte a los
+procesos de negocio.
+
+\begin{enumerate}[leftmargin=1.6cm,start=1,label={\bfseries RI-\arabic*.}]
+\setlength\itemsep{1em} % Aumenta el interlineado entre ítems
+    \item \textbf{Administrador}
+    \\\textbf{Contenido:} email, nombre, apellidos, contraseña, número de teléfono y fecha de creación.
+	\\\textbf{Requisitos asociados:} RF-1
+
+	\item \textbf{Trabajador}
+    \\\textbf{Contenido:} email, nombre, apellidos, contraseña, número de teléfono y fecha de creación.
+    \\\textbf{Requisitos asociados:} RF-2.1, RF-2.2, RF-2.3, RF-2.4
+
+    \item \textbf{Cliente}
+    \\\textbf{Contenido:} email, nombre, apellidos, contraseña, número de teléfono y fecha de creación.
+    \\\textbf{Requisitos asociados:} RF-3.1, RF-3.2, RF-3.3, RF-3.4
+
+    \item \textbf{Citas}
+    \\\textbf{Contenido:} trabajador, cliente, fecha de reserva.
+    \\\textbf{Requisitos asociados:} RF-4, RF-2.5, RF-3.5
 
 \end{enumerate}
 
