@@ -161,7 +161,7 @@ Desarrollaremos aquí los requisitos funcionales para la definición de funciona
         \item \textbf{Reserva de cita previa por trabajador.} Una cita previa podrá ser reservada por un trabajador
         siempre que la fecha sea válida, el trabajador pueda atenderla y el cliente no tenga una cita ya pendiente.
         \item \textbf{Cancelación de cita previa por cliente.} Una cita previa podrá ser cancelada por un trabajador
-        siempre que la cita a cancelar esté asignada a él y esté en estado pendiente.
+        siempre que la cita a cancelar esté asignada a él y esté en estado pendiente.\\
     \end{enumerate}
 
 \end{enumerate}
@@ -187,7 +187,57 @@ procesos de negocio.
 
     \item \textbf{Citas}
     \\\textbf{Contenido:} trabajador, cliente, fecha de reserva.
-    \\\textbf{Requisitos asociados:} RF-4, RF-2.5, RF-3.5
+    \\\textbf{Requisitos asociados:} RF-4, RF-2.5, RF-3.5\\
+\end{enumerate}
 
+\subsection{Restricciones semánticas}
+
+Restricciones aplicadas a los requisitos funcionales y a los requisitos de información
+para su correcto uso y almacenamiento.
+
+\begin{enumerate}[leftmargin=1.75cm,start=1,label={\bfseries RS-\arabic*.}]
+\setlength\itemsep{1em} % Aumenta el interlineado entre ítems
+
+    \item \textbf{Alta super-administrador.} En el formulario de alta de super-administrador deberá comprobarse:
+    \begin{enumerate}[start=1,label={\bfseries RS-1.\arabic*.}]
+        \item \textbf{Email:} debe tener un formato válido.
+        \item \textbf{Nombre:} no puede ser nulo o estar vacío.
+        \item \textbf{Apellidos:} no puede ser nulo o estar vacío.
+        \item \textbf{Número de teléfono:} debe ser un número válido.
+        \item \textbf{Contraseña:} alfanumérica de más de 8 caracteres
+    \end{enumerate}
+
+    \item \textbf{Alta de trabajador.} En el formulario de alta de trabajador deberá comprobarse:
+    \begin{enumerate}[start=1,label={\bfseries RS-1.\arabic*.}]
+        \item \textbf{Email:} debe tener un formato válido.
+        \item \textbf{Nombre:} no puede ser nulo o estar vacío.
+        \item \textbf{Apellidos:} no puede ser nulo o estar vacío.
+        \item \textbf{Número de teléfono:} debe ser un número válido.
+        \item \textbf{Contraseña:} alfanumérica de más de 8 caracteres
+    \end{enumerate}
+
+    \item \textbf{Alta de cliente.} En el formulario de alta de cliente deberá comprobarse:
+    \begin{enumerate}[start=1,label={\bfseries RS-1.\arabic*.}]
+        \item \textbf{Email:} debe tener un formato válido.
+        \item \textbf{Nombre:} no puede ser nulo o estar vacío.
+        \item \textbf{Apellidos:} no puede ser nulo o estar vacío.
+        \item \textbf{Número de teléfono:} debe ser un número válido.
+        \item \textbf{Contraseña:} alfanumérica de más de 8 caracteres
+    \end{enumerate}
+
+    \item \textbf{Reserva de cita previa por cliente.} Habrá varias restricciones para realizar la reserva de citas
+    \begin{enumerate}[start=1,label={\bfseries RS-4.\arabic*.}]
+        \item \textbf{Fecha válida:} la fecha está en horario de trabajo.
+        \item \textbf{Trabajador disponible:} hay un trabajador disponible para atender la cita a la fecha indicada.
+        \item \textbf{No existen citas pendientes:} el cliente no tiene ya una cita previa pendiente.
+    \end{enumerate}
+
+    \item \textbf{Reserva de cita previa por trabajador.} Habrá varias restricciones para realizar la reserva de citas
+    \begin{enumerate}[start=1,label={\bfseries RS-4.\arabic*.}]
+        \item \textbf{Fecha válida:} la fecha está en horario de trabajo.
+        \item \textbf{Trabajador disponible:} el trabajador debe estar disponible para atender la cita.
+        \item \textbf{Cliente:} deberá indicarse un cliente existente para la cita.
+        \item \textbf{No existen citas pendientes:} el cliente no tiene ya una cita previa pendiente.
+    \end{enumerate}
 \end{enumerate}
 
