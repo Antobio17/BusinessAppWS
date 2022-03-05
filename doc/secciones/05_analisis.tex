@@ -245,7 +245,7 @@ para su correcto uso y almacenamiento.
 
 \section{Modelo de casos de uso}
 
-\section{Diagramas de casos de uso}
+\subsection{Diagramas de casos de uso}
 
 Un diagrama de casos de uso es una forma de diagrama de comportamiento UML mejorado. Con estos representaremos
 los procesos del sistema de negocio así como los procesos de programación orientada a objetos.\\
@@ -264,3 +264,155 @@ los procesos del sistema de negocio así como los procesos de programación orie
     \label{CU1}
 \end{figure}
 
+\subsection{Descripción de los casos de uso}
+
+En las siguientes tablas se detallan los casos de uso definidos en el apartado anterior. Podemos ver información sobre
+los actores que interactuan en ella, el tipo, los requisitos funcionales incluidos, las precondiciones y
+poscondiciones relativas a este y el propósito que cumple, además de un breve resumen que describe a un más alto
+nivel lo que proporciona el caso de uso.
+
+Los diferentes tipos de casos de uso son:
+
+\begin{itemize}
+    \item Según su importancia:
+    \begin{itemize}
+        \item Primarios: Procesos comunes más importantes.
+        \item Secundarios: Procesos menores o raros.
+        \item Opcionales: Procesos que pueden no abordarse.
+    \end{itemize}
+
+    \item Según el nivel de detalle
+    \begin{itemize}
+        \item Alto nivel: Descripción general del procesamiento.
+        \item Extendidos: Descripción de la secuencia de acción completa entre actores y sistema.
+    \end{itemize}
+
+    \item Según el nivel de abstracción
+    \begin{itemize}
+        \item Esencial: Expresado de forma abstracta, contiene poca tecnología y pocos detalles de diseño.
+        \item Real: Expresado en base al diseño actual, en el que aparecen relaciones con la interfaz de usuario.
+    \end{itemize}
+\end{itemize}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Dar de alta super-administrador
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-1
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Super-administrador
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-1.1
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente un super-administrador que pueda \\ llevar a cabo esta función. Si no hay ninguno \\
+    deberá añadirse por base de datos
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    El super-administrador quedará registrado en el sistema
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{
+    Dar de alta un nuevo super-administrador en el sistema
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Se darán de alta usuarios con rol super-administrador, los cuales podrán \\ encargarse de la supervisión
+    del sistema
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Dar de baja super-administrador
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-2
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Super-administrador
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-1.2
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente el super-administrador al que \\
+    se quiera realizar la baja
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    El super-administrador quedará eliminado del sistema
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{
+    Dar de baja a un super-administrador del sistema
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Se darán de baja a usuarios con rol super-administrador, eliminando \\
+    sus datos de la base de datos del sistema
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Consultar datos del super-administrador
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-2
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Super-administrador
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-1.3
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente el super-administrador al que \\
+    para poder consultar sus datos
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    El super-administrador no sufrirá modificaciones
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{
+    Consultar los datos propios como usuario super-administrador del sistema
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Se podrá consultar los datos propios como usuario \\
+    con rol super-administrador del sistema
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
