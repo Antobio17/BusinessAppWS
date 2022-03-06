@@ -631,3 +631,174 @@ Los diferentes tipos de casos de uso son:
 \end{tabular}} \\ \hline
 \end{tabular}
 \end{table}
+
+% CLIENTES
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Dar de alta cliente
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-9
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Super-administrador, trabajador y cliente
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-3.1
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Un cliente puede darse de alta en un negocio sin \\
+    precondiciones
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    El cliente quedará registrado en el sistema
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{
+    Dar de alta un nuevo cliente en el negocio
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Se darán de alta usuarios con rol cliente, los cuales podrán \\
+    realizar acciones en el negocio determinado
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Dar de baja cliente
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-10
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Super-administrador, trabajador y cliente
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-3.2
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente el cliente al que \\
+    se quiera realizar la baja
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    El cliente quedará eliminado del sistema
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{
+    Dar de baja a un cliente del sistema
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Se darán de baja a usuarios con rol cliente, eliminando \\
+    su información de la base de datos del sistema
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Consultar datos del cliente
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-7
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Super-administrador, trabajador y cliente
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-3.3
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente el cliente para \\
+    poder consultar sus datos
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    El cliente no sufrirá modificaciones
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}{
+    Consultar los datos personales como usuario cliente del sistema \\
+    de un negocio determinado
+} \\ \hline
+\end{tabular}} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Se podrá consultar los datos personales como usuario \\
+    con rol cliente del sistema de un negocio determinado
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Modificar datos del cliente
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-8
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Cliente
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-2.4
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente el cliente para \\
+    poder modificar sus datos personales
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    Los datos del cliente sufrirán modificaciones
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}{
+    Modificar los datos personales como usuario cliente del sistema \\
+    de un negocio determinado
+} \\ \hline
+\end{tabular}} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Se podrán modificar los datos personales como usuario \\
+    con rol cliente del sistema de un negocio determinado
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
