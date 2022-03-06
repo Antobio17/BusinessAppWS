@@ -294,6 +294,8 @@ Los diferentes tipos de casos de uso son:
     \end{itemize}
 \end{itemize}
 
+% SUPER-ADMINISTRADOR
+
 \begin{table}[H]
 \begin{tabular}{lll}
 \hline
@@ -371,7 +373,7 @@ Los diferentes tipos de casos de uso son:
 \multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
 \multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
     Se darán de baja a usuarios con rol super-administrador, eliminando \\
-    sus datos de la base de datos del sistema
+    su información de la base de datos del sistema
 \end{tabular}} \\ \hline
 \end{tabular}
 \end{table}
@@ -383,7 +385,7 @@ Los diferentes tipos de casos de uso son:
 \multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
     Consultar datos del super-administrador
 } & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
-    CU-2
+    CU-3
 } \\ \hline
 \multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
     Super-administrador
@@ -395,8 +397,8 @@ Los diferentes tipos de casos de uso son:
     RF-1.3
 } \\ \hline
 \multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
-    Debe existir previamente el super-administrador al que \\
-    para poder consultar sus datos
+    Debe existir previamente el super-administrador para \\
+    poder consultar sus datos
 \end{tabular}} \\ \hline
 \multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
     El super-administrador no sufrirá modificaciones
@@ -405,14 +407,225 @@ Los diferentes tipos de casos de uso son:
 \rowcolor[HTML]{EFEFEF}
 \multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
 \multicolumn{3}{|l|}{
-    Consultar los datos propios como usuario super-administrador del sistema
+    Consultar los datos personales como usuario super-administrador del sistema
 } \\ \hline
 \multicolumn{3}{l}{} \\ \hline
 \rowcolor[HTML]{EFEFEF}
 \multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
 \multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
-    Se podrá consultar los datos propios como usuario \\
+    Se podrá consultar los datos personales como usuario \\
     con rol super-administrador del sistema
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Modificar datos del super-administrador
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-4
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Super-administrador
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-1.4
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente el super-administrador para \\
+    poder modificar sus datos personales
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    Los datos del super-administrador sufrirán modificaciones
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{
+    Modificar los datos personales como usuario super-administrador del sistema
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Se podrán modificar los datos personales como usuario \\
+    con rol super-administrador del sistema
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+% TRABAJADORES
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Dar de alta trabajador
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-5
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Super-administrador y trabajador
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-2.1
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente un super-administrador o \\
+    un trabajador del negocio que pueda llevar a cabo \\
+    esta función. Si no hay ninguno deberá añadirse \\
+    por base de datos
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    El trabajador quedará registrado en el sistema
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{
+    Dar de alta un nuevo trabajador en el negocio
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Se darán de alta usuarios con rol trabajador, los cuales podrán \\
+    encargarse de la supervisión del negocio y atender citas
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Dar de baja trabajador
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-6
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Super-administrador y trabajador
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-2.2
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente el trabajador al que \\
+    se quiera realizar la baja
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    El trabajador quedará eliminado del sistema
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{
+    Dar de baja a un trabajador del sistema
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Se darán de baja a usuarios con rol trabajador, eliminando \\
+    su información de la base de datos del sistema
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Consultar datos del trabajador
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-7
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Super-administrador y trabajador
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-2.3
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente el trabajador para \\
+    poder consultar sus datos
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    El trabajador no sufrirá modificaciones
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{
+    Consultar los datos personales como usuario trabajador del sistema \\
+    de un negocio determinado
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Se podrá consultar los datos personales como usuario \\
+    con rol trabajador del sistema de un negocio determinado
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Modificar datos del trabajador
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-8
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Super-administrador y trabajador
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-2.4
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente el trabajador para \\
+    poder modificar sus datos personales
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    Los datos del trabajador sufrirán modificaciones
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{
+    Modificar los datos personales como usuario trabajador del sistema \\
+    de un negocio determinado
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Se podrán modificar los datos personales como usuario \\
+    con rol trabajador del sistema de un negocio determinado
 \end{tabular}} \\ \hline
 \end{tabular}
 \end{table}
