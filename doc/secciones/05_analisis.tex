@@ -208,7 +208,7 @@ para su correcto uso y almacenamiento.
     \end{enumerate}
 
     \item \textbf{Alta de trabajador.} En el formulario de alta de trabajador deberá comprobarse:
-    \begin{enumerate}[start=1,label={\bfseries RS-1.\arabic*.}]
+    \begin{enumerate}[start=1,label={\bfseries RS-2.\arabic*.}]
         \item \textbf{Email:} debe tener un formato válido.
         \item \textbf{Nombre:} no puede ser nulo o estar vacío.
         \item \textbf{Apellidos:} no puede ser nulo o estar vacío.
@@ -217,7 +217,7 @@ para su correcto uso y almacenamiento.
     \end{enumerate}
 
     \item \textbf{Alta de cliente.} En el formulario de alta de cliente deberá comprobarse:
-    \begin{enumerate}[start=1,label={\bfseries RS-1.\arabic*.}]
+    \begin{enumerate}[start=1,label={\bfseries RS-3.\arabic*.}]
         \item \textbf{Email:} debe tener un formato válido.
         \item \textbf{Nombre:} no puede ser nulo o estar vacío.
         \item \textbf{Apellidos:} no puede ser nulo o estar vacío.
@@ -233,7 +233,7 @@ para su correcto uso y almacenamiento.
     \end{enumerate}
 
     \item \textbf{Reserva de cita previa por trabajador.} Habrá varias restricciones para realizar la reserva de citas
-    \begin{enumerate}[start=1,label={\bfseries RS-4.\arabic*.}]
+    \begin{enumerate}[start=1,label={\bfseries RS-5.\arabic*.}]
         \item \textbf{Fecha válida:} la fecha está en horario de trabajo.
         \item \textbf{Trabajador disponible:} el trabajador debe estar disponible para atender la cita.
         \item \textbf{Cliente:} deberá indicarse un cliente existente para la cita.
@@ -723,7 +723,7 @@ Los diferentes tipos de casos de uso son:
 \multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
     Consultar datos del cliente
 } & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
-    CU-7
+    CU-11
 } \\ \hline
 \multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
     Super-administrador, trabajador y cliente
@@ -766,7 +766,7 @@ Los diferentes tipos de casos de uso son:
 \multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
     Modificar datos del cliente
 } & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
-    CU-8
+    CU-12
 } \\ \hline
 \multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
     Cliente
@@ -775,7 +775,7 @@ Los diferentes tipos de casos de uso son:
     Primario, básico y esencial
 } \\ \hline
 \multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
-    RF-2.4
+    RF-3.4
 } \\ \hline
 \multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
     Debe existir previamente el cliente para \\
@@ -802,3 +802,135 @@ Los diferentes tipos de casos de uso son:
 \end{tabular}
 \end{table}
 
+% CITAS
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Consultar citas
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-13
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Trabajador y cliente
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-2.5, RF-3.5
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente el usuario para \\
+    consultar sus citas
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    Las citas del usuario no sufrirán modificaciones
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}{
+    Consultar las citas de los usuarios de un negocio determinado
+} \\ \hline
+\end{tabular}} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Un usuario podrá consultar sus citas asignadas, ya \\
+    sea un trabajador para ver sus citas atendidas y \\
+    por atender, o un cliente para ver sus citas reservadas
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Consultar citas pendientes
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-14
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Trabajador y cliente
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-2.5, RF-3.5
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente el usuario para \\
+    consultar sus citas pendientes
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    Las citas del usuario no sufrirán modificaciones
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}{
+    Consultar las citas pendientes de los usuarios de un \\
+    negocio determinado
+} \\ \hline
+\end{tabular}} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Un usuario podrá consultar sus citas pendientes, ya \\
+    sea un trabajador para ver sus citas a atender, \\
+    o un cliente para ver sus citas reservadas pendientes
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Consultar histórico de citas
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-15
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Trabajador y cliente
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-2.5, RF-3.5
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente el usuario para \\
+    consultar su histórico de citas
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    Las citas del usuario no sufrirán modificaciones
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}{
+    Consultar el histórico de citas de los usuarios de un \\
+    negocio determinado
+} \\ \hline
+\end{tabular}} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Un usuario podrá consultar su histórico de citas, ya \\
+    sea un trabajador o un cliente para ver sus citas \\
+    registradas
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
