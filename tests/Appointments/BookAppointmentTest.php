@@ -21,6 +21,6 @@ class BookAppointmentTest extends TestCase
 
         $newError = $this->getAppErrorRepository()->findAll();
 
-        $this->assertFalse(count($newError) === 1);
+        $this->assertTrue(count($newError) === 1);
     }
 }
