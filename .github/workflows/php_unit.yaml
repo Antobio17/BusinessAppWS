@@ -1,85 +1,66 @@
-name: Tests
-on:
-  push:
-    branches:
-      - '**'
-env:
-  ES_HTTP_PORT: 9209
+# GitHub Action for Symfony with MySQL
+name: Testing Symfony with MySQL
+on: [push, pull_request]
 jobs:
   symfony:
-    name: Symfony 5.4 (PHP ${{ matrix.php-versions }})
-    # https://hub.docker.com/_/ubuntu/
-    runs-on: ubuntu-20.04
-
+    name: Symfony (PHP ${{ matrix.php-versions }})
+    runs-on: ubuntu-latest
     services:
-      # https://docs.docker.com/samples/library/mysql/
       mysql:
-        image: mysql:5.7
+        image: mysql:latest
         env:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+          MYSQL_ROOT_PASSWORD: symfony
+          MYSQL_DATABASE: symfony
         ports:
-          - 3306:3306
+          - 3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        php-versions: ['8.0']
+        php-versions: ['7.4', '8.0', '8.1']
     steps:
-      # —— Setup GitHub actions 🐙 —————————————————————————————————————————————
-      # https://github.com/actions/checkout (official)
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      # https://github.com/shivammathur/setup-php (community)
-      - name: Setup PHP, extensions and composer with shivammathur/setup-php
+      # Docs: https://github.com/shivammathur/setup-php
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, iconv, json, mbstring
-        env:
-          update: true
+          tools: phpunit-bridge
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, mysql
+          coverage: xdebug
 
-      - name: Check PHP Version
-        run: php -v
+      - name: Start mysql service
+        run: sudo systemctl start mysql
 
-      # https://github.com/zhulik/redis-action (community)
-      - name: Setup Redis with zhulik/redis-action
-        uses: zhulik/redis-action@1.1.0
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
         with:
-          redis version: '5'
+          path: ${{ steps.composer-cache.outputs.dir }}
+          # Use composer.json for key, if composer.lock is not committed.
+          # key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
 
-      # —— Composer 🧙‍️ —————————————————————————————————————————————————————————
       - name: Install Composer dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Run Migration
         run: |
-          cp .env.ci .env.test
-          cp .env.ci .env
-          composer install --prefer-dist --no-progress --no-suggest --ignore-platform-req=ext-json --ignore-platform-req=ext-openssl
+          composer require --dev symfony/orm-pack
+          php bin/console doctrine:schema:update --force || echo "No migrations found or schema update failed"
+          php bin/console doctrine:migrations:migrate || echo "No migrations found or migration failed"
+        env:
+          DATABASE_URL: mysql://root:symfony@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/symfony
 
-      # —— Symfony 🎵 ——————————————————————————————————————————————————————————
-      - name: Check the Symfony console
-        run: |
-          chmod a+x bin/console
-          bin/console about
+      - name: Install PHPUnit
+        run: simple-phpunit install
 
-      ## —— Doctrine 🎵 —————————————————————————————————————————————————————————————
-      - name: Create BBDD
-        run: |
-          bin/console doctrine:database:create --env=test
-          bin/console doctrine:schema:update --env=test --force
-
-      ## —— JWT 💫 —————————————————————————————————————————————————————————————
-      - name: Generate the SSL keys
-        run: bin/console lexik:jwt:generate-keypair
-
-      ## —— Tests ✅ ———————————————————————————————————————————————————————————
-      # We use the dev env here
-#      - name: Load Doctrine fixtures and populate the Elasticsearch indexes
-#        run: |
-#          make load-fixtures
-#          make populate
-
-      - name: Run functionnal and unit tests
-        run: |
-          chmod a+x bin/phpunit
-          bin/phpunit tests
+      - name: Run tests
+        run: simple-phpunit --coverage-text
