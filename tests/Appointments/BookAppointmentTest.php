@@ -3,24 +3,22 @@
 namespace App\Tests\Appointments;
 
 use App\Entity\AppError;
-use App\Service\AppService;
-use App\Service\Traits\RepositoriesTrait;
-use Doctrine\Persistence\ObjectManager;
-use PHPUnit\Framework\TestCase;
+use App\Tests\AppTestCase;
 
-class BookAppointmentTest extends TestCase
+class BookAppointmentTest extends AppTestCase
 {
 
-    use RepositoriesTrait;
+    /************************************************* PROPERTIES *************************************************/
 
-    public function test_bookSuccess(ObjectManager $entityManager)
+    public function test_bookSuccess()
     {
-        $appError = new AppError(1, 'probando', 'probando');
-        $entityManager->persist($appError);
-        $entityManager->flush();
+        $this->setUp();
+        $appError = new AppError(1, 'prueba', 'prueba');
+        $this->persistAndFlush($appError);
+        $errors = $this->getAppErrorRepository()->findAll();
+        $this->tearDown();
 
-        $newError = $this->getAppErrorRepository()->findAll();
-
-        $this->assertTrue(count($newError) === 1);
+        $this->assertSame(1, count($errors));
     }
+
 }
