@@ -10,7 +10,7 @@ jobs:
         image: mysql:latest
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
-          MYSQL_ROOT_PASSWORD: symfony
+#          MYSQL_ROOT_PASSWORD: symfony
           MYSQL_DATABASE: symfony
         ports:
           - 3306/tcp
