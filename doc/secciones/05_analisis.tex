@@ -7,7 +7,7 @@ la aplicación. Definiremos a continuación los distintos tipos de usuario:
 
 \subsection{Tipos de usuario}
 
-Los usuarios de la aplicación a desarrollar son:
+Los usuarios potenciales de la aplicación son:
 
 \begin{itemize}
     \item Super-Administrador. Su función es gestionar la totalidad del aplicativo, teniendo acceso total a los datos
@@ -121,7 +121,7 @@ Desarrollaremos aquí los requisitos funcionales para la definición de funciona
     \begin{enumerate}[start=1,label={\bfseries RF-1.\arabic*.}]
         \item \textbf{Alta de super-administrador.} Se dará de alta a cada super-administrador con sus datos personales.
         \item \textbf{Baja de super-administrador.} Se dará de baja al super-administrador y la información relativa a
-        él será eliminada.
+        él será eliminada. Siempre deberá haber un usuario de este rol para las revisiones tecnicas del aplicativo.
         \item \textbf{Consultar datos del sistema.} Se podrán consultar todos los datos almacenados en el sistema.
         \item \textbf{Modificar datos del sistema.} Se podrán modificar todos los datos almacenados en el sistema.
     \end{enumerate}
@@ -164,6 +164,19 @@ Desarrollaremos aquí los requisitos funcionales para la definición de funciona
         siempre que la cita a cancelar esté asignada a él y esté en estado pendiente.\\
     \end{enumerate}
 
+    \item \textbf{Gestión de productos.} Se permitirá realizar gestiones sobre los productos de la tienda para su venta online.
+    \begin{enumerate}[start=1,label={\bfseries RF-5.\arabic*.}]
+        \item \textbf{Alta de producto.} Un producto podrá ser dado de alta por un trabajador de un negocio o por un super-administrador.
+        \item \textbf{Baja de producto.} Un producto podrá ser dado de baja por un trabajador de un negocio o por un super-administrador.
+        \item \textbf{Modificación de información de producto.} La informació de un producto podrá ser modificado por un trabajador de un negocio o por un super-administrador.
+    \end{enumerate}
+    
+    \item \textbf{Gestión de pedidos.} Se permitirá realizar pedidos online de productos ofertados por el propio negocio así como acceder al historial y estado de los pedidos.
+    \begin{enumerate}[start=1,label={\bfseries RF-6.\arabic*.}]
+        \item \textbf{Realización de pedido.} Un pedido podrá ser realizado por un usuario del sistema de productos disponibles en la tienda web ofrecidos por el negocio.
+        \item \textbf{Cancelación de pedido.} Un pedido podrá ser cancelado por un usuario del sistema siempre y cuando pertenezca al propio usuario mismo y siga en un estado pendiente.
+        \item \textbf{Seguimiento de pedido.} Un pedido podrá ser seguido por un usuario del sistema siempre y cuando pertenezca al propio usuario mismo. Podrá ver los estados por los que ha ido pasando en el tiempo (pendiente, en preparación, enviado, entregado, etc), además de poder ver un resumen del mismo.
+    \end{enumerate}
 \end{enumerate}
 
 \subsection{Requisitos de información}
@@ -174,20 +187,28 @@ procesos de negocio.
 \begin{enumerate}[leftmargin=1.6cm,start=1,label={\bfseries RI-\arabic*.}]
 \setlength\itemsep{1em} % Aumenta el interlineado entre ítems
     \item \textbf{Administrador}
-    \\\textbf{Contenido:} email, nombre, apellidos, contraseña, número de teléfono y fecha de creación.
+    \\\textbf{Contenido:} email, nombre, apellidos, contraseña, número de teléfono, dirección y fecha de creación.
 	\\\textbf{Requisitos asociados:} RF-1
 
 	\item \textbf{Trabajador}
-    \\\textbf{Contenido:} email, nombre, apellidos, contraseña, número de teléfono y fecha de creación.
+    \\\textbf{Contenido:} email, nombre, apellidos, contraseña, número de teléfono, dirección y fecha de creación.
     \\\textbf{Requisitos asociados:} RF-2.1, RF-2.2, RF-2.3, RF-2.4
 
     \item \textbf{Cliente}
-    \\\textbf{Contenido:} email, nombre, apellidos, contraseña, número de teléfono y fecha de creación.
+    \\\textbf{Contenido:} email, nombre, apellidos, contraseña, número de teléfono, dirección y fecha de creación.
     \\\textbf{Requisitos asociados:} RF-3.1, RF-3.2, RF-3.3, RF-3.4
 
     \item \textbf{Citas}
     \\\textbf{Contenido:} trabajador, cliente, fecha de reserva.
     \\\textbf{Requisitos asociados:} RF-4, RF-2.5, RF-3.5\\
+    
+    \item \textbf{Producto}
+    \\\textbf{Contenido:} nombre, descripción, categoria, stock, precio, fecha de creación.
+    \\\textbf{Requisitos asociados:} RF-5 RF-6.1\\
+    
+    \item \textbf{Pedido}
+    \\\textbf{Contenido:} cliente, dirección de envio, fecha de pedido, productos, estado, importe total.
+    \\\textbf{Requisitos asociados:} RF-6\\
 \end{enumerate}
 
 \subsection{Restricciones semánticas}
@@ -204,7 +225,8 @@ para su correcto uso y almacenamiento.
         \item \textbf{Nombre:} no puede ser nulo o estar vacío.
         \item \textbf{Apellidos:} no puede ser nulo o estar vacío.
         \item \textbf{Número de teléfono:} debe ser un número válido.
-        \item \textbf{Contraseña:} alfanumérica de más de 8 caracteres
+        \item \textbf{Contraseña:} alfanumérica de más de 8 caracteres.
+        \item \textbf{Dirección:} puede ser nulo hasta el momento de la realización de un pedido.
     \end{enumerate}
 
     \item \textbf{Alta de trabajador.} En el formulario de alta de trabajador deberá comprobarse:
@@ -213,7 +235,8 @@ para su correcto uso y almacenamiento.
         \item \textbf{Nombre:} no puede ser nulo o estar vacío.
         \item \textbf{Apellidos:} no puede ser nulo o estar vacío.
         \item \textbf{Número de teléfono:} debe ser un número válido.
-        \item \textbf{Contraseña:} alfanumérica de más de 8 caracteres
+        \item \textbf{Contraseña:} alfanumérica de más de 8 caracteres.
+        \item \textbf{Dirección:} puede ser nulo hasta el momento de la realización de un pedido.
     \end{enumerate}
 
     \item \textbf{Alta de cliente.} En el formulario de alta de cliente deberá comprobarse:
@@ -222,7 +245,8 @@ para su correcto uso y almacenamiento.
         \item \textbf{Nombre:} no puede ser nulo o estar vacío.
         \item \textbf{Apellidos:} no puede ser nulo o estar vacío.
         \item \textbf{Número de teléfono:} debe ser un número válido.
-        \item \textbf{Contraseña:} alfanumérica de más de 8 caracteres
+        \item \textbf{Contraseña:} alfanumérica de más de 8 caracteres.
+        \item \textbf{Dirección:} puede ser nulo hasta el momento de la realización de un pedido.
     \end{enumerate}
 
     \item \textbf{Reserva de cita previa por cliente.} Habrá varias restricciones para realizar la reserva de citas
@@ -238,6 +262,21 @@ para su correcto uso y almacenamiento.
         \item \textbf{Trabajador disponible:} el trabajador debe estar disponible para atender la cita.
         \item \textbf{Cliente:} deberá indicarse un cliente existente para la cita.
         \item \textbf{No existen citas pendientes:} el cliente no tiene ya una cita previa pendiente.
+    \end{enumerate}
+    
+    \item \textbf{Alta de producto.} En el formulario de alta de producto deberá comprobarse:
+    \begin{enumerate}[start=1,label={\bfseries RS-6.\arabic*.}]
+        \item \textbf{Nombre:} no puede ser nulo o estar vacío.
+        \item \textbf{Descripción:} no puede ser nulo o estar vacío.
+        \item \textbf{Categoría:} no puede ser nulo o estar vacío.
+        \item \textbf{Stock:} debe de ser un entero mayor o igual a cero.
+        \item \textbf{Precio:} debe ser un número con decimales mayor o igual a cero.
+    \end{enumerate}
+    
+    \item \textbf{Realización de pedido.} En el formulario de alta de producto deberá comprobarse:
+    \begin{enumerate}[start=1,label={\bfseries RS-7.\arabic*.}]
+        \item \textbf{Dirección de envio:} no puede ser nulo o estar vacío.
+        \item \textbf{Productos:} no puede ser nulo o estar vacio.
     \end{enumerate}
 \end{enumerate}
 
@@ -261,6 +300,13 @@ los procesos del sistema de negocio así como los procesos de programación orie
     \centering
     \includegraphics[width=0.9\textwidth]{images/Gestion_Citas.png}
     \caption{Diagrama de caso de uso - Gestión de citas}
+    \label{CU1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/Gestion_Tienda.png}
+    \caption{Diagrama de caso de uso - Gestión de tienda}
     \label{CU1}
 \end{figure}
 
@@ -934,3 +980,392 @@ Los diferentes tipos de casos de uso son:
 \end{tabular}} \\ \hline
 \end{tabular}
 \end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Reservar cita previa
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-16
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Trabajador y cliente
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-4.1, RF-4.3
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente el usuario del \\
+    cliente y el trabajador para \\
+    reservar una cita previa
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    Se reserverá una cita para un cliente
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}{
+    Reservar una cita para un cliente y trabajador determinado
+} \\ \hline
+\end{tabular}} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Un usuario podrá reservar una cita previa disponible con \\
+    un trabajador determinado. De la misma forma un trabajador \\
+    disponible podrá reservar para un cliente existente que \\
+    aún no disponga de cita reservada
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Cancelar cita previa
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-17
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Trabajador y cliente
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-4.2, RF-4.4
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Debe existir previamente el usuario con \\
+    la cita reservada en estado pendiente
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    Se cancelará una cita para un cliente
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}{
+    Cancelar una cita para un cliente determinado
+} \\ \hline
+\end{tabular}} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Un usuario podrá cancelar su cita previa pendiente.\\
+    De la misma forma un trabajador podrá cancelar una\\
+    cita a un cliente el cual se le había asignado.
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Alta de producto
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-18
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Trabajador y super-administrador
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-5.1
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    El producto no debe exister ya en el sistema
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    Se dará de alta un nuevo producto
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}{
+    Dar de alta un nuevo producto para su venta
+} \\ \hline
+\end{tabular}} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Un trabajador o super-administrador del sistema \\
+    podrá dar de alta un producto para su negocio \\
+    determinado, estando este disponible para su venta \\
+    online.
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Baja de producto
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-19
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Trabajador y super-administrador
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-5.2
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    El producto debe exister en el sistema
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{l|}{
+    Se dará de baja un producto
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}{
+    Dar de baja un producto para su venta
+} \\ \hline
+\end{tabular}} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Un trabajador o super-administrador del sistema \\
+    podrá dar de baja un producto para su negocio \\
+    determinado, eliminando la disponible para su venta \\
+    online.
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Realizar pedido
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-20
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Cliente
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-6.1
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    El pedido no puede tener cero productos
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{1|}{
+    Se reducirá el stock correspondiente
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}{
+    Realizar un pedido de productos
+} \\ \hline
+\end{tabular}} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Un cliente podrá realizar un pedido de productos \\
+    ofertados en la tienda online del negocio.
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Cancelación de pedido
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-21
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Cliente
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Primario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-6.2
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Deberá existir un pedido en estado pendiente
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{1|}{
+    Se cancelará el pedido pendiente
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}{
+    Cancelar un pedido pendiente
+} \\ \hline
+\end{tabular}} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Un cliente podrá cancelar un pedido que se encuentre \\
+    en estado pendiente.
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Caso de uso}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    Consultar de pedido
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    CU-22
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Actores}} & \multicolumn{2}{l|}{
+    Cliente
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Tipo}} & \multicolumn{2}{l|}{
+    Secundario, básico y esencial
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Referencias}} & \multicolumn{2}{l|}{
+    RF-6.3
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Precondición}} & \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}
+    Deberá existir un pedido del cliente
+\end{tabular}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Poscondición}} & \multicolumn{2}{1|}{
+    No se verá afectado el pedido
+} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Propósito}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}{
+    Consular el seguimiento y estado de un pedido
+} \\ \hline
+\end{tabular}} \\ \hline
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{3}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Resumen}} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}
+    Un cliente podrá consultar el estado y realizar un \\
+    seguimiento de su pedido realziado.
+\end{tabular}} \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Diagrama de secuencia}
+
+Con los diagramas de secuencia vamos a obtener una previsualización de como el usuario interactuará directamente con el sistema por medio de pasos de mensajes. Vamos por tanto a representar los casos de uso definidos en el apartado anterior como diagramas de secuencia ayudandonos a la futura implementación de los mismos.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.42]{images/Alta_Usuario.png}
+  \caption{DS: Alta de cliente, trabajador o super-administrador.}
+  \label{DS1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.42]{images/Baja_Usuario.png}
+  \caption{DS: Baja de cliente, trabajador o super-administrador.}
+  \label{DS1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.42]{images/Consultar_Datos_Usuario.png}
+  \caption{DS: Consultar datos de cliente, trabajador o super-administrador.}
+  \label{DS1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.38]{images/Modificar_Datos_Usuario.png}
+  \caption{DS: Modificar datos de cliente, trabajador o super-administrador.}
+  \label{DS1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.38]{images/Consultar_citas.png}
+  \caption{DS: Consultar citas por cliente, trabajador o super-administrador.}
+  \label{DS1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.36]{images/Rerservar_cita.png}
+  \caption{DS: Reserva de cita por cliente o trabajador.}
+  \label{DS1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.36]{images/Rerservar_cita.png}
+  \caption{DS: Cancelación de cita por cliente o trabajador.}
+  \label{DS1}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.38]{images/Alta_Producto.png}
+  \caption{DS: Alta de producto para venta online por trabajador o super-administrador.}
+  \label{DS1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.38]{images/Baja_Producto.png}
+  \caption{DS: Baja de producto para venta online por trabajador o super-administrador.}
+  \label{DS1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.42]{images/Realizar_Pedido.png}
+  \caption{DS: Realizar pedido de productos por cliente.}
+  \label{DS1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.42]{images/Cancelar_Pedido.png}
+  \caption{DS: Cancelar pedido por cliente.}
+  \label{DS1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.42]{images/Consultar_Pedido.png}
+  \caption{DS: Consultar pedido de productos por cliente.}
+  \label{DS1}
+\end{figure}
+
+
+

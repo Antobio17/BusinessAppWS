@@ -1,0 +1,18 @@
+\chapter{Diseño}
+ En este capitulo nos centraremos el diseño elegido después de haber analizado los requisitos de nuestro sistema. De aquí obtendremos la estructura de base de datos idonea para un correcto desarrollo del aplicativo, además de la arquitectura necesaria para llevar a cabo todos estos procesos.
+ 
+\section{Diseño de la base de datos}
+
+El sistema puede ser diferenciado en 4 grandes bloques.
+
+Por una parte tenemos a los usuarios. Estos pueden tener varios roles como son los clientes, los trabajadores y los superadministradores. Todos podrán interactuar con las funcionalidades de la misma forma  proporcionadas por el web service a los dominios Front-End de cada negocio, sin embargo el rol diferenciador entra en juego en la parte de administración de negocios y el propio sistema mencionado. Un usuario deberá estar ligado a un único negocio ya que, aunque la información se almacenen en la misma base de datos el usuario final no tiene por que saber que negocios pertenecen al sistema.
+
+Por otra parte tenemos los negocios, para que todo tenga sentido el sistema permita una rápida implementación de nuevos clientes se crearán configuraciones para las distintas secciones. De esta forma, aunque se separen el Front-End del Back-End, podremos configurar y personalizar nuestra web de la forma que deseemos (dentro de lo permitido por la configuración implementada). Sin olvidar la configuración de horarios, tiempos entre cita y cita, etc.
+
+Las citas son también uno de los bloques principales de este sistema. Se deberá guardar información relevante a la cita, la cual deberá estar asignada a un usuario y a un trabajador del negocio determinado. Guardar datos referentes a la fecha de registro de la cita puede ser interesante de cara al análisis estadistico de los negocios que lo deseen.
+
+Por último pero no menos importante tenemos la parte de la venta de productos online. Esto conlleva el registro de productos para el negocio y de pedidos para los clientes que deseen acceder a este servicio. Un producto deberá estar asociado a un negocio, un pedido deberá tener uno o muchos productos además de estar asociado a un único usuario. No podemos olvidar que para realizar el envio de los pedidor realizados el usuario deberá indicar una dirección. Consecuentemente añadiremos una entidad direcciones que se relacionará con el usuario de forma que un usuario pueda tener cero o más direcciones y una dirección pueda pertenecer a uno o varios usuarios.
+
+Vamos ahora por tanto a representar el diagrama de Entidad-Relación: 
+
+\section{Paso a tablas y funsión}
