@@ -3,7 +3,7 @@
 \section{Implicados}
 
 En esta sección vamos a centrarnos en los implicados del problema a resolver ya que estos serán los usuarios finales de
-la aplicación. Definiremos a continuación los distintos tipos de usuario:
+la aplicación. Definiremos a continuación los distintos tipos de usuario.
 
 \subsection{Tipos de usuario}
 
@@ -14,9 +14,8 @@ Los usuarios potenciales de la aplicación son:
     almacenados por cada uno de los negocios. Podrá monitorizar el correcto funcionamiento de la aplicación y realizar
     correcciones o registrar incidencias si es necesario.
 
-    \item Administrador. Su función es gestionar los datos de un negocio. En este caso existiría un usuario
-    administrador por negocio y este tendrá acceso a los datos del mismo. Si detecta posibles errores también
-    podrá registrar incidencias.
+    \item Trabajador. Su función es gestionar los datos de un negocio. En este caso el trabajador 
+    tendrá acceso a los datos del mismo. Si detecta posibles errores también podrá registrar incidencias.
 
     \item Usuarios. Podrán consultar y reservar citas, así realizar pedidos en la tienda online.
     Además tendrán acceso a todos su datos como histórico de citas o histórico de pedidos.
@@ -29,7 +28,7 @@ Los usuarios potenciales de la aplicación son:
 \hline
 \textbf{Nombre} & \multicolumn{1}{c|}{\textbf{Descripción}} & \textbf{Tipo} & \multicolumn{1}{c|}{\textbf{Responsabilidad}} \\ \hline
 Super-Administrador & \begin{tabular}[c]{@{}l@{}}Administrador \\ del sistema\end{tabular} & \begin{tabular}[c]{@{}c@{}}Usuario\\ producto\end{tabular} & \begin{tabular}[c]{@{}l@{}}Gestionar el sistema, moniro- \\ rizar sistema, gestionar inci- \\ dencias.\end{tabular} \\ \hline
-Administrador & \begin{tabular}[c]{@{}l@{}}Administrador \\ del negocio\end{tabular} & \begin{tabular}[c]{@{}c@{}}Usuario\\ producto\end{tabular} & \begin{tabular}[c]{@{}l@{}}Gestionar el negocio, modificar \\ datos del negocio (citas, \\ productos,...), registrar \\ incidencias.\end{tabular} \\ \hline
+Trabajador & \begin{tabular}[c]{@{}l@{}}Trabajador \\ del negocio\end{tabular} & \begin{tabular}[c]{@{}c@{}}Usuario\\ producto\end{tabular} & \begin{tabular}[c]{@{}l@{}}Gestionar el negocio, modificar \\ datos del negocio (citas, \\ productos,...), registrar \\ incidencias.\end{tabular} \\ \hline
 Usuario & \begin{tabular}[c]{@{}l@{}}Cliente que \\ usa el sistema \\ de manera \\ convencional.\end{tabular} & \begin{tabular}[c]{@{}c@{}}Usuario\\ producto\end{tabular} & \begin{tabular}[c]{@{}l@{}}Reservar/modificar/cancelar \\ citas, realizar pedidos, \\ gestionar perfil de usuario.\end{tabular} \\ \hline
 \end{tabular}
 \caption{Resumen de implicados}
