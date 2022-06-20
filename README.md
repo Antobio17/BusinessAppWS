@@ -56,3 +56,32 @@ php bin/console lexik:jwt:generate-keypair
 ```
 
 ---
+
+### Contenedores Docker
+
+Se ha dockerizado la aplicación para facilitar el despliegue de la misma en otros servidores.
+
+Algunos de los comandos a destacar son:
+
+```shell
+# Levantar el contenedor en segundo plano reconstruyendo las imágenes
+docker-compose up -d --build
+
+# En la APP de Symfony dentro del contenedor de PHP
+docker-compose exec php-service bin/console cache:clear
+docker-compose exec php-service bin/console doctrine:migrations:diff
+docker-compose exec php-service bin/console doctrine:migrations:execute --up DoctrineMigrations\VersionXXXXXXXXXXXXXX
+docker-compose exec php-service composer require _packagename_
+
+# Para abrir el bash de cualquier de los diferentes servicios levantados
+docker-compose exec -it php-container-ws bash
+docker-compose exec mysql-container-ws bash
+docker-compose exec nginx-container-ws bash
+
+# Acceder a la base de datos desde el bash de MYSQL
+mysql -uroot -psecret
+
+```
+
+---
+
