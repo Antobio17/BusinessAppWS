@@ -2,9 +2,7 @@
 
 namespace App\Repository\Interfaces;
 
-use Doctrine\ORM\NonUniqueResultException;
-
-interface _TemplateRepositoryInterface_
+interface OrderRepositoryInterface
 {
 
     /*********************************************** PUBLIC METHODS ***********************************************/

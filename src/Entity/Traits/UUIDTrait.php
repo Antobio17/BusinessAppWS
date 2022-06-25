@@ -2,42 +2,43 @@
 
 namespace App\Entity\Traits;
 
+use App\Helper\ToolsHelper;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\Interfaces\HasStatusInterface;
+use App\Entity\Traits\Interfaces\HasUUIDInterface;
 
 /**
- * Trait to implement StatusTrait property.
+ * Trait to implement UUID property.
  *
- * @see HasStatusInterface
+ * @see HasUUIDInterface
  */
-trait StatusTrait
+trait UUIDTrait
 {
 
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="integer", options={ "default": 0 })
+     * @ORM\Column(type="string", length=1024, unique=true)
      */
-    protected int $status;
+    protected string $uuid;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return int int
+     * @return string string
      */
-    public function getStatus(): int
+    public function getUUID(): string
     {
-        return $this->status;
+        return $this->uuid;
     }
 
     /**
      * @inheritDoc
      * @return $this $this
      */
-    public function setStatus(int $status): self
+    public function setUUID(string $uuid): self
     {
-        $this->status = $status;
+        $this->uuid = $uuid;
 
         return $this;
     }
@@ -45,11 +46,13 @@ trait StatusTrait
     /************************************************* CONSTRUCT **************************************************/
 
     /**
-     *  StatusTrait constructor.
+     *  UUIDTrait constructor.
+     *
+     * @param string $uuid UUID of the Entity to set.
      */
-    public function __construct(int $status = 0)
+    public function __construct(string $uuid)
     {
-        $this->setStatus($status);
+        $this->setUUID($uuid);
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
@@ -61,7 +64,7 @@ trait StatusTrait
     public function __toArray(): array
     {
         return array(
-            'status' => $this->getStatus(),
+            'uuid' => $this->getUUID()
         );
     }
 
