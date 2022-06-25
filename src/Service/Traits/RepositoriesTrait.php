@@ -2,11 +2,15 @@
 
 namespace App\Service\Traits;
 
+use App\Entity\Order;
+use App\Entity\Product;
 use App\Entity\User;
 use App\Entity\AppError;
 use App\Entity\Business;
 use App\Entity\Appointment;
 use App\Entity\PostalAddress;
+use App\Repository\OrderRepository;
+use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use App\Repository\BusinessRepository;
 use App\Repository\AppointmentRepository;
@@ -73,6 +77,24 @@ trait RepositoriesTrait
     public function getAppointmentRepository(): AppointmentRepository
     {
         return $this->getEntityManager()->getRepository(Appointment::class);
+    }
+
+    /**
+     * @inheritDoc
+     * @return OrderRepository OrderRepository
+     */
+    public function getOrderRepository(): OrderRepository
+    {
+        return $this->getEntityManager()->getRepository(Order::class);
+    }
+
+    /**
+     * @inheritDoc
+     * @return ProductRepository ProductRepository
+     */
+    public function getProductRepository(): ProductRepository
+    {
+        return $this->getEntityManager()->getRepository(Product::class);
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
