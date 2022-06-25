@@ -2,42 +2,45 @@
 
 namespace App\Entity\Traits;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\Interfaces\HasStatusInterface;
+use App\Entity\Traits\Interfaces\HasSentAtInterface;
 
 /**
- * Trait to implement StatusTrait property.
+ * Trait to implement SentAt property.
  *
- * @see HasStatusInterface
+ * @see HasSentAtInterface
  */
-trait StatusTrait
+trait SentAtTrait
 {
 
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="integer", options={ "default": 0 })
+     * @var DateTime
+     * @ORM\Column(type="datetime")
      */
-    protected int $status;
+    protected DateTime $sentAt;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return int int
+     * @return DateTime DateTime
      */
-    public function getStatus(): int
+    public function getSentAt(): DateTime
     {
-        return $this->status;
+        return $this->sentAt;
     }
 
     /**
      * @inheritDoc
+     * @param DateTime $sentAt
      * @return $this $this
      */
-    public function setStatus(int $status): self
+    public function setSentAt(DateTime $sentAt): self
     {
-        $this->status = $status;
+        $this->sentAt = $sentAt;
 
         return $this;
     }
@@ -45,11 +48,11 @@ trait StatusTrait
     /************************************************* CONSTRUCT **************************************************/
 
     /**
-     *  StatusTrait constructor.
+     *  SentAt constructor.
      */
-    public function __construct(int $status = 0)
+    public function __construct(DateTime $sentAt)
     {
-        $this->setStatus($status);
+        $this->setSentAt($sentAt);
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
@@ -61,7 +64,7 @@ trait StatusTrait
     public function __toArray(): array
     {
         return array(
-            'status' => $this->getStatus(),
+            'sentAt' => $this->getSentAt(),
         );
     }
 

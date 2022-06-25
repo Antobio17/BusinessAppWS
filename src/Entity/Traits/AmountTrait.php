@@ -3,41 +3,41 @@
 namespace App\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\Interfaces\HasStatusInterface;
+use App\Entity\Traits\Interfaces\HasAmountInterface;
 
 /**
- * Trait to implement StatusTrait property.
+ * Trait to implement AmountTrait property.
  *
- * @see HasStatusInterface
+ * @see HasAmountInterface
  */
-trait StatusTrait
+trait AmountTrait
 {
 
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="integer", options={ "default": 0 })
+     * @ORM\Column(type="float", options={ "default": 0.0 })
      */
-    protected int $status;
+    protected float $amount;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return int int
+     * @return float float
      */
-    public function getStatus(): int
+    public function getAmount(): float
     {
-        return $this->status;
+        return $this->amount;
     }
 
     /**
      * @inheritDoc
      * @return $this $this
      */
-    public function setStatus(int $status): self
+    public function setAmount(float $amount): self
     {
-        $this->status = $status;
+        $this->amount = $amount;
 
         return $this;
     }
@@ -45,11 +45,11 @@ trait StatusTrait
     /************************************************* CONSTRUCT **************************************************/
 
     /**
-     *  StatusTrait constructor.
+     *  AmountTrait constructor.
      */
-    public function __construct(int $status = 0)
+    public function __construct(float $amount = 0)
     {
-        $this->setStatus($status);
+        $this->setAmount($amount);
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
@@ -61,7 +61,7 @@ trait StatusTrait
     public function __toArray(): array
     {
         return array(
-            'status' => $this->getStatus(),
+            'amount' => $this->getAmount(),
         );
     }
 
