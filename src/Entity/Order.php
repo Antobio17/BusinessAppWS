@@ -61,6 +61,14 @@ class Order extends AbstractUserContext implements OrderInterface
 
     /**
      *  Order constructor.
+     *
+     * @param BusinessInterface $business Business to which the order belongs.
+     * @param UserInterface $user User to which the order belongs.
+     * @param string $uuid UUID of the payment order.
+     * @param int $status Status of the order.
+     * @param float $amount Amount of the order.
+     * @param DateTime|null $createdAt Date of the creation of the order.
+     * @param DateTime|null $sentAt Date when the order was sent.
      */
     public function __construct(BusinessInterface $business, UserInterface $user, string $uuid, int $status = 0,
                                 float             $amount = 0.0, DateTime $createdAt = NULL, DateTime $sentAt = NULL)
