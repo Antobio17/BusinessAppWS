@@ -29,8 +29,7 @@ class AppointmentController extends AppController implements AppointmentControll
     /**
      *  AppointmentController constructor.
      *
-     * @param AppointmentServiceInterface $appointmentService Service of User.
-     *
+     * @param AppointmentServiceInterface $appointmentService Service of Appointment.
      */
     public function __construct(AppointmentServiceInterface $appointmentService)
     {
