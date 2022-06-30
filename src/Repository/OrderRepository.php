@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Order;
 use App\Repository\Interfaces\OrderRepositoryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Order|null find($id, $lockMode = null, $lockVersion = null)
@@ -15,6 +16,16 @@ class OrderRepository extends AppRepository implements OrderRepositoryInterface
 {
 
     /************************************************* CONSTRUCT **************************************************/
+
+    /**
+     * OrderRepository constructor.
+     *
+     * @param ManagerRegistry $registry Object managers for a Doctrine persistence layer ManagerRegistry class.
+     */
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Order::class);
+    }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 

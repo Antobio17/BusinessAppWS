@@ -26,7 +26,7 @@ interface AppRepositoryInterface
     /**
      * Finds the entities with the specified status.
      *
-     * @param BusinessInterface $business Business to which the appointment belongs.
+     * @param BusinessInterface $business Business to which the entity belongs.
      * @param int|null $status Status of the entity.
      * @param UserInterface|null $user User of the entity.
      * @param bool $isWorker Boolean to know if the user is a worker.
@@ -39,6 +39,15 @@ interface AppRepositoryInterface
     public function findByStatus(BusinessInterface $business, ?int $status = NULL, ?UserInterface $user = NULL,
                                  bool              $isWorker = FALSE, ?DateTime $startDate = NULL,
                                  ?DateTime         $endDate = NULL, bool $resultAsArray = TRUE): array;
+
+    /**
+     * Gets the count of a collection in the business context.
+     *
+     * @param BusinessInterface $business Business to which the entity belongs.
+     *
+     * @return int int
+     */
+    public function getCount(BusinessInterface $business): int;
 
     /*********************************************** STATIC METHODS ***********************************************/
 

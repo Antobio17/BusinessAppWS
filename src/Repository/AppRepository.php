@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use DateTime;
 use App\Entity\Interfaces\BusinessInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\Interfaces\AppRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -94,6 +96,28 @@ abstract class AppRepository extends ServiceEntityRepository implements AppRepos
         endif;
 
         return $result;
+    }
+
+    /**
+     * @inheritDoc
+     * @return int int
+     */
+    public function getCount(BusinessInterface $business): int
+    {
+        $alias = 'ent';
+
+        $queryBuilder = $this->createQueryBuilder($alias);
+        $queryBuilder->select($queryBuilder->expr()->count($alias))
+            ->andWhere(sprintf('%s.business = :business', $alias))
+            ->setParameter('business', $business->getID());
+
+        $count = NULL;
+        try {
+            $count = $queryBuilder->getQuery()->getSingleScalarResult();
+        } catch (NoResultException | NonUniqueResultException $e) {
+        }
+
+        return is_numeric($count) ? (int)$count : 0;
     }
 
     /*********************************************** STATIC METHODS ***********************************************/
