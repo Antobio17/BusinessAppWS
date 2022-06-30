@@ -20,6 +20,22 @@ interface AppControllerInterface
      *      return array(
      *          array(
      *              'field' => $key,
+     *              'message' => sprintf('The %s field must be integer', $key)
+     *          )
+     *      )
+     *
+     * @param array $requestFields The array of fields to validate.
+     *
+     * @return array array
+     */
+    public function validateRequestIntegerFields(array $requestFields): array;
+
+    /**
+     * Validates the fields of the request passed by parameters as an array of key => value.
+     *
+     *      return array(
+     *          array(
+     *              'field' => $key,
      *              'message' => sprintf('The %s field cannot be empty', $key)
      *          )
      *      )

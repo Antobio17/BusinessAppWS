@@ -18,6 +18,8 @@ class AppController extends AbstractController implements AppControllerInterface
     public const REQUEST_FIELD_STATUS = 'status';
     public const REQUEST_FIELD_START_DATE = 'startDate';
     public const REQUEST_FIELD_END_DATE = 'endDate';
+    public const REQUEST_FIELD_OFFSET = 'offset';
+    public const REQUEST_FIELD_LIMIT = 'limit';
 
     /************************************************* PROPERTIES *************************************************/
 
@@ -36,6 +38,25 @@ class AppController extends AbstractController implements AppControllerInterface
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /*********************************************** PUBLIC METHODS ***********************************************/
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function validateRequestIntegerFields(array $requestFields): array
+    {
+        $validationErrors = array();
+        foreach ($requestFields as $fieldName => $value):
+            if ($value !== NULL && !is_numeric($value)):
+                $validationErrors[] = array(
+                    'field' => $fieldName,
+                    'message' => sprintf('The %s field must be integer', $fieldName)
+                );
+            endif;
+        endforeach;
+
+        return $validationErrors;
+    }
 
     /**
      * @inheritDoc
