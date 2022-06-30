@@ -65,6 +65,15 @@ class Product extends AbstractBusinessContext implements ProductInterface
 
     /**
      *  Order constructor.
+     *
+     * @param BusinessInterface $business Business to which the product belongs.
+     * @param string $name Name of the product.
+     * @param string $code Unique code of the product.
+     * @param string $description Description of the product.
+     * @param float $price Price of the product.
+     * @param int $category Category of the product.
+     * @param int $stock Stock of the product.
+     * @param int $discountPercent Discount percent associated to the product.
      */
     public function __construct(BusinessInterface $business, string $name, string $code, string $description,
                                 float $price, int $category, int $stock = 0, int $discountPercent = 0)
