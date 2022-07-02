@@ -29,7 +29,7 @@ class StoreService extends AppService implements StoreServiceInterface
             $totalProducts = $this->getProductRepository()->getCount($this->getBusiness());
             $result = array(
                 'products' => $products,
-                'total' => $totalProducts,
+                'last' => $limit !== NULL && $offset + count($products) === $totalProducts,
             );
         else:
             $result = NULL;
