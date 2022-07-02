@@ -9,6 +9,7 @@ use App\Entity\Traits\CodeTrait;
 use App\Entity\Traits\DescriptionTrait;
 use App\Entity\Traits\DiscountPercentTrait;
 use App\Entity\Traits\NameTrait;
+use App\Entity\Traits\SRCTrait;
 use App\Entity\Traits\StockTrait;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProductRepository;
@@ -61,6 +62,11 @@ class Product extends AbstractBusinessContext implements ProductInterface
         DiscountPercentTrait::__toArray as protected __discountPercentToArray;
     }
 
+    use SRCTrait {
+        SRCTrait::__construct as protected __srcConstruct;
+        SRCTrait::__toArray as protected __srcToArray;
+    }
+
     /************************************************* CONSTRUCT **************************************************/
 
     /**
@@ -72,11 +78,12 @@ class Product extends AbstractBusinessContext implements ProductInterface
      * @param string $description Description of the product.
      * @param float $price Price of the product.
      * @param int $category Category of the product.
+     * @param string $src Image SRC od the product.
      * @param int $stock Stock of the product.
      * @param int $discountPercent Discount percent associated to the product.
      */
     public function __construct(BusinessInterface $business, string $name, string $code, string $description,
-                                float $price, int $category, int $stock = 0, int $discountPercent = 0)
+                                float $price, int $category, string $src, int $stock = 0, int $discountPercent = 0)
     {
         parent::__construct($business);
 
@@ -86,6 +93,7 @@ class Product extends AbstractBusinessContext implements ProductInterface
         $this->__priceConstruct($price);
         $this->__stockConstruct($stock);
         $this->__categoryConstruct($category);
+        $this->__srcConstruct($src);
         $this->__discountPercentConstruct($discountPercent);
     }
 
@@ -125,6 +133,7 @@ class Product extends AbstractBusinessContext implements ProductInterface
             $this->__priceToArray(),
             $this->__stockToArray(),
             $this->__categoryToArray(),
+            $this->__srcToArray(),
             $this->__discountPercentToArray(),
         );
     }
