@@ -2,24 +2,23 @@
 
 namespace App\Repository;
 
+use App\Entity\Interfaces\PostalAddressInterface;
 use App\Entity\PostalAddress;
-use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\Interfaces\PostalAddressRepositoryInterface;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use function get_class;
+use Exception;
 
 /**
- * @method PostalAddress|null find($id, $lockMode = null, $lockVersion = null)
- * @method PostalAddress|null findOneBy(array $criteria, array $orderBy = null)
- * @method PostalAddress[]    findAll()
- * @method PostalAddress[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method PostalAddressInterface|null find($id, $lockMode = null, $lockVersion = null)
+ * @method PostalAddressInterface|null findOneBy(array $criteria, array $orderBy = null)
+ * @method PostalAddressInterface[]    findAll()
+ * @method PostalAddressInterface[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class PostalAddressRepository extends AppRepository implements PostalAddressRepositoryInterface
 {
+
+    /************************************************* CONSTRUCT **************************************************/
+
     /**
      * PostalAddressRepository constructor.
      *
@@ -29,5 +28,9 @@ class PostalAddressRepository extends AppRepository implements PostalAddressRepo
     {
         parent::__construct($registry, PostalAddress::class);
     }
+
+    /*********************************************** PUBLIC METHODS ***********************************************/
+
+    /*********************************************** STATIC METHODS ***********************************************/
 
 }

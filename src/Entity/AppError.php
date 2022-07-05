@@ -34,6 +34,9 @@ class AppError extends AbstractORM implements AppErrorInterface
     public const ERROR_APPOINTMENT_BOOK_DATE_INTERVAL = 23;
     public const ERROR_APPOINTMENT_BOOK_ERROR = 24;
 
+    public const ERROR_STORE_INCORRECT_POSTAL_ADDRESS = 40;
+    public const ERROR_STORE_UUID_EXIST = 41;
+
     /************************************************* PROPERTIES *************************************************/
 
     use TypeTrait {

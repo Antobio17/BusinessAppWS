@@ -43,14 +43,14 @@ class AppController extends AbstractController implements AppControllerInterface
      * @inheritDoc
      * @return array array
      */
-    public function validateRequestIntegerFields(array $requestFields): array
+    public function validateRequestNumericFields(array $requestFields): array
     {
         $validationErrors = array();
         foreach ($requestFields as $fieldName => $value):
             if ($value !== NULL && !is_numeric($value)):
                 $validationErrors[] = array(
                     'field' => $fieldName,
-                    'message' => sprintf('The %s field must be integer', $fieldName)
+                    'message' => sprintf('The %s field must be numeric', $fieldName)
                 );
             endif;
         endforeach;

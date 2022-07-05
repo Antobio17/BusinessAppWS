@@ -28,7 +28,7 @@ interface AppControllerInterface
      *
      * @return array array
      */
-    public function validateRequestIntegerFields(array $requestFields): array;
+    public function validateRequestNumericFields(array $requestFields): array;
 
     /**
      * Validates the fields of the request passed by parameters as an array of key => value.
