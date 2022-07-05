@@ -2,15 +2,17 @@
 
 namespace App\Repository;
 
+use App\Entity\Interfaces\OrderInterface;
 use App\Entity\Order;
 use App\Repository\Interfaces\OrderRepositoryInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
- * @method Order|null find($id, $lockMode = null, $lockVersion = null)
- * @method Order|null findOneBy(array $criteria, array $orderBy = null)
- * @method Order[]    findAll()
- * @method Order[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method OrderInterface|null find($id, $lockMode = null, $lockVersion = null)
+ * @method OrderInterface|null findOneBy(array $criteria, array $orderBy = null)
+ * @method OrderInterface[]    findAll()
+ * @method OrderInterface[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class OrderRepository extends AppRepository implements OrderRepositoryInterface
 {
@@ -28,6 +30,26 @@ class OrderRepository extends AppRepository implements OrderRepositoryInterface
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
+
+    /**
+     * @inheritDoc
+     * @return OrderInterface|null OrderInterface|null
+     */
+    public function findByUUID(string $UUID): ?OrderInterface
+    {
+        $alias = 'ord';
+
+        try{
+            $order = $this->createQueryBuilder($alias)
+                ->andWhere($alias . '.UUID = :UUID')
+                ->setParameter('UUID', $UUID)
+                ->getQuery()->getOneOrNullResult();
+        } catch(Exception $e) {
+            $order = NULL;
+        }
+
+        return $order;
+    }
 
     /*********************************************** STATIC METHODS ***********************************************/
 

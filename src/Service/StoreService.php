@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Entity\AppError;
+use App\Entity\Order;
 use App\Helper\ToolsHelper;
 use App\Service\Interfaces\StoreServiceInterface;
 
@@ -39,6 +41,49 @@ class StoreService extends AppService implements StoreServiceInterface
         endif;
 
         return $result;
+    }
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function notifyNewOrder(int $postalAddressID, float $amount, string $UUID, array $productsData): ?bool
+    {
+        $result = NULL;
+
+        if ($this->getBusiness() !== NULL):
+            $user = $this->getUser();
+            $postalAddress = $this->getPostalAddressRepository()->find($postalAddressID);
+            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+            if ($postalAddress === NULL || !$user->isOwnerPostalAddress($postalAddress->getID())):
+                $message = $postalAddress === NULL ? 'la dirección es nula' : 'la dirección no pertenece al usuario';
+                $this->registerAppError(
+                    ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
+                    AppError::ERROR_STORE_INCORRECT_POSTAL_ADDRESS,
+                    sprintf('Error en la creación de pedido: %s.', $message)
+                );
+            endif;
+
+            $existUUID = $this->getOrderRepository()->findByUUID($UUID) !== NULL;
+            if ($existUUID):
+                $this->registerAppError(
+                    ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
+                    AppError::ERROR_STORE_UUID_EXIST,
+                    'Error en la creación de pedido: UUID ya registrado.'
+                );
+            endif;
+
+            if (empty($this->getErrors())):
+                $order = new Order($this->getBusiness(), $user, $postalAddress, $UUID, $amount);
+                $created = $this->persistAndFlush($order);
+            endif;
+        else:
+            $this->registerAppError_BusinessContextUndefined(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__)
+            );
+        endif;
+
+        return $created ?? NULL;
     }
 
     /********************************************** PROTECTED METHODS *********************************************/

@@ -4,8 +4,11 @@ namespace App\Entity;
 
 use App\Entity\Interfaces\BusinessContextInterface;
 use App\Entity\Interfaces\BusinessInterface;
+use App\Entity\Interfaces\PostalAddressInterface;
 use App\Entity\Traits\Interfaces\HasIsWorkerInterface;
 use App\Entity\Traits\IsWorkerTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use App\Entity\Traits\NameTrait;
@@ -21,9 +24,9 @@ use App\Entity\Traits\Interfaces\HasNameInterface;
 use App\Entity\Traits\Interfaces\HasEmailInterface;
 use App\Entity\Traits\Interfaces\HasSurnameInterface;
 use App\Entity\Traits\Interfaces\HasPasswordInterface;
+use Doctrine\ORM\Mapping\JoinTable;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Entity\Traits\Interfaces\HasPhoneNumberInterface;
-use App\Entity\Traits\Interfaces\HasPostalAddressInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
@@ -47,7 +50,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  */
 class User extends AbstractBusinessContext implements BusinessContextInterface, UserInterface,
     PasswordAuthenticatedUserInterface, HasEmailInterface, HasPasswordInterface, HasPhoneNumberInterface,
-    HasNameInterface, HasSurnameInterface, HasPostalAddressInterface, HasIsWorkerInterface
+    HasNameInterface, HasSurnameInterface, HasIsWorkerInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
@@ -83,14 +86,19 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
         SurnameTrait::__toArray as protected __surnameToArray;
     }
 
-    use PostalAddressTrait {
-        PostalAddressTrait::__toArray as protected __postalAddressToArray;
-    }
-
     use IsWorkerTrait {
         IsWorkerTrait::__construct as protected __isWorkerConstruct;
         IsWorkerTrait::__toArray as protected __isWorkerToArray;
     }
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\PostalAddress", cascade={"persist"})
+     * @JoinTable(name="postal_addresses_users",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="postal_address_id", referencedColumnName="id")}
+     * )
+     */
+    protected Collection $postalAddresses;
 
     /**
      * @ORM\Column(type="json")
@@ -112,7 +120,7 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
      *
      */
     public function __construct(BusinessInterface $business, string $email, string $password, string $phoneNumber,
-                                string $name, string $surname, array $roles = array(), bool $isWorker = FALSE)
+                                string            $name, string $surname, array $roles = array(), bool $isWorker = FALSE)
     {
         parent::__construct($business);
 
@@ -124,6 +132,8 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
         $this->__isWorkerConstruct($isWorker);
 
         $this->setRoles(empty($roles) ? array(static::ROLE_USER) : $roles);
+
+        $this->postalAddresses = new ArrayCollection();
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -189,6 +199,49 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
     }
 
     /**
+     * Gets the collection of postal addresses of the user.
+     *
+     * @return Collection|PostalAddressInterface[] Collection|PostalAddressInterface[]
+     */
+    public function getPostalAddresses(): Collection
+    {
+        return $this->postalAddresses;
+    }
+
+    /**
+     * Add a new postal address to the user.
+     *
+     * @param PostalAddressInterface $postalAddress The new postal address to add.
+     *
+     * @return $this $this
+     */
+    public function addPostalAddress(PostalAddressInterface $postalAddress): self
+    {
+        $this->getPostalAddresses()->add($postalAddress);
+
+        return $this;
+    }
+
+    /**
+     * Checks if the ID of the postal address belongs to the user.
+     *
+     * @param int $postalAddressID ID os the postal address to check.
+     *
+     * @return bool bool
+     */
+    public function isOwnerPostalAddress(int $postalAddressID): bool
+    {
+        foreach ($this->getPostalAddresses() as $postalAddress):
+            if ($postalAddress->getID() === $postalAddressID):
+                $isOwner = TRUE;
+                break;
+            endif;
+        endforeach;
+
+        return $isOwner ?? FALSE;
+    }
+
+    /**
      * @inheritDoc
      * @return array array
      */
@@ -201,7 +254,6 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
             $this->__phoneNumberToArray(),
             $this->__nameToArray(),
             $this->__surnameToArray(),
-            $this->__postalAddressToArray(),
             $this->__isWorkerToArray(),
             array(
                 'roles' => $this->getRoles(),

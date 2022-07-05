@@ -3,7 +3,6 @@
 namespace App\Entity\Traits;
 
 use App\Entity\Interfaces\PostalAddressInterface;
-use App\Entity\PostalAddress;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
 use App\Entity\Traits\Interfaces\HasPostalAddressInterface;

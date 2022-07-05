@@ -21,6 +21,15 @@ interface StoreControllerInterface extends HasStoreServiceInterface
      */
     public function getBusinessProducts(Request $request): Response;
 
+    /**
+     * Route to notify that a new order has been created.
+     *
+     * @param Request $request Request of the route.
+     *
+     * @return Response Response
+     */
+    public function notifyNewOrder(Request $request): Response;
+
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /*********************************************** PUBLIC METHODS ***********************************************/
