@@ -19,7 +19,7 @@ trait PostalAddressTrait
 
     /**
      * @ManyToOne(targetEntity="App\Entity\PostalAddress", cascade={"persist"})
-     * @JoinColumn(name="postalAddress_id", referencedColumnName="id", nullable=true)
+     * @JoinColumn(name="postal_address_id", referencedColumnName="id", nullable=true)
      */
     protected ?PostalAddressInterface $postalAddress;
 

@@ -41,7 +41,7 @@ class OrderRepository extends AppRepository implements OrderRepositoryInterface
 
         try{
             $order = $this->createQueryBuilder($alias)
-                ->andWhere($alias . '.UUID = :UUID')
+                ->andWhere($alias . '.uuid = :UUID')
                 ->setParameter('UUID', $UUID)
                 ->getQuery()->getOneOrNullResult();
         } catch(Exception $e) {
