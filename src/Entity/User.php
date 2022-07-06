@@ -92,7 +92,7 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
     }
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\PostalAddress", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\PostalAddress", cascade={"all"})
      * @JoinTable(name="postal_addresses_users",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="postal_address_id", referencedColumnName="id")}
@@ -227,18 +227,18 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
      *
      * @param int $postalAddressID ID os the postal address to check.
      *
-     * @return bool bool
+     * @return PostalAddressInterface|null PostalAddressInterface|null
      */
-    public function isOwnerPostalAddress(int $postalAddressID): bool
+    public function isOwnerPostalAddress(int $postalAddressID): ?PostalAddressInterface
     {
         foreach ($this->getPostalAddresses() as $postalAddress):
             if ($postalAddress->getID() === $postalAddressID):
-                $isOwner = TRUE;
+                $result = $postalAddress;
                 break;
             endif;
         endforeach;
 
-        return $isOwner ?? FALSE;
+        return $result ?? NULL;
     }
 
     /**

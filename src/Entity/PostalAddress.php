@@ -66,13 +66,13 @@ class PostalAddress extends AbstractORM implements PostalAddressInterface
      *
      * @param string $name Name to set in the entity.
      * @param string $address Address to set in the entity.
-     * @param string $neighborhood Neighborhood to set in the entity.
+     * @param string|null $neighborhood Neighborhood to set in the entity.
      * @param string $postalCode PostalCode to set in the entity.
      * @param string $population Population to set in the entity.
      * @param string $province Province to set in the entity.
      * @param string $state State to set in the entity.
      */
-    public function __construct(string $name, string $address, string $neighborhood, string $postalCode,
+    public function __construct(string $name, string $address, ?string $neighborhood, string $postalCode,
                                 string $population, string $province, string $state)
     {
         $this->__nameConstruct($name);
@@ -99,6 +99,7 @@ class PostalAddress extends AbstractORM implements PostalAddressInterface
     public function __toArray(): array
     {
         return array_merge(
+            parent::__toArray(),
             $this->__nameToArray(),
             $this->__addressToArray(),
             $this->__neighborhoodToArray(),

@@ -17,7 +17,7 @@ trait NameTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=1024, unique=true)
+     * @ORM\Column(type="string", length=1024)
      */
     protected string $name;
 

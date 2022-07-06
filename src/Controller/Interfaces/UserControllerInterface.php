@@ -17,7 +17,7 @@ interface UserControllerInterface extends HasUserServiceInterface
      *
      * @param Request $request Request of the route.
      *
-     * @return JsonResponse JsonResponse
+     * @return Response Response
      */
     public function signup(Request $request): Response;
 
@@ -26,9 +26,18 @@ interface UserControllerInterface extends HasUserServiceInterface
      *
      * @param Request $request Request of the route.
      *
-     * @return JsonResponse JsonResponse
+     * @return Response Response
      */
     public function signin(Request $request): Response;
+
+    /**
+     * Route to create a postal address for a user.
+     *
+     * @param Request $request Request of the route.
+     *
+     * @return Response Response
+     */
+    public function createPostalAddress(Request $request): Response;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 

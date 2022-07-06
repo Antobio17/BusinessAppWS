@@ -17,28 +17,35 @@ trait NeighborhoodTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=1024)
+     * @ORM\Column(type="string", length=1024, nullable=true)
      */
-    protected string $neighborhood;
+    protected ?string $neighborhood;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return string string
+     * @return string|null
      */
-    public function getNeighborhood(): string
+    public function getNeighborhood(): ?string
     {
-        return ToolsHelper::decrypt($this->neighborhood, getenv(static::SECRET_ENCRYPTION_TOKEN));
+        if ($this->neighborhood !== NULL):
+            $neighborhood = ToolsHelper::decrypt($this->neighborhood, getenv(static::SECRET_ENCRYPTION_TOKEN));
+        endif;
+
+        return $neighborhood ?? NULL;
     }
 
     /**
      * @inheritDoc
      * @return $this $this
      */
-    public function setNeighborhood(string $neighborhood): self
+    public function setNeighborhood(?string $neighborhood): self
     {
-        $this->neighborhood = ToolsHelper::encrypt($neighborhood, getenv(static::SECRET_ENCRYPTION_TOKEN));
+        $this->neighborhood = $neighborhood;
+        if ($neighborhood !== NULL):
+            $this->neighborhood = ToolsHelper::encrypt($neighborhood, getenv(static::SECRET_ENCRYPTION_TOKEN));
+        endif;
 
         return $this;
     }
@@ -48,9 +55,9 @@ trait NeighborhoodTrait
     /**
      *  NeighborhoodTrait constructor.
      *
-     * @param string $neighborhood Neighborhood to set in the entity.
+     * @param string|null $neighborhood Neighborhood to set in the entity.
      */
-    public function __construct(string $neighborhood)
+    public function __construct(?string $neighborhood)
     {
         $this->setNeighborhood($neighborhood);
     }

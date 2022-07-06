@@ -13,18 +13,18 @@ interface HasNeighborhoodInterface
     /**
      * Gets the Neighborhood property of the Entity.
      *
-     * @return string string
+     * @return string|null string|null
      */
-    public function getNeighborhood(): string;
+    public function getNeighborhood(): ?string;
 
     /**
      * Sets the Neighborhood property of the Entity.
      *
-     * @param string $neighborhood Neighborhood of the Entity to set.
+     * @param string|null $neighborhood Neighborhood of the Entity to set.
      *
      * @return $this $this
      */
-    public function setNeighborhood(string $neighborhood): self;
+    public function setNeighborhood(?string $neighborhood): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 

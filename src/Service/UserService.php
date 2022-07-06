@@ -2,6 +2,9 @@
 
 namespace App\Service;
 
+use App\Entity\AbstractBusinessContext;
+use App\Entity\AppError;
+use App\Entity\PostalAddress;
 use App\Entity\User;
 use App\Helper\ToolsHelper;
 use Doctrine\Persistence\ManagerRegistry;
@@ -15,6 +18,8 @@ class UserService extends AppService implements UserServiceInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
+
+    public const MAX_POSTAL_ADDRESSES = 5;
 
     /************************************************* PROPERTIES *************************************************/
 
@@ -121,8 +126,6 @@ class UserService extends AppService implements UserServiceInterface
     /**
      * @inheritDoc
      * @return bool bool
-     * @noinspection PhpDocMissingThrowsInspection
-     * @noinspection PhpUnhandledExceptionInspection
      */
     public function signup(string $email, string $password, string $phoneNumber, string $name, string $surname): bool
     {
@@ -150,8 +153,6 @@ class UserService extends AppService implements UserServiceInterface
     /**
      * @inheritDoc
      * @return array array
-     * @noinspection PhpDocMissingThrowsInspection
-     * @noinspection PhpUnhandledExceptionInspection
      */
     public function signin(string $email, string $password): ?array
     {
@@ -179,6 +180,51 @@ class UserService extends AppService implements UserServiceInterface
         endif;
 
         return $token;
+    }
+
+
+    /**
+     * @inheritDoc
+     * @return bool bool
+     */
+    public function managePostalAddress(string $name, string $address, ?string $neighborhood, string $postalCode,
+                                        string $population, string $province, string $state,
+                                        ?int   $postalAddressID = NULL): bool
+    {
+        $user = $this->getUser();
+        if ($user instanceof User):
+            if ($postalAddressID !== NULL):
+                $postalAddress = $user->isOwnerPostalAddress($postalAddressID);
+                if ($postalAddress !== NULL):
+                    $postalAddress->setName($name)
+                        ->setAddress($address)
+                        ->setNeighborhood($neighborhood)
+                        ->setPostalCode($postalCode)
+                        ->setPopulation($population)
+                        ->setProvince($province)
+                        ->setState($state);
+                    $persisted = $this->persistAndFlush($postalAddress);
+                else:
+                    $this->registerAppError(
+                        ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
+                        AppError::ERROR_USER_WRONG_POSTAL_ADDRESS,
+                        'Error en la actualización de dirección postal: no pertenece al usuario de la sesión.'
+                    );
+                endif;
+            elseif ($user->getPostalAddresses()->count() < static::MAX_POSTAL_ADDRESSES):
+                $postalAddress = new PostalAddress(
+                    $name, $address, $neighborhood, $postalCode, $population, $province, $state
+                );
+                $user->addPostalAddress($postalAddress);
+                $persisted = $this->persistAndFlush($user);
+            endif;
+        else:
+            $this->registerAppError_UserContextUndefined(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__)
+            );
+        endif;
+
+        return $persisted ?? FALSE;
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
