@@ -16,18 +16,18 @@ interface HasSentAtInterface
     /**
      * Gets the SentAt property.
      *
-     * @return DateTime DateTime
+     * @return DateTime|null DateTime|null
      */
-    public function getSentAt(): DateTime;
+    public function getSentAt(): ?DateTime;
 
     /**
      * Sets the SentAt property.
      *
-     * @param DateTime $sentAt The sent date to be set.
+     * @param DateTime|null $sentAt The sent date to be set.
      *
      * @return $this $this
      */
-    public function setSentAt(DateTime $sentAt): self;
+    public function setSentAt(?DateTime $sentAt): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 

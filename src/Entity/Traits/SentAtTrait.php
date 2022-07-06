@@ -17,28 +17,27 @@ trait SentAtTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @var DateTime
-     * @ORM\Column(type="datetime")
+     * @var DateTime|null
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    protected DateTime $sentAt;
+    protected ?DateTime $sentAt;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return DateTime DateTime
+     * @return DateTime|null DateTime|null
      */
-    public function getSentAt(): DateTime
+    public function getSentAt(): ?DateTime
     {
         return $this->sentAt;
     }
 
     /**
      * @inheritDoc
-     * @param DateTime $sentAt
      * @return $this $this
      */
-    public function setSentAt(DateTime $sentAt): self
+    public function setSentAt(?DateTime $sentAt): self
     {
         $this->sentAt = $sentAt;
 
@@ -50,7 +49,7 @@ trait SentAtTrait
     /**
      *  SentAt constructor.
      */
-    public function __construct(DateTime $sentAt)
+    public function __construct(?DateTime $sentAt = NULL)
     {
         $this->setSentAt($sentAt);
     }

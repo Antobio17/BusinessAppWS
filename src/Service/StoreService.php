@@ -53,10 +53,10 @@ class StoreService extends AppService implements StoreServiceInterface
 
         if ($this->getBusiness() !== NULL):
             $user = $this->getUser();
-            $postalAddress = $this->getPostalAddressRepository()->find($postalAddressID);
             /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-            if ($postalAddress === NULL || !$user->isOwnerPostalAddress($postalAddress->getID())):
-                $message = $postalAddress === NULL ? 'la dirección es nula' : 'la dirección no pertenece al usuario';
+            $postalAddress = $user->isOwnerPostalAddress($postalAddressID);
+            if ($postalAddress === NULL):
+                $message = 'la dirección no pertenece al usuario';
                 $this->registerAppError(
                     ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
                     AppError::ERROR_STORE_INCORRECT_POSTAL_ADDRESS,
@@ -64,8 +64,7 @@ class StoreService extends AppService implements StoreServiceInterface
                 );
             endif;
 
-            $existUUID = $this->getOrderRepository()->findByUUID($UUID) !== NULL;
-            if ($existUUID):
+            if ($this->getOrderRepository()->findByUUID($UUID) !== NULL):
                 $this->registerAppError(
                     ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
                     AppError::ERROR_STORE_UUID_EXIST,

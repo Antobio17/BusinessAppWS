@@ -19,6 +19,16 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * Order entity.
  *
  * @ORM\Entity(repositoryClass=OrderRepository::class)
+ * @ORM\Table(name="`order`")
+ * @ORM\AssociationOverrides({
+ *      @ORM\AssociationOverride(name="postalAddress",
+ *          joinColumns=@ORM\JoinColumn(
+ *              name                 = "postal_address_id",
+ *              referencedColumnName = "id",
+ *              nullable             = false
+ *          )
+ *      )
+ * })
  */
 class Order extends AbstractUserContext implements OrderInterface
 {
@@ -73,10 +83,11 @@ class Order extends AbstractUserContext implements OrderInterface
      */
     public function __construct(BusinessInterface $business, UserInterface $user, PostalAddress $postalAddress,
                                 string            $uuid, float $amount = 0.0, int $status = 0,
-                                DateTime          $createdAt = NULL, DateTime $sentAt = NULL)
+                                ?DateTime          $createdAt = NULL, ?DateTime $sentAt = NULL)
     {
         parent::__construct($business, $user);
 
+        $this->__postalAddressConstruct($postalAddress);
         $this->__uuidConstruct($uuid);
         $this->__statusConstruct($status);
         $this->__amountConstruct($amount);
