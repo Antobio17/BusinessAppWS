@@ -21,6 +21,13 @@ class UserController extends AppController implements UserControllerInterface
     public const REQUEST_FIELD_PHONENUMBER = 'phoneNumber';
     public const REQUEST_FIELD_NAME = 'name';
     public const REQUEST_FIELD_SURNAME = 'surname';
+    public const REQUEST_FIELD_ADDRESS = 'address';
+    public const REQUEST_FIELD_NEIGHBORHOOD = 'neighborhood';
+    public const REQUEST_FIELD_POSTAL_CODE = 'postalCode';
+    public const REQUEST_FIELD_POPULATION = 'population';
+    public const REQUEST_FIELD_PROVINCE = 'province';
+    public const REQUEST_FIELD_STATE = 'state';
+    public const REQUEST_FIELD_POSTAL_ADDRESS_ID = 'postalAddressID';
 
     /************************************************* PROPERTIES *************************************************/
 
@@ -101,6 +108,52 @@ class UserController extends AppController implements UserControllerInterface
         if (empty($validationErrors)):
             if ($this->getUserService()->setBusinessContext($domain)):
                 $data = $this->getUserService()->signin($email, $password);
+            endif;
+        endif;
+
+        return $this->createJsonResponse($data, $validationErrors, $this->getUserService());
+    }
+
+    /**
+     * @Route("/api/user/create/address")
+     *
+     * @inheritDoc
+     * @return JsonResponse JsonResponse
+     */
+    public function createPostalAddress(Request $request): Response
+    {
+        $domain = $request->server->get('HTTP_HOST');
+        $name = $request->request->get(static::REQUEST_FIELD_NAME);
+        $address = $request->request->get(static::REQUEST_FIELD_ADDRESS);
+        $neighborhood = $request->request->get(static::REQUEST_FIELD_NEIGHBORHOOD);
+        $postalCode = $request->request->get(static::REQUEST_FIELD_POSTAL_CODE);
+        $population = $request->request->get(static::REQUEST_FIELD_POPULATION);
+        $province = $request->request->get(static::REQUEST_FIELD_PROVINCE);
+        $state = $request->request->get(static::REQUEST_FIELD_STATE);
+        $postalAddressID = $request->request->get(static::REQUEST_FIELD_POSTAL_ADDRESS_ID);
+
+        # Data Validation
+        $validationErrors = array_merge(
+            $this->validateRequiredRequestFields(array(
+                static::REQUEST_FIELD_NAME => $name,
+                static::REQUEST_FIELD_ADDRESS => $address,
+                static::REQUEST_FIELD_POSTAL_CODE => $postalCode,
+                static::REQUEST_FIELD_POPULATION => $population,
+                static::REQUEST_FIELD_PROVINCE => $province,
+                static::REQUEST_FIELD_STATE => $state,
+            )),
+            $this->validateRequestNumericFields(array(
+                static::REQUEST_FIELD_POSTAL_ADDRESS_ID => $postalAddressID,
+            ))
+        );
+
+        $data = NULL;
+        if (empty($validationErrors)):
+            if ($this->getUserService()->setBusinessContext($domain)):
+                $postalAddressID = $postalAddressID !== NULL ? (int)$postalAddressID : NULL;
+                $data = $this->getUserService()->managePostalAddress(
+                    $name, $address, $neighborhood, $postalCode, $population, $province, $state, $postalAddressID
+                );
             endif;
         endif;
 

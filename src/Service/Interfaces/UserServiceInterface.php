@@ -90,6 +90,24 @@ interface UserServiceInterface extends AppServiceInterface
      */
     public function signin(string $email, string $password): ?array;
 
+    /**
+     * Manage a postal address to the user logged, if an ID is passed it will modify the existing address.
+     *
+     * @param string $name Name of the Postal Address.
+     * @param string $address The address.
+     * @param string|null $neighborhood The neighborhood of the postal address.
+     * @param string $postalCode The postal code of the postal address.
+     * @param string $population The population of the postal address.
+     * @param string $province The province of the postal address.
+     * @param string $state The state of the postal address.
+     * @param int|null $postalAddressID The ID of an existing postal address.
+     *
+     * @return bool bool
+     */
+    public function managePostalAddress(string $name, string $address, ?string $neighborhood, string $postalCode,
+                                        string $population, string $province, string $state,
+                                        ?int $postalAddressID = NULL): bool;
+
     /*********************************************** STATIC METHODS ***********************************************/
 
 }
