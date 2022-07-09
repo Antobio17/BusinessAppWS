@@ -74,7 +74,7 @@ class StoreService extends AppService implements StoreServiceInterface
             endif;
 
             if (empty($this->getErrors())):
-                $order = new Order($this->getBusiness(), $user, $postalAddress, $UUID, $amount);
+                $order = new Order($this->getBusiness(), $user, $postalAddress, $UUID, $amount, $productsData);
                 $created = $this->persistAndFlush($order);
             endif;
         endif;
