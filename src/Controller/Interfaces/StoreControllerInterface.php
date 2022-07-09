@@ -48,6 +48,15 @@ interface StoreControllerInterface extends HasStoreServiceInterface
      */
     public function getProductCategories(Request $request): Response;
 
+    /**
+     * Route to get the orders of a user in the business.
+     *
+     * @param Request $request Request of the route.
+     *
+     * @return Response Response
+     */
+    public function getUserOrders(Request $request): Response;
+
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /*********************************************** PUBLIC METHODS ***********************************************/
