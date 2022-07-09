@@ -63,6 +63,25 @@ class ProductRepository extends AppRepository implements ProductRepositoryInterf
         return $result;
     }
 
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function findProductCategoryIDs(BusinessInterface $business): array
+    {
+        $alias = 'pdt';
+        $aliasCategory = 'cat';
+
+        $queryBuilder = $this->createQueryBuilder($alias)
+            ->select(sprintf('%s.id', $aliasCategory))
+            ->andWhere(sprintf('%s.business = :business', $alias))
+            ->setParameter('business', $business->getID())
+            ->join(sprintf('%s.category', $alias), $aliasCategory)
+            ->distinct();
+
+        return $queryBuilder->getQuery()->execute();
+    }
+
     /*********************************************** STATIC METHODS ***********************************************/
 
 }

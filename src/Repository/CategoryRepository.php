@@ -27,6 +27,29 @@ class CategoryRepository extends AppRepository implements CategoryRepositoryInte
         parent::__construct($registry, Category::class);
     }
 
+    /**
+     * @inheritDoc
+     * @return array
+     */
+    public function findByIDs(array $categoryIDs, bool $resultAsArray = TRUE): array
+    {
+        $alias = 'cat';
+
+        $query = $this->createQueryBuilder($alias)
+            ->andWhere(sprintf('%s.id IN (:categoryIDs)', $alias))
+            ->setParameter('categoryIDs', $categoryIDs)
+            ->orderBy(sprintf('%s.name', $alias), 'ASC')
+            ->getQuery();
+
+        if ($resultAsArray):
+            $result = $query->getArrayResult();
+        else:
+            $result = $query->execute();
+        endif;
+
+        return $result;
+    }
+
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /*********************************************** STATIC METHODS ***********************************************/
