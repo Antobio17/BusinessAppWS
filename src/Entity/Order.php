@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Interfaces\BusinessInterface;
 use App\Entity\Traits\AmountTrait;
 use App\Entity\Traits\CreatedAtTrait;
+use App\Entity\Traits\DataTrait;
 use App\Entity\Traits\PostalAddressTrait;
 use App\Entity\Traits\SentAtTrait;
 use App\Entity\Traits\StatusTrait;
@@ -72,6 +73,11 @@ class Order extends AbstractUserContext implements OrderInterface
         UUIDTrait::__toArray as protected __uuidToArray;
     }
 
+    use DataTrait {
+        DataTrait::__construct as protected __dataConstruct;
+        DataTrait::__toArray as protected __dataToArray;
+    }
+
     /************************************************* CONSTRUCT **************************************************/
 
     /**
@@ -87,7 +93,7 @@ class Order extends AbstractUserContext implements OrderInterface
      * @param DateTime|null $sentAt Date when the order was sent.
      */
     public function __construct(BusinessInterface $business, UserInterface $user, PostalAddress $postalAddress,
-                                string            $uuid, float $amount = 0.0, int $status = 0,
+                                string            $uuid, float $amount = 0.0, array $data = array(), int $status = 0,
                                 ?DateTime          $createdAt = NULL, ?DateTime $sentAt = NULL)
     {
         parent::__construct($business, $user);
@@ -96,6 +102,7 @@ class Order extends AbstractUserContext implements OrderInterface
         $this->__uuidConstruct($uuid);
         $this->__statusConstruct($status);
         $this->__amountConstruct($amount);
+        $this->__dataConstruct($data);
         $this->__createdAtConstruct($createdAt ?? date_create());
         $this->__sentAtConstruct($sentAt);
     }
@@ -117,6 +124,7 @@ class Order extends AbstractUserContext implements OrderInterface
             $this->__amountToArray(),
             $this->__createdAtToArray(),
             $this->__sentAtToArray(),
+            $this->__dataToArray(),
         );
     }
 

@@ -4,6 +4,7 @@ namespace App\Entity\Interfaces;
 
 use App\Entity\Traits\Interfaces\HasAmountInterface;
 use App\Entity\Traits\Interfaces\HasCreatedAtInterface;
+use App\Entity\Traits\Interfaces\HasDataInterface;
 use App\Entity\Traits\Interfaces\HasPostalAddressInterface;
 use App\Entity\Traits\Interfaces\HasSentAtInterface;
 use App\Entity\Traits\Interfaces\HasStatusInterface;
@@ -13,7 +14,7 @@ use App\Entity\Traits\Interfaces\HasUUIDInterface;
  * Order interface.
  */
 interface OrderInterface extends HasPostalAddressInterface, HasAmountInterface, HasStatusInterface,
-    HasCreatedAtInterface, HasSentAtInterface, HasUUIDInterface
+    HasCreatedAtInterface, HasSentAtInterface, HasUUIDInterface, HasDataInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
