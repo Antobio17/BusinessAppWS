@@ -136,9 +136,28 @@ class StoreService extends AppService implements StoreServiceInterface
             endforeach;
             $categoryIDs = array_values($categoryIDs);
             $categories = $this->getCategoryRepository()->findByIDs($categoryIDs);
-            $result = array(
-                'categories' => $categories,
-            );
+            $result = array('categories' => $categories);
+        endif;
+
+        return $result ?? NULL;
+    }
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function getUserOrders(): ?array
+    {
+        $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
+
+        $user = $this->getUser();
+        if ($this->getBusiness() === NULL):
+            $this->registerAppError_BusinessContextUndefined($method);
+        elseif (!$user instanceof User):
+            $this->registerAppError_UserContextUndefined($method);
+        else:
+            $orders = $this->getOrderRepository()->findByUser($this->getBusiness(), $user);
+            $result = array('orders' => $orders);
         endif;
 
         return $result ?? NULL;

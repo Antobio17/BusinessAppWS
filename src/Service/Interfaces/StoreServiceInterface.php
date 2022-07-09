@@ -42,9 +42,17 @@ interface StoreServiceInterface extends AppServiceInterface
 
     /**
      * Gets the categories of the business' product.
+     *
      * @return array array
      */
     public function getProductCategories(): ?array;
+
+    /**
+     * Gets the orders of a user in the business.
+     *
+     * @return array array
+     */
+    public function getUserOrders(): ?array;
 
     /*********************************************** STATIC METHODS ***********************************************/
 

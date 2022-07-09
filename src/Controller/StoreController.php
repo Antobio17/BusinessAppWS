@@ -169,6 +169,23 @@ class StoreController extends AppController implements StoreControllerInterface
         return $this->createJsonResponse($data ?? NULL, array(), $this->getStoreService());
     }
 
+    /**
+     * @Route("/api/store/order/user/get")
+     *
+     * @inheritDoc
+     * @return Response Response
+     */
+    public function getUserOrders(Request $request): Response
+    {
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+
+        if ($this->getStoreService()->setBusinessContext($domain)):
+            $data = $this->getStoreService()->getUserOrders();
+        endif;
+
+        return $this->createJsonResponse($data ?? NULL, array(), $this->getStoreService());
+    }
+
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /********************************************** PROTECTED METHODS *********************************************/
