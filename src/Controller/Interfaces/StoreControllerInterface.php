@@ -30,6 +30,15 @@ interface StoreControllerInterface extends HasStoreServiceInterface
      */
     public function notifyNewOrder(Request $request): Response;
 
+    /**
+     * Route to cancel an order that has been created, and it has pending status.
+     *
+     * @param Request $request Request of the route.
+     *
+     * @return Response Response
+     */
+    public function cancelPendingOrder(Request $request): Response;
+
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /*********************************************** PUBLIC METHODS ***********************************************/
