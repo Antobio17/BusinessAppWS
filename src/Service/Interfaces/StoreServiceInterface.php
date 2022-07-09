@@ -31,6 +31,15 @@ interface StoreServiceInterface extends AppServiceInterface
      */
     public function notifyNewOrder(int $postalAddressID, float $amount, string $UUID, array $productsData): ?bool;
 
+    /**
+     * Cancel a user's order that it is in pending status.
+     *
+     * @param int $orderID ID of the order to cancel.
+     *
+     * @return bool bool
+     */
+    public function cancelPendingOrder(int $orderID): ?bool;
+
     /*********************************************** STATIC METHODS ***********************************************/
 
 }

@@ -19,6 +19,7 @@ class StoreController extends AppController implements StoreControllerInterface
     public const REQUEST_FIELD_AMOUNT = 'amount';
     public const REQUEST_FIELD_UUID = 'uuid';
     public const REQUEST_FIELD_PRODUCTS_DATA = 'productsData';
+    public const REQUEST_FIELD_ORDER_ID = 'orderID';
 
     public const PRODUCT_DATA_KEY_ID = 'productID';
     public const PRODUCT_DATA_KEY_NAME = 'name';
@@ -49,7 +50,7 @@ class StoreController extends AppController implements StoreControllerInterface
     /************************************************** ROUTING ***************************************************/
 
     /**
-     * @Route("/api/get/store/products")
+     * @Route("/api/store/product/get")
      *
      * @inheritDoc
      * @return Response Response
@@ -79,7 +80,7 @@ class StoreController extends AppController implements StoreControllerInterface
     }
 
     /**
-     * @Route("/api/notify/order/")
+     * @Route("/api/store/order/create")
      *
      * @inheritDoc
      * @return Response Response
@@ -120,6 +121,38 @@ class StoreController extends AppController implements StoreControllerInterface
         endif;
 
         return $this->createJsonResponse_Creation($data, $validationErrors, $this->getStoreService());
+    }
+
+    /**
+     * @Route("/api/store/order/cancel")
+     *
+     * @inheritDoc
+     * @return Response Response
+     */
+    public function cancelPendingOrder(Request $request): Response
+    {
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+        $orderID = $request->request->get(static::REQUEST_FIELD_ORDER_ID);
+
+        # Data Validation
+        $validationErrors = array_merge(
+            $this->validateRequiredRequestFields(array(
+                static::REQUEST_FIELD_ORDER_ID => $orderID,
+            )),
+            $this->validateRequestNumericFields(array(
+                static::REQUEST_FIELD_ORDER_ID => $orderID,
+            )),
+        );
+
+        $data = NULL;
+        if (empty($validationErrors)):
+            $orderID = (int)$orderID;
+            if ($this->getStoreService()->setBusinessContext($domain)):
+                $data = $this->getStoreService()->cancelPendingOrder($orderID);
+            endif;
+        endif;
+
+        return $this->createJsonResponse($data, $validationErrors, $this->getStoreService());
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
