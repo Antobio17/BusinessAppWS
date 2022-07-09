@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Interfaces\BusinessInterface;
+use App\Entity\Interfaces\CategoryInterface;
 use App\Entity\Traits\AmountTrait;
 use App\Entity\Traits\CategoryTrait;
 use App\Entity\Traits\CodeTrait;
@@ -77,13 +78,14 @@ class Product extends AbstractBusinessContext implements ProductInterface
      * @param string $code Unique code of the product.
      * @param string $description Description of the product.
      * @param float $price Price of the product.
-     * @param int $category Category of the product.
+     * @param CategoryInterface $category Category of the product.
      * @param string $src Image SRC od the product.
      * @param int $stock Stock of the product.
      * @param int $discountPercent Discount percent associated to the product.
      */
     public function __construct(BusinessInterface $business, string $name, string $code, string $description,
-                                float $price, int $category, string $src, int $stock = 0, int $discountPercent = 0)
+                                float $price, CategoryInterface $category, string $src, int $stock = 0,
+                                int $discountPercent = 0)
     {
         parent::__construct($business);
 

@@ -2,6 +2,8 @@
 
 namespace App\Entity\Traits\Interfaces;
 
+use App\Entity\Interfaces\CategoryInterface;
+
 /**
  * CategoryTrait interface
  */
@@ -13,18 +15,18 @@ interface HasCategoryInterface
     /**
      * Gets the Category property.
      *
-     * @return int int
+     * @return CategoryInterface CategoryInterface
      */
-    public function getCategory(): int;
+    public function getCategory(): CategoryInterface;
 
     /**
      * Sets the Category property.
      *
-     * @param int $category The Category to be set.
+     * @param CategoryInterface $category The Category to be set.
      *
      * @return $this $this
      */
-    public function setCategory(int $category): self;
+    public function setCategory(CategoryInterface $category): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 
@@ -32,7 +34,7 @@ interface HasCategoryInterface
      * ToArray function of the property.
      *
      *      Returns array(
-     *          'category' => $this->>getCategory()
+     *          'category' => $this->getCategory()->__toArray()
      *      )
      *
      * @return array array

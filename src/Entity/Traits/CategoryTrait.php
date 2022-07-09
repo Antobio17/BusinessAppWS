@@ -2,11 +2,15 @@
 
 namespace App\Entity\Traits;
 
+use App\Entity\Category;
+use App\Entity\Interfaces\CategoryInterface;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\Interfaces\HasCategoryInterface;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
 
 /**
- * Trait to implement CategoryTrait property.
+ * Trait to implement Category property.
  *
  * @see HasCategoryInterface
  */
@@ -16,17 +20,18 @@ trait CategoryTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="integer")
+     * @ManyToOne(targetEntity="App\Entity\Category")
+     * @JoinColumn(name="category_id", referencedColumnName="id", nullable=false)
      */
-    protected int $category;
+    protected CategoryInterface $category;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return int int
+     * @return CategoryInterface CategoryInterface
      */
-    public function getCategory(): int
+    public function getCategory(): CategoryInterface
     {
         return $this->category;
     }
@@ -35,7 +40,7 @@ trait CategoryTrait
      * @inheritDoc
      * @return $this $this
      */
-    public function setCategory(int $category): self
+    public function setCategory(CategoryInterface $category): self
     {
         $this->category = $category;
 
@@ -47,7 +52,7 @@ trait CategoryTrait
     /**
      *  CategoryTrait constructor.
      */
-    public function __construct(int $category)
+    public function __construct(CategoryInterface $category)
     {
         $this->setCategory($category);
     }
@@ -61,7 +66,7 @@ trait CategoryTrait
     public function __toArray(): array
     {
         return array(
-            'category' => $this->getCategory(),
+            'category' => $this->getCategory()->__toArray(),
         );
     }
 
