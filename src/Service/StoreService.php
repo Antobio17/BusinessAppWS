@@ -25,7 +25,7 @@ class StoreService extends AppService implements StoreServiceInterface
      * @inheritDoc
      * @return array array
      */
-    public function getBusinessProducts(?int $offset, ?int $limit): ?array
+    public function getBusinessProducts(?int $offset = NULL, ?int $limit = NULL): ?array
     {
         if ($this->getBusiness() === NULL):
             $this->registerAppError_BusinessContextUndefined(
@@ -146,7 +146,7 @@ class StoreService extends AppService implements StoreServiceInterface
      * @inheritDoc
      * @return array array
      */
-    public function getUserOrders(): ?array
+    public function getUserOrders(?int $offset = NULL, ?int $limit = NULL): ?array
     {
         $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
 
@@ -156,8 +156,12 @@ class StoreService extends AppService implements StoreServiceInterface
         elseif (!$user instanceof User):
             $this->registerAppError_UserContextUndefined($method);
         else:
-            $orders = $this->getOrderRepository()->findByUser($this->getBusiness(), $user);
-            $result = array('orders' => $orders);
+            $orders = $this->getOrderRepository()->findByUser($this->getBusiness(), $user, $offset, $limit);
+            $totalOrders = $this->getOrderRepository()->getCountTotalOrders($this->getBusiness(), $user);
+            $result = array(
+                'orders' => $orders,
+                'last' => $limit !== NULL && $offset + count($orders) === $totalOrders,
+            );
         endif;
 
         return $result ?? NULL;

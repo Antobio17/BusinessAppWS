@@ -7,6 +7,8 @@ use App\Entity\Interfaces\OrderInterface;
 use App\Entity\Order;
 use App\Entity\User;
 use App\Repository\Interfaces\OrderRepositoryInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 
@@ -57,24 +59,57 @@ class OrderRepository extends AppRepository implements OrderRepositoryInterface
      * @inheritDoc
      * @return array array
      */
-    public function findByUser(BusinessInterface $business, User $user, bool $resultAsArray = TRUE): array
+    public function findByUser(BusinessInterface $business, User $user, ?int $offset = NULL, ?int $limit = NULL,
+                               bool $resultAsArray = TRUE): array
     {
         $alias = 'ord';
 
-        $query = $this->createQueryBuilder($alias)
+        $queryBuilder = $this->createQueryBuilder($alias)
             ->andWhere(sprintf('%s.business = :business', $alias))
             ->setParameter('business', $business->getID())
             ->andWhere(sprintf('%s.user = :user', $alias))
             ->setParameter('user', $user->getID())
-            ->getQuery();
+            ->orderBy(sprintf('%s.id', $alias), 'DESC');
+
+        # Add optionals parameters.
+        if ($offset !== NULL):
+            $queryBuilder->setFirstResult($offset);
+        endif;
+        if ($limit !== NULL):
+            $queryBuilder->setMaxResults($limit);
+        endif;
 
         if ($resultAsArray):
-            $result = $query->getArrayResult();
+            $result = $queryBuilder->getQuery()->getArrayResult();
         else:
-            $result = $query->execute();
+            $result = $queryBuilder->getQuery()->execute();
         endif;
 
         return $result;
+    }
+
+    /**
+     * @inheritDoc
+     * @return int int
+     */
+    public function getCountTotalOrders(BusinessInterface $business, User $user): int
+    {
+        $alias = 'odr';
+
+        $queryBuilder = $this->createQueryBuilder($alias);
+        $queryBuilder->select($queryBuilder->expr()->count($alias))
+            ->andWhere(sprintf('%s.business = :business', $alias))
+            ->setParameter('business', $business->getID())
+            ->andWhere(sprintf('%s.user = :user', $alias))
+            ->setParameter('user', $user->getID());
+
+        $count = NULL;
+        try {
+            $count = $queryBuilder->getQuery()->getSingleScalarResult();
+        } catch (NoResultException | NonUniqueResultException $e) {
+        }
+
+        return is_numeric($count) ? (int)$count : 0;
     }
 
     /*********************************************** STATIC METHODS ***********************************************/

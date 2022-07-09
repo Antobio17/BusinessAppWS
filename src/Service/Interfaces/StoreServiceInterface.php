@@ -17,7 +17,7 @@ interface StoreServiceInterface extends AppServiceInterface
      *
      * @return array array
      */
-    public function getBusinessProducts(?int $offset, ?int $limit): ?array;
+    public function getBusinessProducts(?int $offset = NULL, ?int $limit = NULL): ?array;
 
     /**
      * Create the new order requested from the front-end.
@@ -50,9 +50,12 @@ interface StoreServiceInterface extends AppServiceInterface
     /**
      * Gets the orders of a user in the business.
      *
+     * @param int|null $offset The offset of the query.
+     * @param int|null $limit The limit of the query.
+     *
      * @return array array
      */
-    public function getUserOrders(): ?array;
+    public function getUserOrders(?int $offset = NULL, ?int $limit = NULL): ?array;
 
     /*********************************************** STATIC METHODS ***********************************************/
 
