@@ -2,13 +2,14 @@
 
 namespace App\Service\Traits\Interfaces;
 
-use App\Repository\AppointmentRepository;
-use App\Repository\OrderRepository;
-use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
-use App\Repository\PostalAddressRepository;
+use App\Repository\Interfaces\OrderRepositoryInterface;
+use App\Repository\Interfaces\ProductRepositoryInterface;
 use App\Repository\Interfaces\AppErrorRepositoryInterface;
 use App\Repository\Interfaces\BusinessRepositoryInterface;
+use App\Repository\Interfaces\CategoryRepositoryInterface;
+use App\Repository\Interfaces\AppointmentRepositoryInterface;
+use App\Repository\Interfaces\PostalAddressRepositoryInterface;
 
 /**
  * RepositoriesTrait interface.
@@ -44,30 +45,37 @@ interface HasRepositoriesInterface
     /**
      * Facade that returns an instance of the PostalAddressRepository.
      *
-     * @return PostalAddressRepository PostalAddressRepository
+     * @return PostalAddressRepositoryInterface PostalAddressRepositoryInterface
      */
-    public function getPostalAddressRepository(): PostalAddressRepository;
+    public function getPostalAddressRepository(): PostalAddressRepositoryInterface;
 
     /**
      * Facade that returns an instance of the AppointmentRepository.
      *
-     * @return AppointmentRepository AppointmentRepository
+     * @return AppointmentRepositoryInterface AppointmentRepositoryInterface
      */
-    public function getAppointmentRepository(): AppointmentRepository;
+    public function getAppointmentRepository(): AppointmentRepositoryInterface;
 
     /**
      * Facade that returns an instance of the OrderRepository.
      *
-     * @return OrderRepository OrderRepository
+     * @return OrderRepositoryInterface OrderRepositoryInterface
      */
-    public function getOrderRepository(): OrderRepository;
+    public function getOrderRepository(): OrderRepositoryInterface;
 
     /**
      * Facade that returns an instance of the ProductRepository.
      *
-     * @return ProductRepository ProductRepository
+     * @return ProductRepositoryInterface ProductRepositoryInterface
      */
-    public function getProductRepository(): ProductRepository;
+    public function getProductRepository(): ProductRepositoryInterface;
+
+    /**
+     * Facade that returns an instance of the CategoryRepository.
+     *
+     * @return CategoryRepositoryInterface CategoryRepositoryInterface
+     */
+    public function getCategoryRepository(): CategoryRepositoryInterface;
 
     /*********************************************** STATIC METHODS ***********************************************/
 

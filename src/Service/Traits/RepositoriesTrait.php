@@ -2,6 +2,7 @@
 
 namespace App\Service\Traits;
 
+use App\Entity\Category;
 use App\Entity\Order;
 use App\Entity\Product;
 use App\Entity\User;
@@ -9,6 +10,8 @@ use App\Entity\AppError;
 use App\Entity\Business;
 use App\Entity\Appointment;
 use App\Entity\PostalAddress;
+use App\Repository\CategoryRepository;
+use App\Repository\Interfaces\CategoryRepositoryInterface;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
@@ -95,6 +98,15 @@ trait RepositoriesTrait
     public function getProductRepository(): ProductRepository
     {
         return $this->getEntityManager()->getRepository(Product::class);
+    }
+
+    /**
+     * @inheritDoc
+     * @return CategoryRepositoryInterface CategoryRepositoryInterface
+     */
+    public function getCategoryRepository(): CategoryRepositoryInterface
+    {
+        return $this->getEntityManager()->getRepository(Category::class);
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
