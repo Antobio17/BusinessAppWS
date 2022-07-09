@@ -40,6 +40,12 @@ interface StoreServiceInterface extends AppServiceInterface
      */
     public function cancelPendingOrder(int $orderID): ?bool;
 
+    /**
+     * Gets the categories of the business' product.
+     * @return array array
+     */
+    public function getProductCategories(): ?array;
+
     /*********************************************** STATIC METHODS ***********************************************/
 
 }

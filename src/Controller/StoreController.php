@@ -67,7 +67,6 @@ class StoreController extends AppController implements StoreControllerInterface
             static::REQUEST_FIELD_LIMIT => $limit,
         ));
 
-        $data = NULL;
         if (empty($validationErrors)):
             $offset = $offset !== NULL ? (int)$offset : NULL;
             $limit = $limit !== NULL ? (int)$limit : NULL;
@@ -76,7 +75,7 @@ class StoreController extends AppController implements StoreControllerInterface
             endif;
         endif;
 
-        return $this->createJsonResponse($data, $validationErrors, $this->getStoreService());
+        return $this->createJsonResponse($data ?? NULL, $validationErrors, $this->getStoreService());
     }
 
     /**
@@ -110,7 +109,6 @@ class StoreController extends AppController implements StoreControllerInterface
             ))
         );
 
-        $data = NULL;
         if (empty($validationErrors)):
             $postalAddressID = (int)$postalAddressID;
             $amount = (float)$amount;
@@ -120,7 +118,7 @@ class StoreController extends AppController implements StoreControllerInterface
             endif;
         endif;
 
-        return $this->createJsonResponse_Creation($data, $validationErrors, $this->getStoreService());
+        return $this->createJsonResponse_Creation($data ?? NULL, $validationErrors, $this->getStoreService());
     }
 
     /**
@@ -144,7 +142,6 @@ class StoreController extends AppController implements StoreControllerInterface
             )),
         );
 
-        $data = NULL;
         if (empty($validationErrors)):
             $orderID = (int)$orderID;
             if ($this->getStoreService()->setBusinessContext($domain)):
@@ -152,7 +149,24 @@ class StoreController extends AppController implements StoreControllerInterface
             endif;
         endif;
 
-        return $this->createJsonResponse($data, $validationErrors, $this->getStoreService());
+        return $this->createJsonResponse($data ?? NULL, $validationErrors, $this->getStoreService());
+    }
+
+    /**
+     * @Route("/api/store/category/get")
+     *
+     * @inheritDoc
+     * @return Response Response
+     */
+    public function getProductCategories(Request $request): Response
+    {
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+
+        if ($this->getStoreService()->setBusinessContext($domain)):
+            $data = $this->getStoreService()->getProductCategories();
+        endif;
+
+        return $this->createJsonResponse($data ?? NULL, array(), $this->getStoreService());
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/

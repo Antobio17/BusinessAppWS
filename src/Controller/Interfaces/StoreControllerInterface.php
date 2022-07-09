@@ -39,6 +39,15 @@ interface StoreControllerInterface extends HasStoreServiceInterface
      */
     public function cancelPendingOrder(Request $request): Response;
 
+    /**
+     * Route to get the categories of the business' products.
+     *
+     * @param Request $request Request of the route.
+     *
+     * @return Response Response
+     */
+    public function getProductCategories(Request $request): Response;
+
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /*********************************************** PUBLIC METHODS ***********************************************/

@@ -27,21 +27,20 @@ class StoreService extends AppService implements StoreServiceInterface
      */
     public function getBusinessProducts(?int $offset, ?int $limit): ?array
     {
-        if ($this->getBusiness() !== NULL):
+        if ($this->getBusiness() === NULL):
+            $this->registerAppError_BusinessContextUndefined(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__)
+            );
+        else:
             $products = $this->getProductRepository()->findByOffset($this->getBusiness(), $offset, $limit);
             $totalProducts = $this->getProductRepository()->getCount($this->getBusiness());
             $result = array(
                 'products' => $products,
                 'last' => $limit !== NULL && $offset + count($products) === $totalProducts,
             );
-        else:
-            $result = NULL;
-            $this->registerAppError_BusinessContextUndefined(
-                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__)
-            );
         endif;
 
-        return $result;
+        return $result ?? NULL;
     }
 
     /**
@@ -117,6 +116,32 @@ class StoreService extends AppService implements StoreServiceInterface
         endif;
 
         return $cancelled ?? NULL;
+    }
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function getProductCategories(): ?array
+    {
+        if ($this->getBusiness() === NULL):
+            $this->registerAppError_BusinessContextUndefined(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__)
+            );
+        else:
+            $categoryIDs = $this->getProductRepository()->findProductCategoryIDs($this->getBusiness());
+            foreach ($categoryIDs as $key => $categoryID):
+                $categoryIDs[] = $categoryID['id'];
+                unset($categoryIDs[$key]);
+            endforeach;
+            $categoryIDs = array_values($categoryIDs);
+            $categories = $this->getCategoryRepository()->findByIDs($categoryIDs);
+            $result = array(
+                'categories' => $categories,
+            );
+        endif;
+
+        return $result ?? NULL;
     }
 
     /********************************************** PROTECTED METHODS *********************************************/

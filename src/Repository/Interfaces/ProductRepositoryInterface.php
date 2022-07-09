@@ -22,5 +22,14 @@ interface ProductRepositoryInterface
     public function findByOffset(BusinessInterface $business, ?int $offset = NULL, ?int $limit = NULL,
                                  bool $resultAsArray = TRUE): array;
 
+    /**
+     * Finds the Category IDs of the products of a business.
+     *
+     * @param BusinessInterface $business Business to which the products belong.
+     *
+     * @return array array
+     */
+    public function findProductCategoryIDs(BusinessInterface $business): array;
+
     /*********************************************** STATIC METHODS ***********************************************/
 }
