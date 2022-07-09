@@ -54,13 +54,13 @@ class AppointmentRepository extends AppRepository implements AppointmentReposito
             else:
                 $property = 'user';
             endif;
-            /** @noinspection PhpUndefinedMethodInspection */
+            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
             $queryBuilder->andWhere(sprintf('%s.%s = :%s', $alias, $property, $property))
                 ->setParameter($property, $user->getID());
         endif;
 
         try {
-            $appointment = $queryBuilder->orderBy(sprintf('%s.id', $alias), 'ASC')
+            $appointment = $queryBuilder->orderBy(sprintf('%s.id', $alias), 'DESC')
                 ->getQuery()
                 ->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {

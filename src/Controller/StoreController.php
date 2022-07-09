@@ -67,12 +67,10 @@ class StoreController extends AppController implements StoreControllerInterface
             static::REQUEST_FIELD_LIMIT => $limit,
         ));
 
-        if (empty($validationErrors)):
+        if (empty($validationErrors) && $this->getStoreService()->setBusinessContext($domain)):
             $offset = $offset !== NULL ? (int)$offset : NULL;
             $limit = $limit !== NULL ? (int)$limit : NULL;
-            if ($this->getStoreService()->setBusinessContext($domain)):
-                $data = $this->getStoreService()->getBusinessProducts($offset, $limit);
-            endif;
+            $data = $this->getStoreService()->getBusinessProducts($offset, $limit);
         endif;
 
         return $this->createJsonResponse($data ?? NULL, $validationErrors, $this->getStoreService());
@@ -178,12 +176,22 @@ class StoreController extends AppController implements StoreControllerInterface
     public function getUserOrders(Request $request): Response
     {
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+        $offset = $request->request->get(static::REQUEST_FIELD_OFFSET);
+        $limit = $request->request->get(static::REQUEST_FIELD_LIMIT);
 
-        if ($this->getStoreService()->setBusinessContext($domain)):
-            $data = $this->getStoreService()->getUserOrders();
+        # Data Validation
+        $validationErrors = $this->validateRequestNumericFields(array(
+            static::REQUEST_FIELD_OFFSET => $offset,
+            static::REQUEST_FIELD_LIMIT => $limit,
+        ));
+
+        if (empty($validationErrors) && $this->getStoreService()->setBusinessContext($domain)):
+            $offset = $offset !== NULL ? (int)$offset : NULL;
+            $limit = $limit !== NULL ? (int)$limit : NULL;
+            $data = $this->getStoreService()->getUserOrders($offset, $limit);
         endif;
 
-        return $this->createJsonResponse($data ?? NULL, array(), $this->getStoreService());
+        return $this->createJsonResponse($data ?? NULL, $validationErrors, $this->getStoreService());
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/

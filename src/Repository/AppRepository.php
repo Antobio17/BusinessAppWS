@@ -43,7 +43,7 @@ abstract class AppRepository extends ServiceEntityRepository implements AppRepos
         return $this->createQueryBuilder($alias)
             ->andWhere($alias . '.type = :type')
             ->setParameter('type', $type)
-            ->orderBy($alias . '.id', 'ASC')
+            ->orderBy($alias . '.id', 'DESC')
             ->getQuery()
             ->getArrayResult();
     }
@@ -86,7 +86,7 @@ abstract class AppRepository extends ServiceEntityRepository implements AppRepos
                 ->setParameter('endDate', $endDate);
         endif;
 
-        $query = $queryBuilder->orderBy(sprintf('%s.id', $alias), 'ASC')
+        $query = $queryBuilder->orderBy(sprintf('%s.id', $alias), 'DESC')
             ->getQuery();
 
         if ($resultAsArray):
