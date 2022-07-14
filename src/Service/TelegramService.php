@@ -113,7 +113,7 @@ class TelegramService implements TelegramServiceInterface
      */
     protected function _formatAppErrorToHTML(AppError $error): string
     {
-        $message = '<b>' . $error->getCreatedAt()->format('d/m/Y h:m:s') . '</b>' . chr(10) .
+        $message = '<b>' . $error->getCreatedAt()->format('d/m/Y h:i:s') . '</b>' . chr(10) .
             '<b>' . $error->getMethod() . '</b>' . chr(10) . chr(10) .
             $error->getMessage();
 
