@@ -34,18 +34,22 @@ class BusinessRepository extends AppRepository implements BusinessRepositoryInte
     /**
      * @inheritDoc
      * @return BusinessInterface|null BusinessInterface|null
-     * @throws NonUniqueResultException
      */
     public function findByDomain(string $domain): ?BusinessInterface
     {
         $alias = 'bus';
 
-        return $this->createQueryBuilder($alias)
-            ->andWhere($alias . '.domain = :domain')
-            ->setParameter('domain', $domain)
-            ->orderBy($alias . '.id', 'ASC')
-            ->getQuery()
-            ->getOneOrNullResult();
+        try {
+            $result = $this->createQueryBuilder($alias)
+                ->andWhere($alias . '.domain = :domain')
+                ->setParameter('domain', $domain)
+                ->orderBy($alias . '.id', 'ASC')
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+        }
+
+        return $result ?? NULL;
     }
 
     /*********************************************** STATIC METHODS ***********************************************/

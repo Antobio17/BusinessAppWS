@@ -57,7 +57,7 @@ class StoreController extends AppController implements StoreControllerInterface
      */
     public function getBusinessProducts(Request $request): Response
     {
-        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
         $offset = $request->request->get(static::REQUEST_FIELD_OFFSET);
         $limit = $request->request->get(static::REQUEST_FIELD_LIMIT);
 
@@ -84,7 +84,7 @@ class StoreController extends AppController implements StoreControllerInterface
      */
     public function notifyNewOrder(Request $request): Response
     {
-        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
         $postalAddressID = $request->request->get(static::REQUEST_FIELD_POSTAL_ADDRESS_ID);
         $amount = $request->request->get(static::REQUEST_FIELD_AMOUNT);
         $UUID = $request->request->get(static::REQUEST_FIELD_UUID);
@@ -127,7 +127,7 @@ class StoreController extends AppController implements StoreControllerInterface
      */
     public function cancelPendingOrder(Request $request): Response
     {
-        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
         $orderID = $request->request->get(static::REQUEST_FIELD_ORDER_ID);
 
         # Data Validation
@@ -158,7 +158,7 @@ class StoreController extends AppController implements StoreControllerInterface
      */
     public function getProductCategories(Request $request): Response
     {
-        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
 
         if ($this->getStoreService()->setBusinessContext($domain)):
             $data = $this->getStoreService()->getProductCategories();
@@ -175,7 +175,7 @@ class StoreController extends AppController implements StoreControllerInterface
      */
     public function getUserOrders(Request $request): Response
     {
-        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
         $offset = $request->request->get(static::REQUEST_FIELD_OFFSET);
         $limit = $request->request->get(static::REQUEST_FIELD_LIMIT);
 

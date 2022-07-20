@@ -50,7 +50,7 @@ class AppointmentController extends AppController implements AppointmentControll
      */
     public function getBusinessAppointments(Request $request): Response
     {
-        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
         $status = $request->request->get(static::REQUEST_FIELD_STATUS);
         $startDate = $request->request->get(static::REQUEST_FIELD_START_DATE);
         $endDate = $request->request->get(static::REQUEST_FIELD_END_DATE);
@@ -82,7 +82,7 @@ class AppointmentController extends AppController implements AppointmentControll
      */
     public function getUserAppointments(Request $request): Response
     {
-        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
         $status = $request->request->get(static::REQUEST_FIELD_STATUS);
 
         # Data Validation
@@ -106,7 +106,7 @@ class AppointmentController extends AppController implements AppointmentControll
      */
     public function getWorkerAppointments(Request $request): Response
     {
-        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
         $status = $request->request->get(static::REQUEST_FIELD_STATUS);
 
         # Data Validation
@@ -132,7 +132,7 @@ class AppointmentController extends AppController implements AppointmentControll
      */
     public function bookUserAppointment(Request $request): Response
     {
-        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
         $bookingDateAt = $request->request->get(static::REQUEST_FIELD_BOOKING_DATE_AT);
         $userEmail = $request->request->get(static::REQUEST_FIELD_USER_EMAIL);
 
@@ -164,7 +164,7 @@ class AppointmentController extends AppController implements AppointmentControll
      */
     public function cancelUserBookedAppointment(Request $request): Response
     {
-        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_HOST);
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
         $userEmail = $request->request->get(static::REQUEST_FIELD_USER_EMAIL);
 
         $cancelled = FALSE;

@@ -83,6 +83,15 @@ interface AppServiceInterface extends HasRepositoriesInterface, HasBusinessInter
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
+     * Sets the business context of the operations.
+     *
+     * @param string|null $domain Domain to identify the business.
+     *
+     * @return bool bool
+     */
+    public function setBusinessContext(?string $domain): bool;
+
+    /**
      * Persists an ORM object.
      *
      * @param AbstractORM $object Object to persist in the app.

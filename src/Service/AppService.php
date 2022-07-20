@@ -148,22 +148,29 @@ class AppService extends AbstractController implements AppServiceInterface
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
-     * @param string $domain
-     * @return bool
-     * @noinspection PhpDocMissingThrowsInspection
-     * @noinspection PhpUnhandledExceptionInspection
+     * @inheritDoc
+     * @return bool bool
      */
-    public function setBusinessContext(string $domain): bool
+    public function setBusinessContext(?string $domain): bool
     {
-        $business = $this->getBusinessRepository()->findByDomain($domain);
-        if ($business === NULL):
+        $business = NULL;
+        if ($domain !== NULL):
+            $business = $this->getBusinessRepository()->findByDomain($domain);
+            if ($business === NULL):
+                $this->registerAppError(
+                    ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
+                    AppError::ERROR_BUSINESS_CONTEXT,
+                    sprintf('Error al establecer el contexto de Business: Dominio %s no encontrado.', $domain)
+                );
+            else:
+                $this->setBusiness($business);
+            endif;
+        else:
             $this->registerAppError(
                 ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
                 AppError::ERROR_BUSINESS_CONTEXT,
-                sprintf('Error al establecer el contexto de Business: Dominio %s no encontrado.', $domain)
+                'Error al establecer el contexto de Business: El dominio es nulo.'
             );
-        else:
-            $this->setBusiness($business);
         endif;
 
         return $business !== NULL;
@@ -255,7 +262,7 @@ class AppService extends AbstractController implements AppServiceInterface
      * @inheritDoc
      * @return AppErrorInterface AppErrorInterface
      */
-    public function registerAppError_UserContextUndefined(string  $method): AppErrorInterface
+    public function registerAppError_UserContextUndefined(string $method): AppErrorInterface
     {
         return $this->registerAppError(
             $method,
