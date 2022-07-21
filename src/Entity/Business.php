@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping\Column;
 use App\Entity\Traits\DomainTrait;
 use App\Repository\BusinessRepository;
 use App\Entity\Traits\PhoneNumberTrait;
+use App\Entity\Traits\EmailNullableTrait;
 use App\Entity\Traits\PostalAddressTrait;
 use App\Entity\Traits\BusinessConfigTrait;
 use Doctrine\ORM\Mapping\AttributeOverride;
@@ -50,6 +51,11 @@ class Business extends AbstractORM implements BusinessInterface
         PhoneNumberTrait::__toArray as protected __phoneNumberToArray;
     }
 
+    use EmailNullableTrait {
+        EmailNullableTrait::__construct as protected __emailConstruct;
+        EmailNullableTrait::__toArray as protected __emailToArray;
+    }
+
     use PostalAddressTrait {
         PostalAddressTrait::__construct as protected __postalAddressConstruct;
         PostalAddressTrait::__toArray as protected __postalAddressToArray;
@@ -72,14 +78,17 @@ class Business extends AbstractORM implements BusinessInterface
      * @param string $opensAt The open date for the business.
      * @param string $closesAt The close date for the business.
      * @param int $appointmentDuration The duration of the appointments.
+     * @param string|null $email Email of the business.
      *
      */
     public function __construct(string   $domain, string $name, string $phoneNumber, PostalAddress $postalAddress,
-                                string $opensAt, string $closesAt, int $appointmentDuration = 60)
+                                string $opensAt, string $closesAt, int $appointmentDuration = 60,
+                                ?string $email = NULL)
     {
         $this->__domainConstruct($domain);
         $this->__nameConstruct($name);
         $this->__phoneNumberConstruct($phoneNumber);
+        $this->__emailConstruct($email);
         $this->__postalAddressConstruct($postalAddress);
         $this->__configConstruct($opensAt, $closesAt, $appointmentDuration);
     }
@@ -98,6 +107,7 @@ class Business extends AbstractORM implements BusinessInterface
             $this->__domainToArray(),
             $this->__nameToArray(),
             $this->__phoneNumberToArray(),
+            $this->__emailToArray(),
             $this->__postalAddressToArray(),
             $this->__configToArray()
         );
