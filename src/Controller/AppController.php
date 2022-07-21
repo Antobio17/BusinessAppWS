@@ -31,9 +31,7 @@ class AppController extends AbstractController implements AppControllerInterface
      * AppController construct.
      */
     public function __construct()
-    {
-
-    }
+    {}
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
