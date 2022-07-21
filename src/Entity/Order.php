@@ -88,6 +88,7 @@ class Order extends AbstractUserContext implements OrderInterface
      * @param PostalAddress $postalAddress The postal address to send the order.
      * @param string $uuid UUID of the payment order.
      * @param float $amount Amount of the order.
+     * @param array $data Data related to the products ordered.
      * @param int $status Status of the order.
      * @param DateTime|null $createdAt Date of the creation of the order.
      * @param DateTime|null $sentAt Date when the order was sent.
