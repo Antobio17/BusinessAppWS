@@ -79,7 +79,7 @@ class Product extends AbstractBusinessContext implements ProductInterface
      * @param string $description Description of the product.
      * @param float $price Price of the product.
      * @param CategoryInterface $category Category of the product.
-     * @param string $src Image SRC od the product.
+     * @param string $src Image SRC of the product.
      * @param int $stock Stock of the product.
      * @param int $discountPercent Discount percent associated to the product.
      */

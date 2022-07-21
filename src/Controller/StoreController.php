@@ -2,13 +2,12 @@
 
 namespace App\Controller;
 
-use App\Service\Interfaces\StoreServiceInterface;
 use App\Service\Traits\StoreServiceTrait;
-use App\Controller\Interfaces\StoreControllerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\Interfaces\StoreServiceInterface;
+use App\Controller\Interfaces\StoreControllerInterface;
 
 class StoreController extends AppController implements StoreControllerInterface
 {
