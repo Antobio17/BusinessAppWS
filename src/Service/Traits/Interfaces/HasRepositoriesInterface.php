@@ -2,6 +2,7 @@
 
 namespace App\Service\Traits\Interfaces;
 
+use App\Repository\Interfaces\HomeConfigRepositoryInterface;
 use App\Repository\UserRepository;
 use App\Repository\Interfaces\OrderRepositoryInterface;
 use App\Repository\Interfaces\ProductRepositoryInterface;
@@ -76,6 +77,13 @@ interface HasRepositoriesInterface
      * @return CategoryRepositoryInterface CategoryRepositoryInterface
      */
     public function getCategoryRepository(): CategoryRepositoryInterface;
+
+    /**
+     * Facade that returns an instance of the HomeConfigRepository.
+     *
+     * @return HomeConfigRepositoryInterface HomeConfigRepositoryInterface
+     */
+    public function getHomeConfigRepository(): HomeConfigRepositoryInterface;
 
     /*********************************************** STATIC METHODS ***********************************************/
 
