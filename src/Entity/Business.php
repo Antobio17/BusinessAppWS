@@ -75,14 +75,13 @@ class Business extends AbstractORM implements BusinessInterface
      * @param string $name Name to set in the entity.
      * @param string $phoneNumber PhoneNumber to set in the entity.
      * @param PostalAddress $postalAddress PostalAddress to set in the entity.
-     * @param string $opensAt The open date for the business.
-     * @param string $closesAt The close date for the business.
+     * @param array $hours Hours of the business.
      * @param int $appointmentDuration The duration of the appointments.
      * @param string|null $email Email of the business.
      *
      */
     public function __construct(string   $domain, string $name, string $phoneNumber, PostalAddress $postalAddress,
-                                string $opensAt, string $closesAt, int $appointmentDuration = 60,
+                                array $hours, int $appointmentDuration = 60,
                                 ?string $email = NULL)
     {
         $this->__domainConstruct($domain);
@@ -90,7 +89,7 @@ class Business extends AbstractORM implements BusinessInterface
         $this->__phoneNumberConstruct($phoneNumber);
         $this->__emailConstruct($email);
         $this->__postalAddressConstruct($postalAddress);
-        $this->__configConstruct($opensAt, $closesAt, $appointmentDuration);
+        $this->__configConstruct($hours, $appointmentDuration);
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/

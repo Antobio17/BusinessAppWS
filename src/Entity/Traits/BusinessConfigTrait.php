@@ -14,14 +14,9 @@ trait BusinessConfigTrait
 
     /************************************************* PROPERTIES *************************************************/
 
-    use OpensAtTrait {
-        OpensAtTrait::__construct as protected __opensAtConstruct;
-        OpensAtTrait::__toArray as protected __opensAtToArray;
-    }
-
-    use ClosesAtTrait {
-        ClosesAtTrait::__construct as protected __closesAtConstruct;
-        ClosesAtTrait::__toArray as protected __closesAtToArray;
+    use DataTrait {
+        DataTrait::__construct as protected __hoursConstruct;
+        DataTrait::__toArray as protected __hoursToArray;
     }
 
     use AppointmentDurationTrait {
@@ -31,20 +26,36 @@ trait BusinessConfigTrait
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function getHours(): array
+    {
+        return $this->getData();
+    }
+
+    /**
+     * @inheritDoc
+     * @return $this $this
+     */
+    public function setHours(array $hours): self
+    {
+        return $this->setData($hours);
+    }
+
     /************************************************* CONSTRUCT **************************************************/
 
     /**
      *  BusinessConfigTrait constructor.
      *
-     * @param string $opensAt The open date for the business.
-     * @param string $closesAt The close date for the business.
+     * @param array $hours Hours of the business.
      * @param int $appointmentDuration The duration of the appointments.
      *
      */
-    public function __construct(string $opensAt, string $closesAt, int $appointmentDuration = 60)
+    public function __construct(array $hours, int $appointmentDuration = 60)
     {
-        $this->__opensAtConstruct($closesAt);
-        $this->__closesAtConstruct($closesAt);
+        $this->__hoursConstruct($hours);
         $this->__appointmentDurationConstruct($appointmentDuration);
     }
 
@@ -57,8 +68,7 @@ trait BusinessConfigTrait
     public function __toArray(): array
     {
         return array_merge(
-            $this->__opensAtToArray(),
-            $this->__closesAtToArray(),
+            $this->__hoursToArray(),
             $this->__appointmentDurationToArray(),
         );
     }
