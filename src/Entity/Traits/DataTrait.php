@@ -24,7 +24,7 @@ trait DataTrait
 
     /**
      * @inheritDoc
-     * @return string string
+     * @return array array
      */
     public function getData(): array
     {
