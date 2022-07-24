@@ -40,6 +40,8 @@ class AppError extends AbstractORM implements AppErrorInterface
 
     public const ERROR_USER_WRONG_POSTAL_ADDRESS = 60;
 
+    public const ERROR_BUSINESS_HOME_CONFIG_UNDEFINED = 71;
+
     /************************************************* PROPERTIES *************************************************/
 
     use TypeTrait {

@@ -21,6 +21,24 @@ trait SocialSectionTrait
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function getSocialData(): array
+    {
+        return $this->getData();
+    }
+
+    /**
+     * @inheritDoc
+     * @return $this $this
+     */
+    public function setSocialData(array $socialData): self
+    {
+        return $this->setData($socialData);
+    }
+
     /************************************************* CONSTRUCT **************************************************/
 
     /**

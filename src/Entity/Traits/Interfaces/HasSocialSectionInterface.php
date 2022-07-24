@@ -10,7 +10,21 @@ interface HasSocialSectionInterface extends HasDataInterface
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
+    /**
+     * Gets the SocialData property of the Entity.
+     *
+     * @return array array
+     */
+    public function getSocialData(): array;
 
+    /**
+     * Sets the SocialData property of the Entity.
+     *
+     * @param array $socialData The data to set.
+     *
+     * @return $this $this
+     */
+    public function setSocialData(array $socialData): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 
