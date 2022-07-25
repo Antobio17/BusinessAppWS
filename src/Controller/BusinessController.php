@@ -3,11 +3,11 @@
 namespace App\Controller;
 
 use App\Service\Traits\BusinessServiceTrait;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\Interfaces\BusinessServiceInterface;
 use App\Controller\Interfaces\BusinessControllerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
 class BusinessController extends AppController implements BusinessControllerInterface
 {
@@ -41,9 +41,9 @@ class BusinessController extends AppController implements BusinessControllerInte
      * @Route("/api/business/config/home/get")
      *
      * @inheritDoc
-     * @return Response Response
+     * @return JsonResponse JsonResponse
      */
-    public function getBusinessHomeConfig(Request $request): Response
+    public function getBusinessHomeConfig(Request $request): JsonResponse
     {
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
 

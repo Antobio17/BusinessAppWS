@@ -1,12 +1,12 @@
-<?php
+<?php /** @noinspection DuplicatedCode */
 
 namespace App\Controller;
 
 use App\Service\Traits\StoreServiceTrait;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\Interfaces\StoreServiceInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Controller\Interfaces\StoreControllerInterface;
 
 class StoreController extends AppController implements StoreControllerInterface
@@ -52,13 +52,13 @@ class StoreController extends AppController implements StoreControllerInterface
      * @Route("/api/store/product/get")
      *
      * @inheritDoc
-     * @return Response Response
+     * @return JsonResponse JsonResponse
      */
-    public function getBusinessProducts(Request $request): Response
+    public function getBusinessProducts(Request $request): JsonResponse
     {
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
-        $offset = $request->request->get(static::REQUEST_FIELD_OFFSET);
-        $limit = $request->request->get(static::REQUEST_FIELD_LIMIT);
+        $offset = $this->getParamFromRequest($request, static::REQUEST_FIELD_OFFSET);
+        $limit = $this->getParamFromRequest($request, static::REQUEST_FIELD_LIMIT);
 
         # Data Validation
         $validationErrors = $this->validateRequestNumericFields(array(
@@ -79,15 +79,15 @@ class StoreController extends AppController implements StoreControllerInterface
      * @Route("/api/store/order/create")
      *
      * @inheritDoc
-     * @return Response Response
+     * @return JsonResponse JsonResponse
      */
-    public function notifyNewOrder(Request $request): Response
+    public function notifyNewOrder(Request $request): JsonResponse
     {
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
-        $postalAddressID = $request->request->get(static::REQUEST_FIELD_POSTAL_ADDRESS_ID);
-        $amount = $request->request->get(static::REQUEST_FIELD_AMOUNT);
-        $UUID = $request->request->get(static::REQUEST_FIELD_UUID);
-        $productsData = $request->request->get(static::REQUEST_FIELD_PRODUCTS_DATA);
+        $postalAddressID = $this->getParamFromRequest($request, static::REQUEST_FIELD_POSTAL_ADDRESS_ID);
+        $amount = $this->getParamFromRequest($request, static::REQUEST_FIELD_AMOUNT);
+        $UUID = $this->getParamFromRequest($request, static::REQUEST_FIELD_UUID);
+        $productsData = $this->getParamFromRequest($request, static::REQUEST_FIELD_PRODUCTS_DATA);
 
         # Data Validation
         $validationErrors = array_merge(
@@ -122,12 +122,12 @@ class StoreController extends AppController implements StoreControllerInterface
      * @Route("/api/store/order/cancel")
      *
      * @inheritDoc
-     * @return Response Response
+     * @return JsonResponse JsonResponse
      */
-    public function cancelPendingOrder(Request $request): Response
+    public function cancelPendingOrder(Request $request): JsonResponse
     {
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
-        $orderID = $request->request->get(static::REQUEST_FIELD_ORDER_ID);
+        $orderID = $this->getParamFromRequest($request, static::REQUEST_FIELD_ORDER_ID);
 
         # Data Validation
         $validationErrors = array_merge(
@@ -153,9 +153,9 @@ class StoreController extends AppController implements StoreControllerInterface
      * @Route("/api/store/category/get")
      *
      * @inheritDoc
-     * @return Response Response
+     * @return JsonResponse JsonResponse
      */
-    public function getProductCategories(Request $request): Response
+    public function getProductCategories(Request $request): JsonResponse
     {
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
 
@@ -170,13 +170,13 @@ class StoreController extends AppController implements StoreControllerInterface
      * @Route("/api/store/order/user/get")
      *
      * @inheritDoc
-     * @return Response Response
+     * @return JsonResponse JsonResponse
      */
-    public function getUserOrders(Request $request): Response
+    public function getUserOrders(Request $request): JsonResponse
     {
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
-        $offset = $request->request->get(static::REQUEST_FIELD_OFFSET);
-        $limit = $request->request->get(static::REQUEST_FIELD_LIMIT);
+        $offset = $this->getParamFromRequest($request, static::REQUEST_FIELD_OFFSET);
+        $limit = $this->getParamFromRequest($request, static::REQUEST_FIELD_LIMIT);
 
         # Data Validation
         $validationErrors = $this->validateRequestNumericFields(array(

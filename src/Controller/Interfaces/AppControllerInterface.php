@@ -3,7 +3,8 @@
 namespace App\Controller\Interfaces;
 
 use App\Service\Interfaces\AppServiceInterface;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 interface AppControllerInterface
 {
@@ -64,6 +65,34 @@ interface AppControllerInterface
     public function validateRequestStatusField(array $status, array $statusChoices): array;
 
     /**
+     * Validates the fields of the request passed by parameters as an array of key => value.
+     *
+     *      return array(
+     *          array(
+     *              'field' => $key,
+     *              'message' => sprintf(
+     *                  'El campo %s debe de ser de tipo entero (timestamp) o nulo',$fieldName
+     *              )
+     *          )
+     *      )
+     *
+     * @param array $dates The valid status of the entity.
+     *
+     * @return array array
+     */
+    public function validateRequestDateFields(array $dates): array;
+
+    /**
+     * Gets the param value from the request passed or null if it not exists.
+     *
+     * @param Request $request Request of the route.
+     * @param string $paramKey Key to search the param value.
+     *
+     * @return mixed|null mixed|null
+     */
+    public function getParamFromRequest(Request $request, string $paramKey);
+
+    /**
      * Creates a Json response for the WebService.
      * If the process is successful it will return the creation code 201.
      *
@@ -71,10 +100,10 @@ interface AppControllerInterface
      * @param array $validationErrors The validation errors to add to the response.
      * @param AppServiceInterface $service The service used in the process.
      *
-     * @return Response Response
+     * @return JsonResponse JsonResponse
      */
     public function createJsonResponse_Creation($data, array $validationErrors,
-                                                AppServiceInterface $service): Response;
+                                                AppServiceInterface $service): JsonResponse;
 
     /**
      * Creates a Json response for the WebService.
@@ -85,10 +114,10 @@ interface AppControllerInterface
      * @param AppServiceInterface $service The service used in the process.
      * @param int $code The code to return.
      *
-     * @return Response Response
+     * @return JsonResponse JsonResponse
      */
     public function createJsonResponse($data, array $validationErrors, AppServiceInterface $service,
-                                       int $code = 200): Response;
+                                       int $code = 200): JsonResponse;
 
     /*********************************************** STATIC METHODS ***********************************************/
 

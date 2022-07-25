@@ -3,7 +3,7 @@
 namespace App\Controller\Interfaces;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\Traits\Interfaces\HasBusinessServiceInterface;
 
 interface BusinessControllerInterface extends HasBusinessServiceInterface
@@ -16,9 +16,9 @@ interface BusinessControllerInterface extends HasBusinessServiceInterface
      *
      * @param Request $request Request of the route.
      *
-     * @return Response Response
+     * @return JsonResponse JsonResponse
      */
-    public function getBusinessHomeConfig(Request $request): Response;
+    public function getBusinessHomeConfig(Request $request): JsonResponse;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
