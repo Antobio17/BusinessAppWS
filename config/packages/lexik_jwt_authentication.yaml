@@ -1,5 +1,34 @@
 lexik_jwt_authentication:
-    secret_key: '%env(resolve:JWT_SECRET_KEY)%'
-    public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
-    pass_phrase: '%env(JWT_PASSPHRASE)%'
-    token_ttl: 2629800 # One month
+  secret_key: '%env(resolve:JWT_SECRET_KEY)%'
+  public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
+  pass_phrase: '%env(JWT_PASSPHRASE)%'
+  token_ttl: 259200 # Three days
+
+  token_extractors:
+    split_cookie:
+      enabled: true
+      cookies:
+        - jwt_hp
+        - jwt_s
+
+  set_cookies:
+    jwt_hp:
+      lifetime: 259200
+      samesite: strict
+      path: /
+      domain: null
+      httpOnly: false
+      split:
+        - header
+        - payload
+
+    jwt_s:
+      lifetime: 0
+      samesite: strict
+      path: /
+      domain: null
+      httpOnly: true
+      split:
+        - signature
+
+  remove_token_from_body_when_cookies_used: false

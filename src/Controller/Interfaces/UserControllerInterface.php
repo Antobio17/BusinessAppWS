@@ -17,27 +17,27 @@ interface UserControllerInterface extends HasUserServiceInterface
      *
      * @param Request $request Request of the route.
      *
-     * @return Response Response
+     * @return JsonResponse JsonResponse
      */
-    public function signup(Request $request): Response;
+    public function signup(Request $request): JsonResponse;
 
     /**
      * Route to access user login in the application.
      *
      * @param Request $request Request of the route.
      *
-     * @return Response Response
+     * @return JsonResponse JsonResponse
      */
-    public function signin(Request $request): Response;
+    public function signin(Request $request): JsonResponse;
 
     /**
      * Route to create a postal address for a user.
      *
      * @param Request $request Request of the route.
      *
-     * @return Response Response
+     * @return JsonResponse JsonResponse
      */
-    public function createPostalAddress(Request $request): Response;
+    public function createPostalAddress(Request $request): JsonResponse;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
