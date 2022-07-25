@@ -1,15 +1,16 @@
-<?php
+<?php /** @noinspection DuplicatedCode */
 
 namespace App\Controller;
 
+use App\Entity\AppError;
+use App\Helper\ToolsHelper;
 use App\Service\Traits\UserServiceTrait;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\Interfaces\UserServiceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Controller\Interfaces\UserControllerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 
 class UserController extends AppController implements UserControllerInterface
 {
@@ -28,6 +29,8 @@ class UserController extends AppController implements UserControllerInterface
     public const REQUEST_FIELD_PROVINCE = 'province';
     public const REQUEST_FIELD_STATE = 'state';
     public const REQUEST_FIELD_POSTAL_ADDRESS_ID = 'postalAddressID';
+
+    public const COOKIE_LOGIN_EXPIRATION = 259200;
 
     /************************************************* PROPERTIES *************************************************/
 
@@ -58,14 +61,14 @@ class UserController extends AppController implements UserControllerInterface
      * @inheritDoc
      * @return JsonResponse JsonResponse
      */
-    public function signup(Request $request): Response
+    public function signup(Request $request): JsonResponse
     {
-        $domain = $request->server->get('HTTP_HOST');
-        $email = $request->request->get(static::REQUEST_FIELD_EMAIL);
-        $password = $request->request->get(static::REQUEST_FIELD_PASSWORD);
-        $phoneNumber = $request->request->get(static::REQUEST_FIELD_PHONENUMBER);
-        $name = $request->request->get(static::REQUEST_FIELD_NAME);
-        $surname = $request->request->get(static::REQUEST_FIELD_SURNAME);
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
+        $email = $this->getParamFromRequest($request, static::REQUEST_FIELD_EMAIL);
+        $password = $this->getParamFromRequest($request, static::REQUEST_FIELD_PASSWORD);
+        $phoneNumber = $this->getParamFromRequest($request, static::REQUEST_FIELD_PHONENUMBER);
+        $name = $this->getParamFromRequest($request, static::REQUEST_FIELD_NAME);
+        $surname = $this->getParamFromRequest($request, static::REQUEST_FIELD_SURNAME);
 
         # Data Validation
         $validationErrors = $this->validateRequiredRequestFields(array(
@@ -92,11 +95,11 @@ class UserController extends AppController implements UserControllerInterface
      * @inheritDoc
      * @return JsonResponse JsonResponse
      */
-    public function signin(Request $request): Response
+    public function signin(Request $request): JsonResponse
     {
-        $domain = $request->server->get('HTTP_HOST');
-        $email = $request->request->get(static::REQUEST_FIELD_EMAIL);
-        $password = $request->request->get(static::REQUEST_FIELD_PASSWORD);
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
+        $email = $this->getParamFromRequest($request, static::REQUEST_FIELD_EMAIL);
+        $password = $this->getParamFromRequest($request, static::REQUEST_FIELD_PASSWORD);
 
         # Data Validation
         $validationErrors = $this->validateRequiredRequestFields(array(
@@ -111,7 +114,13 @@ class UserController extends AppController implements UserControllerInterface
             endif;
         endif;
 
-        return $this->createJsonResponse($data, $validationErrors, $this->getUserService());
+        $response = $this->createJsonResponse($data, $validationErrors, $this->getUserService());
+
+        if ($data !== NULL && isset($data['token'])):
+            $response = $this->_setJWTCookiesResponse($data['token'], $response);
+        endif;
+
+        return $response;
     }
 
     /**
@@ -120,17 +129,17 @@ class UserController extends AppController implements UserControllerInterface
      * @inheritDoc
      * @return JsonResponse JsonResponse
      */
-    public function createPostalAddress(Request $request): Response
+    public function createPostalAddress(Request $request): JsonResponse
     {
-        $domain = $request->server->get('HTTP_HOST');
-        $name = $request->request->get(static::REQUEST_FIELD_NAME);
-        $address = $request->request->get(static::REQUEST_FIELD_ADDRESS);
-        $neighborhood = $request->request->get(static::REQUEST_FIELD_NEIGHBORHOOD);
-        $postalCode = $request->request->get(static::REQUEST_FIELD_POSTAL_CODE);
-        $population = $request->request->get(static::REQUEST_FIELD_POPULATION);
-        $province = $request->request->get(static::REQUEST_FIELD_PROVINCE);
-        $state = $request->request->get(static::REQUEST_FIELD_STATE);
-        $postalAddressID = $request->request->get(static::REQUEST_FIELD_POSTAL_ADDRESS_ID);
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
+        $name = $this->getParamFromRequest($request, static::REQUEST_FIELD_NAME);
+        $address = $this->getParamFromRequest($request, static::REQUEST_FIELD_ADDRESS);
+        $neighborhood = $this->getParamFromRequest($request, static::REQUEST_FIELD_NEIGHBORHOOD);
+        $postalCode = $this->getParamFromRequest($request, static::REQUEST_FIELD_POSTAL_CODE);
+        $population = $this->getParamFromRequest($request, static::REQUEST_FIELD_POPULATION);
+        $province = $this->getParamFromRequest($request, static::REQUEST_FIELD_PROVINCE);
+        $state = $this->getParamFromRequest($request, static::REQUEST_FIELD_STATE);
+        $postalAddressID = $this->getParamFromRequest($request, static::REQUEST_FIELD_POSTAL_ADDRESS_ID);
 
         # Data Validation
         $validationErrors = array_merge(
@@ -163,6 +172,45 @@ class UserController extends AppController implements UserControllerInterface
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /********************************************** PROTECTED METHODS *********************************************/
+
+    /**
+     * @param string $token
+     * @param JsonResponse $response
+     * @return JsonResponse
+     */
+    protected function _setJWTCookiesResponse(string $token, JsonResponse $response): JsonResponse
+    {
+        $tokenSplit = explode('.', $token);
+
+        if (count($tokenSplit) === 3):
+            $response->headers->setCookie(new Cookie(
+                'jwt_hp',
+                sprintf('%s.%s', $tokenSplit[0], $tokenSplit[1]),
+                time() + static::COOKIE_LOGIN_EXPIRATION,
+                '/',
+                null,
+                false,
+                false
+            ));
+            $response->headers->setCookie(new Cookie(
+                'jwt_s',
+                $tokenSplit[2],
+                0,
+                '/',
+                null,
+                false,
+                true
+            ));
+        else:
+            $this->getUserService()->registerAppError(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
+                AppError::ERROR_JWT_SPLIT_TOKEN,
+                sprintf('Error al establecer las cookies de JWT: Token %s no válido.', $token)
+            );
+        endif;
+
+        return $response;
+    }
 
     /*********************************************** STATIC METHODS ***********************************************/
 
