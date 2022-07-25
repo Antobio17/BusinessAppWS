@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Appointment;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\Traits\AppointmentServiceTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -48,12 +47,12 @@ class AppointmentController extends AppController implements AppointmentControll
      * @inheritDoc
      * @return JsonResponse JsonResponse
      */
-    public function getBusinessAppointments(Request $request): Response
+    public function getBusinessAppointments(Request $request): JsonResponse
     {
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
-        $status = $request->request->get(static::REQUEST_FIELD_STATUS);
-        $startDate = $request->request->get(static::REQUEST_FIELD_START_DATE);
-        $endDate = $request->request->get(static::REQUEST_FIELD_END_DATE);
+        $status = $this->getParamFromRequest($request, static::REQUEST_FIELD_STATUS);
+        $startDate = $this->getParamFromRequest($request, static::REQUEST_FIELD_START_DATE);
+        $endDate = $this->getParamFromRequest($request, static::REQUEST_FIELD_END_DATE);
 
         # Data Validation
         $validationErrors = $this->validateRequestStatusField($status, Appointment::getStatusChoices());
@@ -80,10 +79,10 @@ class AppointmentController extends AppController implements AppointmentControll
      * @inheritDoc
      * @return JsonResponse JsonResponse
      */
-    public function getUserAppointments(Request $request): Response
+    public function getUserAppointments(Request $request): JsonResponse
     {
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
-        $status = $request->request->get(static::REQUEST_FIELD_STATUS);
+        $status = $this->getParamFromRequest($request, static::REQUEST_FIELD_STATUS);
 
         # Data Validation
         $validationErrors = $this->validateRequestStatusField($status, Appointment::getStatusChoices());
@@ -104,10 +103,10 @@ class AppointmentController extends AppController implements AppointmentControll
      * @inheritDoc
      * @return JsonResponse JsonResponse
      */
-    public function getWorkerAppointments(Request $request): Response
+    public function getWorkerAppointments(Request $request): JsonResponse
     {
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
-        $status = $request->request->get(static::REQUEST_FIELD_STATUS);
+        $status = $this->getParamFromRequest($request, static::REQUEST_FIELD_STATUS);
 
         # Data Validation
         $validationErrors = $this->validateRequestStatusField($status, Appointment::getStatusChoices());
@@ -130,11 +129,11 @@ class AppointmentController extends AppController implements AppointmentControll
      * @inheritDoc
      * @return JsonResponse JsonResponse
      */
-    public function bookUserAppointment(Request $request): Response
+    public function bookUserAppointment(Request $request): JsonResponse
     {
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
-        $bookingDateAt = $request->request->get(static::REQUEST_FIELD_BOOKING_DATE_AT);
-        $userEmail = $request->request->get(static::REQUEST_FIELD_USER_EMAIL);
+        $bookingDateAt = $this->getParamFromRequest($request, static::REQUEST_FIELD_BOOKING_DATE_AT);
+        $userEmail = $this->getParamFromRequest($request, static::REQUEST_FIELD_USER_EMAIL);
 
         # Data Validation
         $validationErrors = $this->validateRequestDateFields(array(
@@ -162,10 +161,10 @@ class AppointmentController extends AppController implements AppointmentControll
      * @inheritDoc
      * @return JsonResponse JsonResponse
      */
-    public function cancelUserBookedAppointment(Request $request): Response
+    public function cancelUserBookedAppointment(Request $request): JsonResponse
     {
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
-        $userEmail = $request->request->get(static::REQUEST_FIELD_USER_EMAIL);
+        $userEmail = $this->getParamFromRequest($request, static::REQUEST_FIELD_USER_EMAIL);
 
         $cancelled = FALSE;
         if ($this->getAppointmentService()->setBusinessContext($domain)):

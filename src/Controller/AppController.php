@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Symfony\Component\HttpFoundation\InputBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Service\Interfaces\AppServiceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -100,7 +102,7 @@ class AppController extends AbstractController implements AppControllerInterface
     }
 
     /**
-     * @param array $dates
+     * @inheritDoc
      * @return array array
      */
     public function validateRequestDateFields(array $dates): array
@@ -123,20 +125,31 @@ class AppController extends AbstractController implements AppControllerInterface
 
     /**
      * @inheritDoc
-     * @return Response Response
+     * @return mixed|null mixed|null
+     */
+    public function getParamFromRequest(Request $request, string $paramKey)
+    {
+        $content = json_decode($request->getContent(), true);
+
+        return $content[$paramKey] ?? $request->request->get($paramKey) ?? NULL;
+    }
+
+    /**
+     * @inheritDoc
+     * @return JsonResponse JsonResponse
      */
     public function createJsonResponse_Creation($data, array $validationErrors,
-                                                AppServiceInterface $service): Response
+                                                AppServiceInterface $service): JsonResponse
     {
         return $this->createJsonResponse($data, $validationErrors, $service, Response::HTTP_CREATED);
     }
 
     /**
      * @inheritDoc
-     * @return Response Response
+     * @return JsonResponse JsonResponse
      */
     public function createJsonResponse($data, array $validationErrors, AppServiceInterface $service,
-                                       int $code = 200): Response
+                                       int $code = 200): JsonResponse
     {
         if (empty($validationErrors)):
             $serviceErrors = $service->getErrors();
