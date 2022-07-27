@@ -63,7 +63,7 @@ class UserController extends AppController implements UserControllerInterface
      */
     public function signup(Request $request): JsonResponse
     {
-        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
+        $domain = $request->server->get('HTTP_HOST');
         $email = $this->getParamFromRequest($request, static::REQUEST_FIELD_EMAIL);
         $password = $this->getParamFromRequest($request, static::REQUEST_FIELD_PASSWORD);
         $phoneNumber = $this->getParamFromRequest($request, static::REQUEST_FIELD_PHONENUMBER);
