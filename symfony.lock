@@ -82,6 +82,15 @@
     "doctrine/sql-formatter": {
         "version": "1.1.2"
     },
+    "easycorp/easyadmin-bundle": {
+        "version": "3.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "3.0",
+            "ref": "b131e6cbfe1b898a508987851963fff485986285"
+        }
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
@@ -199,6 +208,9 @@
             "./.env"
         ]
     },
+    "symfony/form": {
+        "version": "v5.4.10"
+    },
     "symfony/framework-bundle": {
         "version": "5.4",
         "recipe": {
@@ -224,6 +236,9 @@
     "symfony/http-kernel": {
         "version": "v5.4.1"
     },
+    "symfony/intl": {
+        "version": "v5.4.10"
+    },
     "symfony/maker-bundle": {
         "version": "1.36",
         "recipe": {
@@ -233,11 +248,17 @@
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
     },
+    "symfony/options-resolver": {
+        "version": "v5.4.3"
+    },
     "symfony/password-hasher": {
         "version": "v5.4.2"
     },
     "symfony/polyfill-intl-grapheme": {
         "version": "v1.23.1"
+    },
+    "symfony/polyfill-intl-icu": {
+        "version": "v1.26.0"
     },
     "symfony/polyfill-intl-normalizer": {
         "version": "v1.23.0"
@@ -256,6 +277,9 @@
     },
     "symfony/polyfill-php81": {
         "version": "v1.23.0"
+    },
+    "symfony/polyfill-uuid": {
+        "version": "v1.26.0"
     },
     "symfony/property-access": {
         "version": "v5.4.2"
@@ -315,6 +339,41 @@
     "symfony/string": {
         "version": "v5.4.0"
     },
+    "symfony/translation": {
+        "version": "5.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.3",
+            "ref": "da64f5a2b6d96f5dc24914517c0350a5f91dee43"
+        },
+        "files": [
+            "./config/packages/translation.yaml",
+            "./translations/.gitignore"
+        ]
+    },
+    "symfony/translation-contracts": {
+        "version": "v2.5.2"
+    },
+    "symfony/twig-bridge": {
+        "version": "v5.4.9"
+    },
+    "symfony/twig-bundle": {
+        "version": "5.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.4",
+            "ref": "bb2178c57eee79e6be0b297aa96fc0c0def81387"
+        },
+        "files": [
+            "./config/packages/twig.yaml",
+            "./templates/base.html.twig"
+        ]
+    },
+    "symfony/uid": {
+        "version": "v5.4.3"
+    },
     "symfony/var-dumper": {
         "version": "v5.4.1"
     },
@@ -326,5 +385,8 @@
     },
     "telegram-bot/api": {
         "version": "v2.3.24"
+    },
+    "twig/twig": {
+        "version": "v3.4.1"
     }
 }
