@@ -2,14 +2,22 @@
 
 namespace App\Controller\Interfaces;
 
+use Symfony\Component\HttpFoundation\Request;
 use App\Service\Interfaces\AppServiceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 interface AppControllerInterface
 {
 
     /************************************************** ROUTING ***************************************************/
+
+    /**
+     * Index route of the project.
+     *
+     * @return RedirectResponse RedirectResponse
+     */
+    public function index(): RedirectResponse;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 

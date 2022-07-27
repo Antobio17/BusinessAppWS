@@ -29,6 +29,14 @@ security:
         authenticators:
           - lexik_jwt_authentication.jwt_token_authenticator
 
+    admin:
+      pattern: ^/
+      provider: app_user_provider
+      form_login:
+        login_path: login
+        check_path: login
+      logout: true
+
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
   access_control:
@@ -41,6 +49,8 @@ security:
     - { path: ^/api/get/worker, roles: ROLE_WORKER }
     - { path: ^/api/set/worker, roles: ROLE_WORKER }
     - { path: ^/api, roles: ROLE_USER }
+    - { path: ^/admin, roles: [ROLE_WORKER, ROLE_ADMIN] }
+    - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
 
 when@test:

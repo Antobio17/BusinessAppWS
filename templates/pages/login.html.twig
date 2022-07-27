@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <main class="row page-login" style="
+            background-image: url('{{ asset('build/images/admin-background.jpg') }}');
+            background-size: cover;
+            align-content: center;
+            margin: 0;
+            ">
+        <section class="col-12 section-business-app">
+            <span class="title">¡Hola, Bienvenido a Business APP!</span>
+            <span>
+                Desde aquí tendrás accedo a la información de tu negocio que se ha registrado por la página Web.
+            </span>
+        </section>
+        <section class="col-12 section-form">
+            <span class="title">Iniciar Sesión</span>
+            <form class="admin-form-signin" action="{{ path('login') }}" method="POST">
+                <!--suppress HtmlFormInputWithoutLabel -->
+                <input type="email" id="_username" name="_username" class="form-control" placeholder="Email..."
+                       required autofocus>
+                <!--suppress HtmlFormInputWithoutLabel -->
+                <input type="password" id="_password" name="_password" class="form-control" placeholder="Contraseña..."
+                       required autofocus>
+                <button class="btn btn-login m-auto" type="submit">Iniciar sesión</button>
+            </form>
+        </section>
+    </main>
+{% endblock body %}
