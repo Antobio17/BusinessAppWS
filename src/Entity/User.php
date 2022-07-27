@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Entity\Interfaces\BusinessContextInterface;
 use App\Entity\Interfaces\BusinessInterface;
 use App\Entity\Interfaces\PostalAddressInterface;
+use App\Entity\Traits\BusinessNullableTrait;
+use App\Entity\Traits\Interfaces\HasBusinessNullableInterface;
 use App\Entity\Traits\Interfaces\HasIsWorkerInterface;
 use App\Entity\Traits\IsWorkerTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -48,7 +50,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  *      )
  * })
  */
-class User extends AbstractBusinessContext implements BusinessContextInterface, UserInterface,
+class User extends AbstractORM implements UserInterface, HasBusinessNullableInterface,
     PasswordAuthenticatedUserInterface, HasEmailInterface, HasPasswordInterface, HasPhoneNumberInterface,
     HasNameInterface, HasSurnameInterface, HasIsWorkerInterface
 {
@@ -60,6 +62,11 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
     public const ROLE_USER = 'ROLE_USER';
 
     /************************************************* PROPERTIES *************************************************/
+
+    use BusinessNullableTrait {
+        BusinessNullableTrait::__construct as protected __businessConstruct;
+        BusinessNullableTrait::__toArray as protected __businessToArray;
+    }
 
     use EmailTrait {
         EmailTrait::__construct as protected __emailConstruct;
@@ -110,7 +117,7 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
     /**
      * User Construct.
      *
-     * @param BusinessInterface $business Business to which the user belongs.
+     * @param BusinessInterface|null $business Business to which the user belongs.
      * @param string $email The email of the new user.
      * @param string $password The password of the new user.
      * @param string $phoneNumber The phone number of the new user.
@@ -119,11 +126,11 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
      * @param array $roles The roles of the new user.
      *
      */
-    public function __construct(BusinessInterface $business, string $email, string $password, string $phoneNumber,
-                                string            $name, string $surname, array $roles = array(), bool $isWorker = FALSE)
+    public function __construct(?BusinessInterface $business, string $email, string $password, string $phoneNumber,
+                                string             $name, string $surname, array $roles = array(),
+                                bool $isWorker = FALSE)
     {
-        parent::__construct($business);
-
+        $this->__businessConstruct($business);
         $this->__emailConstruct($email);
         $this->__passwordConstruct($password);
         $this->__phoneNumberConstruct($phoneNumber);
@@ -249,6 +256,7 @@ class User extends AbstractBusinessContext implements BusinessContextInterface, 
     {
         return array_merge(
             parent::__toArray(),
+            $this->__businessToArray(),
             $this->__emailToArray(),
             $this->__passwordToArray(),
             $this->__phoneNumberToArray(),

@@ -112,6 +112,15 @@ class Business extends AbstractORM implements BusinessInterface
         );
     }
 
+    /**
+     * @inheritDoc
+     * @return string string
+     */
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+
     /********************************************** PROTECTED METHODS *********************************************/
 
     /*********************************************** STATIC METHODS ***********************************************/

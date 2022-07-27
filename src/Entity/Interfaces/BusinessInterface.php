@@ -36,6 +36,13 @@ interface BusinessInterface extends HasDomainInterface, HasNameInterface, HasPho
      */
     public function __toArray(): array;
 
+    /**
+     * Gets the Display Name of the entity.
+     *
+     * @return string string
+     */
+    public function __toString(): string;
+
     /*********************************************** STATIC METHODS ***********************************************/
 
 }
