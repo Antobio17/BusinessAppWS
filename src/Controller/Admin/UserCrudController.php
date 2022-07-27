@@ -49,4 +49,7 @@ class UserCrudController extends AbstractCrudController implements UserCrudContr
             BooleanField::new('isWorker', 'Trabajador')->setDisabled(TRUE),
         );
     }
+
+    /*********************************************** STATIC METHODS ***********************************************/
+
 }
