@@ -327,3 +327,5 @@ package-lock.json
 ###< lexik/jwt-authentication-bundle ###
 
 /mysql/
+
+/public/build
