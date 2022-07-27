@@ -85,3 +85,21 @@ mysql -uroot -psecret
 
 ---
 
+### EasyAdminBundle
+
+Se ha hecho uso del bundle EasyAdminBundle para la creación de la administración del Back-End del sistema.
+
+Algunos de los comandos a destacar son:
+
+```shell
+# Creación del Dashboard principal
+php bin/console make:admin:dashboard
+
+# Creación de CRUD de entidades
+php bin/console make:admin:crud
+
+```
+
+---
+
+
