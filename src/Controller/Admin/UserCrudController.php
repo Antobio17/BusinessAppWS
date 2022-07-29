@@ -5,11 +5,11 @@ namespace App\Controller\Admin;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use App\Controller\Admin\Interfaces\UserCrudControllerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class UserCrudController extends AbstractCrudController implements UserCrudControllerInterface
 {
@@ -20,18 +20,31 @@ class UserCrudController extends AbstractCrudController implements UserCrudContr
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
-    /**
-     * @inheritDoc
-     * @return string string
-     */
-    public static function getEntityFqcn(): string
-    {
-        return User::class;
-    }
-
     /************************************************** ROUTING ***************************************************/
 
     /*********************************************** PUBLIC METHODS ***********************************************/
+
+    /**
+     * @inheritDoc
+     * @return Crud Crud
+     */
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setEntityLabelInSingular('Usuario')
+            ->setEntityLabelInPlural('Usuarios')
+            ->setDateFormat('H:i:s d-m-Y');
+    }
+
+    /**
+     * @param Filters $filters
+     *
+     * @return Filters Filters
+     */
+    public function configureFilters(Filters $filters): Filters
+    {
+        return parent::configureFilters($filters);
+    }
 
     /**
      * @inheritDoc
@@ -51,5 +64,14 @@ class UserCrudController extends AbstractCrudController implements UserCrudContr
     }
 
     /*********************************************** STATIC METHODS ***********************************************/
+
+    /**
+     * @inheritDoc
+     * @return string string
+     */
+    public static function getEntityFqcn(): string
+    {
+        return User::class;
+    }
 
 }

@@ -2,26 +2,50 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Business;
 use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
-use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
-use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use App\Controller\Admin\Interfaces\BusinessCrudControllerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
+use App\Controller\Admin\Interfaces\CrudControllerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController as EAAbstractCrudController;
 
-class BusinessCrudController extends AbstractCrudController implements BusinessCrudControllerInterface
+abstract class AbstractCrudController extends EAAbstractCrudController implements CrudControllerInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
 
     /************************************************* PROPERTIES *************************************************/
 
+    /**
+     * @var EntityRepository
+     */
+    protected EntityRepository $entityRepository;
+
+    /************************************************* CONSTRUCT **************************************************/
+
+    /**
+     * AbstractCrudController construct
+     *
+     * @param EntityRepository $entityRepository EntityRepository to override the query builds.
+     */
+    public function __construct(EntityRepository $entityRepository)
+    {
+        $this->entityRepository = $entityRepository;
+    }
+
     /******************************************** GETTERS AND SETTERS *********************************************/
+
+    /**
+     * @inheritDoc
+     * @return EntityRepository EntityRepository
+     */
+    public function getEntityRepository(): EntityRepository
+    {
+        return $this->entityRepository;
+    }
 
     /************************************************** ROUTING ***************************************************/
 
@@ -42,49 +66,13 @@ class BusinessCrudController extends AbstractCrudController implements BusinessC
         $queryBuilder = $this->getEntityRepository()->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
 
         if (isset($business)):
-            $queryBuilder->andWhere('entity.id = :id');
-            $queryBuilder->setParameter('id', $business->getID());
+            $queryBuilder->andWhere('entity.business = :business');
+            $queryBuilder->setParameter('business', $business->getID());
         endif;
 
         return $queryBuilder;
     }
 
-    /**
-     * @inheritDoc
-     * @return Crud Crud
-     */
-    public function configureCrud(Crud $crud): Crud
-    {
-        return $crud
-            ->setEntityLabelInSingular('Negocio')
-            ->setEntityLabelInPlural('Negocios')
-            ->setDateFormat('H:i:s d-m-Y');
-    }
-
-    /**
-     * @inheritDoc
-     * @return iterable iterable
-     */
-    public function configureFields(string $pageName): iterable
-    {
-        return array(
-            IdField::new('id'),
-            TextField::new('domain', 'Dominio'),
-            TextField::new('name', 'Nombre'),
-            TextField::new('phoneNumber', 'Teléfono'),
-            TextField::new('email'),
-        );
-    }
-
     /*********************************************** STATIC METHODS ***********************************************/
-
-    /**
-     * @inheritDoc
-     * @return string string
-     */
-    public static function getEntityFqcn(): string
-    {
-        return Business::class;
-    }
 
 }

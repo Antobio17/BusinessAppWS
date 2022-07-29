@@ -77,7 +77,7 @@ class DashboardController extends AbstractDashboardController implements Dashboa
         yield MenuItem::linkToDashboard('Inicio', 'fa fa-home');
 
         $roles = $this->getUser() !== NULL ? $this->getUser()->getRoles() : array();
-        if (in_array(array(User::ROLE_ADMIN, User::ROLE_WORKER), $roles)):
+        if (in_array(User::ROLE_ADMIN, $roles) || in_array(User::ROLE_WORKER, $roles)):
             yield MenuItem::linkToCrud('Negocios', 'fas fa-briefcase', Business::class);
             yield MenuItem::linkToCrud('Usuarios', 'fas fa-user', User::class);
         endif;

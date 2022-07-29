@@ -21,7 +21,7 @@ trait BusinessNullableTrait
      * @ManyToOne(targetEntity="App\Entity\Business")
      * @JoinColumn(name="business_id", referencedColumnName="id", nullable=true)
      */
-    protected BusinessInterface $business;
+    protected ?BusinessInterface $business;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 

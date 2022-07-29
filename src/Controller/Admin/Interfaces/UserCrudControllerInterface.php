@@ -11,13 +11,6 @@ interface UserCrudControllerInterface
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
-    /**
-     * Method to get the entity FQCN of the Business. It returns the User::class.
-     *
-     * @return string string
-     */
-    public static function getEntityFqcn(): string;
-
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
@@ -31,5 +24,12 @@ interface UserCrudControllerInterface
     public function configureCrud(Crud $crud): Crud;
 
     /*********************************************** STATIC METHODS ***********************************************/
+
+    /**
+     * Method to get the entity FQCN of the Business. It returns the User::class.
+     *
+     * @return string string
+     */
+    public static function getEntityFqcn(): string;
 
 }
