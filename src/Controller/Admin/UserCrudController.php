@@ -5,6 +5,8 @@ namespace App\Controller\Admin;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -61,6 +63,21 @@ class UserCrudController extends AbstractCrudController implements UserCrudContr
             TextField::new('surname', 'Apellidos'),
             BooleanField::new('isWorker', 'Trabajador')->setDisabled(TRUE),
         );
+    }
+
+    /**
+     * @inheritDoc
+     * @return Actions Actions
+     */
+    public function configureActions(Actions $actions): Actions
+    {
+        parent::configureActions($actions);
+
+        return $actions
+            # PAGE_INDEX
+            ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+                return $action->setLabel('Nuevo Usuario');
+            });
     }
 
     /*********************************************** STATIC METHODS ***********************************************/

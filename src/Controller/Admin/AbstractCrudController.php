@@ -4,8 +4,11 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use App\Controller\Admin\Interfaces\CrudControllerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
@@ -71,6 +74,38 @@ abstract class AbstractCrudController extends EAAbstractCrudController implement
         endif;
 
         return $queryBuilder;
+    }
+
+    /**
+     * @inheritDoc
+     * @return Actions Actions
+     */
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            # PAGE_INDEX
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->update(Crud::PAGE_INDEX, Action::DETAIL, function (Action $action) {
+                return $action->setIcon('fa fa-eye')->setLabel('Ver');
+            })
+            ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
+                return $action->setIcon('fa fa-pencil')->setLabel('Editar');
+            })
+            ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+                return $action->setIcon('fa fa-trash')->setLabel('Eliminar');
+            })
+            # PAGE_NEW
+            ->remove(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)
+            ->update(Crud::PAGE_NEW, Action::SAVE_AND_RETURN, function (Action $action) {
+                return $action->setLabel('Crear');
+            })
+            # PAGE_EDIT
+            ->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE, function (Action $action) {
+                return $action->setLabel('Guardar y continuar');
+            })
+            ->update(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN, function (Action $action) {
+                return $action->setLabel('Guardar cambios');
+            });
     }
 
     /*********************************************** STATIC METHODS ***********************************************/
