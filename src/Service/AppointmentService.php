@@ -115,7 +115,7 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
         if ($user !== NULL && empty($this->getErrors())):
             # BookingDate validations
             if ($this->getBusiness()->checkHourInShifts(
-                (int)date('w', $bookingDateAt->getTimestamp()), $bookingDateAt->format("H:m:s")
+                (int)date('w', $bookingDateAt->getTimestamp()), $bookingDateAt->format('H:i:s')
             )):
                 $this->registerAppError(
                     $method,
