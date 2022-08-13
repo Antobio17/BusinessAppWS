@@ -2,6 +2,10 @@
 
 namespace App\Entity\Traits;
 
+use App\Entity\Shift;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Entity\Traits\Interfaces\HasBusinessConfigInterface;
 
 /**
@@ -14,10 +18,12 @@ trait BusinessConfigTrait
 
     /************************************************* PROPERTIES *************************************************/
 
-    use DataTrait {
-        DataTrait::__construct as protected __hoursConstruct;
-        DataTrait::__toArray as protected __hoursToArray;
-    }
+    /**
+     * One Business has many shifts.
+     *
+     * @OneToMany(targetEntity="Shift", mappedBy="business", cascade={"persist"})
+     */
+    protected Collection $shifts;
 
     use AppointmentDurationTrait {
         AppointmentDurationTrait::__construct as protected __appointmentDurationConstruct;
@@ -28,20 +34,22 @@ trait BusinessConfigTrait
 
     /**
      * @inheritDoc
-     * @return array array
+     * @return Shift[] Shift[]
      */
-    public function getHours(): array
+    public function getShifts(): Collection
     {
-        return $this->getData();
+        return $this->shifts;
     }
 
     /**
      * @inheritDoc
      * @return $this $this
      */
-    public function setHours(array $hours): self
+    public function addShift(Shift $shift): self
     {
-        return $this->setData($hours);
+        $this->shifts->add($shift);
+
+        return $this;
     }
 
     /************************************************* CONSTRUCT **************************************************/
@@ -55,8 +63,9 @@ trait BusinessConfigTrait
      */
     public function __construct(array $hours, int $appointmentDuration = 60)
     {
-        $this->__hoursConstruct($hours);
         $this->__appointmentDurationConstruct($appointmentDuration);
+
+        $this->shifts = new ArrayCollection();
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
@@ -65,10 +74,43 @@ trait BusinessConfigTrait
      * @inheritDoc
      * @return array array
      */
+    public function getShiftsAsArray(): array
+    {
+        foreach ($this->getShifts() as $shift):
+            $array[$shift->getWeekDay()][] = array(
+                'opensAt' => $shift->getOpensAt(),
+                'closesAt' => $shift->getClosesAt()
+            );
+        endforeach;
+
+        return $array ?? array();
+    }
+
+    /**
+     * @inheritDoc
+     * @return bool bool
+     */
+    public function checkHourInShifts(int $day, string $hour): bool
+    {
+        $shifts = $this->getShiftsAsArray();
+
+        if (isset($shifts[$day])):
+            foreach ($shifts[$day] as $shift):
+                $isInShifts = $shift['opensAt'] <= $hour && $shift['closesAt'] > $hour;
+            endforeach;
+        endif;
+
+        return $isInShifts ?? FALSE;
+    }
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
     public function __toArray(): array
     {
         return array_merge(
-            $this->__hoursToArray(),
+            $this->getShiftsAsArray(),
             $this->__appointmentDurationToArray(),
         );
     }
