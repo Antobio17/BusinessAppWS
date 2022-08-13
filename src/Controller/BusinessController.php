@@ -54,6 +54,23 @@ class BusinessController extends AppController implements BusinessControllerInte
         return $this->createJsonResponse($data ?? NULL, array(), $this->getBusinessService());
     }
 
+    /**
+     * @Route("/api/business/config/schedule/get")
+     *
+     * @inheritDoc
+     * @return JsonResponse JsonResponse
+     */
+    public function getBusinessScheduleConfig(Request $request): JsonResponse
+    {
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
+
+        if ($this->getBusinessService()->setBusinessContext($domain)):
+            $data = $this->getBusinessService()->getBusinessScheduleConfig();
+        endif;
+
+        return $this->createJsonResponse($data ?? NULL, array(), $this->getBusinessService());
+    }
+
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /********************************************** PROTECTED METHODS *********************************************/
