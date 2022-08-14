@@ -96,7 +96,10 @@ trait BusinessConfigTrait
 
         if (isset($shifts[$day])):
             foreach ($shifts[$day] as $shift):
-                $isInShifts = $shift['opensAt'] <= $hour && $shift['closesAt'] > $hour;
+                if ($shift['opensAt'] <= $hour && $shift['closesAt'] > $hour):
+                    $isInShifts = TRUE;
+                    break;
+                endif;
             endforeach;
         endif;
 
