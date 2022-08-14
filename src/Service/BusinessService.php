@@ -93,9 +93,11 @@ class BusinessService extends AppService implements BusinessServiceInterface
         if ($business === NULL):
             $this->registerAppError_BusinessContextUndefined($method);
         else:
+            $workers = $this->getUserRepository()->findByBusiness($business, TRUE);
             $config = array(
                 'shifts' => $business->getShiftsAsArray(),
                 'appointmentDuration' => $business->getAppointmentDuration(),
+                'numWorkers' => count($workers),
             );
         endif;
 
