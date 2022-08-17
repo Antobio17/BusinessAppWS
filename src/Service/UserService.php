@@ -227,6 +227,67 @@ class UserService extends AppService implements UserServiceInterface
         return $persisted ?? FALSE;
     }
 
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function getUserData(): ?array
+    {
+        $user = $this->getUser();
+        if ($user instanceof User):
+            $userData = $user->__toArray();
+            unset($userData['business'], $userData['roles'], $userData['password']);
+
+            $addresses = $user->getPostalAddresses();
+            $userData['postalAddresses'] = array();
+            foreach ($addresses as $address):
+                $userData['postalAddresses'][$address->getID()] = $address->__toArray();
+            endforeach;
+        else:
+            $this->registerAppError_UserContextUndefined(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__)
+            );
+        endif;
+
+        return $userData ?? NULL;
+    }
+
+    /**
+     * @inheritDoc
+     * @return bool bool
+     */
+    public function updateUserData(string  $email, string $phoneNumber, string $name, string $surname,
+                                   ?string $password = NULL): bool
+    {
+        $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
+
+        $user = $this->getUser();
+        $business = $this->getBusiness();
+        $userExist = $this->getUserRepository()->findByEmail($business, $email);
+
+        if (!$user instanceof User):
+            $this->registerAppError_UserContextUndefined($method);
+        elseif ($userExist !== NULL && $userExist->getID() !== $user->getID()):
+            $this->registerAppError(
+                $method, AppError::ERROR_USER_UPDATE_EMAIL_EXIST,
+                'Error en la actualización de usuario: el nuevo email indicado ya existe.'
+            );
+        else:
+            if ($password !== NULL):
+                $encodedPassword = $this->getUserPasswordHasher()->hashPassword($user, $password);
+                $user->setPassword($encodedPassword);
+            endif;
+            $user->setEmail($email)
+                ->setName($name)
+                ->setSurname($surname)
+                ->setPhoneNumber($phoneNumber);
+
+            $result = $this->persistAndFlush($user);
+        endif;
+
+        return empty($this->getErrors());
+    }
+
     /********************************************** PROTECTED METHODS *********************************************/
 
     /*********************************************** STATIC METHODS ***********************************************/

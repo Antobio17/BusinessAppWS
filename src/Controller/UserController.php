@@ -17,6 +17,7 @@ class UserController extends AppController implements UserControllerInterface
 
     /************************************************* CONSTANTS **************************************************/
 
+    public const REQUEST_FIELD_USER_ID = 'userID';
     public const REQUEST_FIELD_EMAIL = 'email';
     public const REQUEST_FIELD_PASSWORD = 'password';
     public const REQUEST_FIELD_PHONENUMBER = 'phoneNumber';
@@ -167,6 +168,56 @@ class UserController extends AppController implements UserControllerInterface
         endif;
 
         return $this->createJsonResponse($data, $validationErrors, $this->getUserService());
+    }
+
+    /**
+     * @Route("/api/get/user/data")
+     *
+     * @inheritDoc
+     * @return JsonResponse JsonResponse
+     */
+    public function getUserData(Request $request): JsonResponse
+    {
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
+
+        if ($this->getUserService()->setBusinessContext($domain)):
+            $data = $this->getUserService()->getUserData();
+        endif;
+
+        return $this->createJsonResponse($data ?? NULL, array(), $this->getUserService());
+    }
+
+    /**
+     * @Route("/api/user/update")
+     *
+     * @inheritDoc
+     * @return JsonResponse JsonResponse
+     */
+    public function updateUserData(Request $request): JsonResponse
+    {
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
+        $email = $this->getParamFromRequest($request, static::REQUEST_FIELD_EMAIL);
+        $password = $this->getParamFromRequest($request, static::REQUEST_FIELD_PASSWORD);
+        $phoneNumber = $this->getParamFromRequest($request, static::REQUEST_FIELD_PHONENUMBER);
+        $name = $this->getParamFromRequest($request, static::REQUEST_FIELD_NAME);
+        $surname = $this->getParamFromRequest($request, static::REQUEST_FIELD_SURNAME);
+
+        # Data Validation
+        $validationErrors = $this->validateRequiredRequestFields(array(
+            static::REQUEST_FIELD_EMAIL => $email,
+            static::REQUEST_FIELD_PHONENUMBER => $phoneNumber,
+            static::REQUEST_FIELD_NAME => $name,
+            static::REQUEST_FIELD_SURNAME => $surname,
+        ));
+
+        $data = NULL;
+        if (empty($validationErrors)):
+            if ($this->getUserService()->setBusinessContext($domain)):
+                $data = $this->getUserService()->updateUserData($email, $phoneNumber, $name, $surname, $password);
+            endif;
+        endif;
+
+        return $this->createJsonResponse_Put($data, $validationErrors, $this->getUserService());
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/

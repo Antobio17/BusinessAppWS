@@ -148,6 +148,16 @@ class AppController extends AbstractController implements AppControllerInterface
      * @inheritDoc
      * @return JsonResponse JsonResponse
      */
+    public function createJsonResponse_Put($data, array $validationErrors,
+                                                AppServiceInterface $service): JsonResponse
+    {
+        return $this->createJsonResponse($data, $validationErrors, $service, Response::HTTP_ACCEPTED);
+    }
+
+    /**
+     * @inheritDoc
+     * @return JsonResponse JsonResponse
+     */
     public function createJsonResponse($data, array $validationErrors, AppServiceInterface $service,
                                        int $code = 200): JsonResponse
     {
