@@ -107,6 +107,19 @@ interface AppControllerInterface
 
     /**
      * Creates a Json response for the WebService.
+     * If the process is successful it will return the creation code 202.
+     *
+     * @param mixed $data The data of the response.
+     * @param array $validationErrors The validation errors to add to the response.
+     * @param AppServiceInterface $service The service used in the process.
+     *
+     * @return JsonResponse JsonResponse
+     */
+    public function createJsonResponse_Put($data, array $validationErrors,
+                                           AppServiceInterface $service): JsonResponse;
+
+    /**
+     * Creates a Json response for the WebService.
      * It will return the code passed.
      *
      * @param mixed $data The data of the response.
