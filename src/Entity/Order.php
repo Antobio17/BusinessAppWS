@@ -37,7 +37,8 @@ class Order extends AbstractUserContext implements OrderInterface
     /************************************************* CONSTANTS **************************************************/
 
     public const STATUS_PENDING = 0;
-    public const STATUS_CANCELLED = 1;
+    public const STATUS_PREPARING = 1;
+    public const STATUS_CANCELLED = 2;
     public const STATUS_SENT = 3;
     public const STATUS_DELIVERED = 4;
 

@@ -56,12 +56,13 @@ interface StoreServiceInterface extends AppServiceInterface
     /**
      * Gets the orders of a user in the business.
      *
+     * @param array $status Array of status to match.
      * @param int|null $offset The offset of the query.
      * @param int|null $limit The limit of the query.
      *
      * @return array array
      */
-    public function getUserOrders(?int $offset = NULL, ?int $limit = NULL): ?array;
+    public function getUserOrders(array $status = array(), ?int $offset = NULL, ?int $limit = NULL): ?array;
 
     /*********************************************** STATIC METHODS ***********************************************/
 
