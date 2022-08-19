@@ -108,6 +108,44 @@ interface UserServiceInterface extends AppServiceInterface
                                         string $population, string $province, string $state,
                                         ?int $postalAddressID = NULL): bool;
 
+    /**
+     * Delete the postal address referenced by the ID to the user logged.
+     *
+     * @param int|null $postalAddressID The ID of an existing postal address.
+     *
+     * @return bool bool
+     */
+    public function deletePostalAddress(int $postalAddressID): bool;
+
+    /**
+     * Gets the data of the user logged.
+     *
+     *      return array(
+     *          'id' => $user->getID(),
+     *          'email' => $user->getEmail(),
+     *          'name' => $user->getName(),
+     *          'surname' => $user->getSurname(),
+     *          'phoneNumber' => $user->getPhoneNumber()
+     *      )
+     *
+     * @return array array
+     */
+    public function getUserData(): ?array;
+
+    /**
+     * Updates the sata of the user logged.
+     *
+     * @param string $email The email to set to the user.
+     * @param string $phoneNumber The phone number to set to the user.
+     * @param string $name The name to set to the user.
+     * @param string $surname The surname to set to the user.
+     * @param string|null $password The password to set to the user.
+     *
+     * @return bool bool
+     */
+    public function updateUserData(string  $email, string $phoneNumber, string $name, string $surname,
+                                   ?string $password = NULL): bool;
+
     /*********************************************** STATIC METHODS ***********************************************/
 
 }

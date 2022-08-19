@@ -14,10 +14,16 @@ interface StoreServiceInterface extends AppServiceInterface
      *
      * @param int|null $offset The offset of the query.
      * @param int|null $limit The limit of the query.
+     * @param string|null $sort The type of sort to return the products.
+     * @param bool $onStock Include the products with stock available.
+     * @param bool $outOfStock Include the products with stock not available.
+     * @param array $categoryExclusion The categories selected to exclude from search.
      *
      * @return array array
      */
-    public function getBusinessProducts(?int $offset = NULL, ?int $limit = NULL): ?array;
+    public function getBusinessProducts(?int $offset = NULL, ?int $limit = NULL, ?string $sort = NULL,
+                                        bool $onStock = TRUE, bool $outOfStock = TRUE,
+                                        array $categoryExclusion = array()): ?array;
 
     /**
      * Create the new order requested from the front-end.
@@ -50,12 +56,13 @@ interface StoreServiceInterface extends AppServiceInterface
     /**
      * Gets the orders of a user in the business.
      *
+     * @param array $status Array of status to match.
      * @param int|null $offset The offset of the query.
      * @param int|null $limit The limit of the query.
      *
      * @return array array
      */
-    public function getUserOrders(?int $offset = NULL, ?int $limit = NULL): ?array;
+    public function getUserOrders(array $status = array(), ?int $offset = NULL, ?int $limit = NULL): ?array;
 
     /*********************************************** STATIC METHODS ***********************************************/
 

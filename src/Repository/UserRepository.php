@@ -75,11 +75,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      * Finds the users of the business specified.
      *
      * @param BusinessInterface $business Business to which the user belongs.
-     * @param bool $isWorkers Boolean to get only the workers of the business.
+     * @param bool $isWorker Boolean to get only the workers of the business.
      *
      * @return array array
      */
-    public function findByBusiness(BusinessInterface $business, bool $isWorkers): array
+    public function findByBusiness(BusinessInterface $business, bool $isWorker): array
     {
         $alias = 'usr';
 
@@ -87,7 +87,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->andWhere(sprintf('%s.business = :business', $alias))
             ->setParameter('business', $business)
             ->andWhere(sprintf('%s.isWorker = :isWorker', $alias))
-            ->setParameter('isWorker', $isWorkers)
+            ->setParameter('isWorker', $isWorker)
             ->getQuery()
             ->execute();
     }

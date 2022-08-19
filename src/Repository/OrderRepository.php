@@ -59,8 +59,8 @@ class OrderRepository extends AppRepository implements OrderRepositoryInterface
      * @inheritDoc
      * @return array array
      */
-    public function findByUser(BusinessInterface $business, User $user, ?int $offset = NULL, ?int $limit = NULL,
-                               bool $resultAsArray = TRUE): array
+    public function findByUser(BusinessInterface $business, User $user, array $status = array(),
+                               ?int              $offset = NULL, ?int $limit = NULL, bool $resultAsArray = TRUE): array
     {
         $alias = 'ord';
 
@@ -72,6 +72,11 @@ class OrderRepository extends AppRepository implements OrderRepositoryInterface
             ->orderBy(sprintf('%s.id', $alias), 'DESC');
 
         # Add optionals parameters.
+        if (!empty($status)):
+            $queryBuilder->andWhere(
+                sprintf('%s.status IN (%s)', $alias, implode(',', array_values($status)))
+            );
+        endif;
         if ($offset !== NULL):
             $queryBuilder->setFirstResult($offset);
         endif;

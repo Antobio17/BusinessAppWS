@@ -20,6 +20,15 @@ interface BusinessControllerInterface extends HasBusinessServiceInterface
      */
     public function getBusinessHomeConfig(Request $request): JsonResponse;
 
+    /**
+     * Route to access to the business' hours config of the application.
+     *
+     * @param Request $request Request of the route.
+     *
+     * @return JsonResponse JsonResponse
+     */
+    public function getBusinessScheduleConfig(Request $request): JsonResponse;
+
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /*********************************************** PUBLIC METHODS ***********************************************/

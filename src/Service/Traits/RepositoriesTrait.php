@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\HomeConfig;
 use App\Entity\Order;
 use App\Entity\Product;
+use App\Entity\Shift;
 use App\Entity\User;
 use App\Entity\AppError;
 use App\Entity\Business;
@@ -14,6 +15,7 @@ use App\Entity\PostalAddress;
 use App\Repository\CategoryRepository;
 use App\Repository\Interfaces\CategoryRepositoryInterface;
 use App\Repository\Interfaces\HomeConfigRepositoryInterface;
+use App\Repository\Interfaces\ShiftRepositoryInterface;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
@@ -118,6 +120,15 @@ trait RepositoriesTrait
     public function getHomeConfigRepository(): HomeConfigRepositoryInterface
     {
         return $this->getEntityManager()->getRepository(HomeConfig::class);
+    }
+
+    /**
+     * @inheritDoc
+     * @return ShiftRepositoryInterface ShiftRepositoryInterface
+     */
+    public function getShiftRepository(): ShiftRepositoryInterface
+    {
+        return $this->getEntityManager()->getRepository(Shift::class);
     }
 
     /********************************************** PROTECTED METHODS *********************************************/

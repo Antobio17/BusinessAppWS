@@ -2,11 +2,11 @@
 
 namespace App\Service;
 
-use App\Entity\AbstractBusinessContext;
-use App\Entity\AppError;
-use App\Entity\PostalAddress;
+use Exception;
 use App\Entity\User;
+use App\Entity\AppError;
 use App\Helper\ToolsHelper;
+use App\Entity\PostalAddress;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 use App\Service\Interfaces\UserServiceInterface;
@@ -225,6 +225,102 @@ class UserService extends AppService implements UserServiceInterface
         endif;
 
         return $persisted ?? FALSE;
+    }
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function deletePostalAddress(int $postalAddressID): bool
+    {
+        $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
+
+        $user = $this->getUser();
+        if ($user instanceof User):
+            $postalAddress = $user->isOwnerPostalAddress($postalAddressID);
+            if ($postalAddress !== NULL):
+                try {
+                    $user->getPostalAddresses()->removeElement($postalAddress);
+                    $this->getEntityManager()->persist($user);
+                    $this->getEntityManager()->flush();
+                    $this->getEntityManager()->remove($postalAddress);
+                    $this->getEntityManager()->flush();
+                    $deleted = TRUE;
+                } catch (Exception $e) {
+                    $this->registerPersistException($method, $e->getCode(), $e->getMessage(), $e->getTrace());
+                }
+            else:
+                $this->registerAppError(
+                    $method, AppError::ERROR_USER_WRONG_POSTAL_ADDRESS,
+                    'Error en la actualización de dirección postal: no pertenece al usuario de la sesión.'
+                );
+            endif;
+        else:
+            $this->registerAppError_UserContextUndefined($method);
+        endif;
+
+        return $deleted ?? FALSE;
+    }
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public function getUserData(): ?array
+    {
+        $user = $this->getUser();
+        if ($user instanceof User):
+            $userData = $user->__toArray();
+            unset($userData['business'], $userData['roles'], $userData['password']);
+
+            $addresses = $user->getPostalAddresses();
+            $userData['postalAddresses'] = array();
+            foreach ($addresses as $address):
+                $userData['postalAddresses'][$address->getID()] = $address->__toArray();
+            endforeach;
+        else:
+            $this->registerAppError_UserContextUndefined(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__)
+            );
+        endif;
+
+        return $userData ?? NULL;
+    }
+
+    /**
+     * @inheritDoc
+     * @return bool bool
+     */
+    public function updateUserData(string  $email, string $phoneNumber, string $name, string $surname,
+                                   ?string $password = NULL): bool
+    {
+        $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
+
+        $user = $this->getUser();
+        $business = $this->getBusiness();
+        $userExist = $this->getUserRepository()->findByEmail($business, $email);
+
+        if (!$user instanceof User):
+            $this->registerAppError_UserContextUndefined($method);
+        elseif ($userExist !== NULL && $userExist->getID() !== $user->getID()):
+            $this->registerAppError(
+                $method, AppError::ERROR_USER_UPDATE_EMAIL_EXIST,
+                'Error en la actualización de usuario: el nuevo email indicado ya existe.'
+            );
+        else:
+            if ($password !== NULL):
+                $encodedPassword = $this->getUserPasswordHasher()->hashPassword($user, $password);
+                $user->setPassword($encodedPassword);
+            endif;
+            $user->setEmail($email)
+                ->setName($name)
+                ->setSurname($surname)
+                ->setPhoneNumber($phoneNumber);
+
+            $this->persistAndFlush($user);
+        endif;
+
+        return empty($this->getErrors());
     }
 
     /********************************************** PROTECTED METHODS *********************************************/

@@ -67,7 +67,7 @@ class BusinessService extends AppService implements BusinessServiceInterface
                     'contact' => array(
                         'businessName' => $business->getName(),
                         'address' => $address ?? NULL,
-                        'businessHours' => $business->getHours(),
+                        'businessHours' => $business->getShiftsAsArray(),
                         'phoneNumber' => $business->getPhoneNumber(),
                     )
                 );
@@ -76,6 +76,29 @@ class BusinessService extends AppService implements BusinessServiceInterface
                     $config['contact']['email'] = $business->getEmail();
                 endif;
             endif;
+        endif;
+
+        return $config ?? NULL;
+    }
+
+    /**
+     * @inheritDoc
+     * @return array|null array|null
+     */
+    public function getBusinessScheduleConfig(): ?array
+    {
+        $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
+        $business = $this->getBusiness();
+
+        if ($business === NULL):
+            $this->registerAppError_BusinessContextUndefined($method);
+        else:
+            $workers = $this->getUserRepository()->findByBusiness($business, TRUE);
+            $config = array(
+                'shifts' => $business->getShiftsAsArray(),
+                'appointmentDuration' => $business->getAppointmentDuration(),
+                'numWorkers' => count($workers),
+            );
         endif;
 
         return $config ?? NULL;

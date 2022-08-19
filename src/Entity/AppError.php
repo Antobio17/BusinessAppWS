@@ -40,6 +40,7 @@ class AppError extends AbstractORM implements AppErrorInterface
     public const ERROR_STORE_INCORRECT_ORDER = 41;
 
     public const ERROR_USER_WRONG_POSTAL_ADDRESS = 60;
+    public const ERROR_USER_UPDATE_EMAIL_EXIST = 61;
 
     public const ERROR_BUSINESS_HOME_CONFIG_UNDEFINED = 71;
 

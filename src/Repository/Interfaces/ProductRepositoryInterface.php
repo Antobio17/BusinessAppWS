@@ -15,12 +15,17 @@ interface ProductRepositoryInterface
      * @param BusinessInterface $business Business to which the products belong.
      * @param int|null $offset Offset of the query.
      * @param int|null $limit Limit of the query.
+     * @param string|null $sort The type of sort to return the products.
+     * @param bool $onStock Include the products with stock available.
+     * @param bool $outOfStock Include the products with stock not available.
+     * @param array $categoryExclusion The categories selected to exclude from search.
      * @param bool $resultAsArray Boolean to return the result as array or as an entity.
      *
      * @return array array
      */
-    public function findByOffset(BusinessInterface $business, ?int $offset = NULL, ?int $limit = NULL,
-                                 bool $resultAsArray = TRUE): array;
+    public function findByFilters(BusinessInterface $business, ?int $offset = NULL, ?int $limit = NULL,
+                                  ?string           $sort = NULL, bool $onStock = TRUE, bool $outOfStock = TRUE,
+                                  array             $categoryExclusion = array(), bool $resultAsArray = TRUE): array;
 
     /**
      * Finds the Category IDs of the products of a business.

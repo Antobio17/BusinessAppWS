@@ -19,6 +19,10 @@ class StoreController extends AppController implements StoreControllerInterface
     public const REQUEST_FIELD_UUID = 'uuid';
     public const REQUEST_FIELD_PRODUCTS_DATA = 'productsData';
     public const REQUEST_FIELD_ORDER_ID = 'orderID';
+    public const REQUEST_FIELD_SORT = 'sort';
+    public const REQUEST_FIELD_ON_STOCK = 'onStock';
+    public const REQUEST_FIELD_OUT_OF_STOCK = 'outOfStock';
+    public const REQUEST_FIELD_CATEGORY_EXCLUSION = 'categoryExclusion';
 
     public const PRODUCT_DATA_KEY_ID = 'productID';
     public const PRODUCT_DATA_KEY_NAME = 'name';
@@ -59,6 +63,10 @@ class StoreController extends AppController implements StoreControllerInterface
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
         $offset = $this->getParamFromRequest($request, static::REQUEST_FIELD_OFFSET);
         $limit = $this->getParamFromRequest($request, static::REQUEST_FIELD_LIMIT);
+        $sort = $this->getParamFromRequest($request, static::REQUEST_FIELD_SORT);
+        $onStock = $this->getParamFromRequest($request, static::REQUEST_FIELD_ON_STOCK);
+        $outOfStock = $this->getParamFromRequest($request, static::REQUEST_FIELD_OUT_OF_STOCK);
+        $categoryExclusion = $this->getParamFromRequest($request, static::REQUEST_FIELD_CATEGORY_EXCLUSION);
 
         # Data Validation
         $validationErrors = $this->validateRequestNumericFields(array(
@@ -69,7 +77,9 @@ class StoreController extends AppController implements StoreControllerInterface
         if (empty($validationErrors) && $this->getStoreService()->setBusinessContext($domain)):
             $offset = $offset !== NULL ? (int)$offset : NULL;
             $limit = $limit !== NULL ? (int)$limit : NULL;
-            $data = $this->getStoreService()->getBusinessProducts($offset, $limit);
+            $data = $this->getStoreService()->getBusinessProducts(
+                $offset, $limit, $sort, $onStock, $outOfStock, $categoryExclusion
+            );
         endif;
 
         return $this->createJsonResponse($data ?? NULL, $validationErrors, $this->getStoreService());
@@ -177,6 +187,7 @@ class StoreController extends AppController implements StoreControllerInterface
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
         $offset = $this->getParamFromRequest($request, static::REQUEST_FIELD_OFFSET);
         $limit = $this->getParamFromRequest($request, static::REQUEST_FIELD_LIMIT);
+        $status = $this->getParamFromRequest($request, static::REQUEST_FIELD_STATUS);
 
         # Data Validation
         $validationErrors = $this->validateRequestNumericFields(array(
@@ -187,7 +198,8 @@ class StoreController extends AppController implements StoreControllerInterface
         if (empty($validationErrors) && $this->getStoreService()->setBusinessContext($domain)):
             $offset = $offset !== NULL ? (int)$offset : NULL;
             $limit = $limit !== NULL ? (int)$limit : NULL;
-            $data = $this->getStoreService()->getUserOrders($offset, $limit);
+            $status = is_array($status) ? $status : array();
+            $data = $this->getStoreService()->getUserOrders($status, $offset, $limit);
         endif;
 
         return $this->createJsonResponse($data ?? NULL, $validationErrors, $this->getStoreService());

@@ -2,9 +2,9 @@
 
 namespace App\Service;
 
-use App\Entity\AppError;
-use App\Entity\Order;
 use App\Entity\User;
+use App\Entity\Order;
+use App\Entity\AppError;
 use App\Helper\ToolsHelper;
 use App\Service\Interfaces\StoreServiceInterface;
 
@@ -25,18 +25,24 @@ class StoreService extends AppService implements StoreServiceInterface
      * @inheritDoc
      * @return array array
      */
-    public function getBusinessProducts(?int $offset = NULL, ?int $limit = NULL): ?array
+    public function getBusinessProducts(?int  $offset = NULL, ?int $limit = NULL, ?string $sort = NULL,
+                                        bool  $onStock = TRUE, bool $outOfStock = TRUE,
+                                        array $categoryExclusion = array()): ?array
     {
         if ($this->getBusiness() === NULL):
             $this->registerAppError_BusinessContextUndefined(
                 ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__)
             );
         else:
-            $products = $this->getProductRepository()->findByOffset($this->getBusiness(), $offset, $limit);
-            $totalProducts = $this->getProductRepository()->getCount($this->getBusiness());
+            $products = $this->getProductRepository()->findByFilters(
+                $this->getBusiness(), $offset, $limit, $sort, $onStock, $outOfStock, $categoryExclusion
+            );
+            $totalProducts = $this->getProductRepository()->getCount(
+                $this->getBusiness(), $onStock, $outOfStock, $categoryExclusion
+            );
             $result = array(
                 'products' => $products,
-                'last' => $limit !== NULL && $offset + count($products) === $totalProducts,
+                'total' => $totalProducts,
             );
         endif;
 
@@ -146,7 +152,7 @@ class StoreService extends AppService implements StoreServiceInterface
      * @inheritDoc
      * @return array array
      */
-    public function getUserOrders(?int $offset = NULL, ?int $limit = NULL): ?array
+    public function getUserOrders(array $status = array(), ?int $offset = NULL, ?int $limit = NULL): ?array
     {
         $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
 
@@ -156,7 +162,7 @@ class StoreService extends AppService implements StoreServiceInterface
         elseif (!$user instanceof User):
             $this->registerAppError_UserContextUndefined($method);
         else:
-            $orders = $this->getOrderRepository()->findByUser($this->getBusiness(), $user, $offset, $limit);
+            $orders = $this->getOrderRepository()->findByUser($this->getBusiness(), $user, $status, $offset, $limit);
             $totalOrders = $this->getOrderRepository()->getCountTotalOrders($this->getBusiness(), $user);
             $result = array(
                 'orders' => $orders,
