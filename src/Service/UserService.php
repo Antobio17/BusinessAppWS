@@ -2,11 +2,11 @@
 
 namespace App\Service;
 
-use App\Entity\AbstractBusinessContext;
-use App\Entity\AppError;
-use App\Entity\PostalAddress;
+use Exception;
 use App\Entity\User;
+use App\Entity\AppError;
 use App\Helper\ToolsHelper;
+use App\Entity\PostalAddress;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 use App\Service\Interfaces\UserServiceInterface;
@@ -231,6 +231,41 @@ class UserService extends AppService implements UserServiceInterface
      * @inheritDoc
      * @return array array
      */
+    public function deletePostalAddress(int $postalAddressID): bool
+    {
+        $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
+
+        $user = $this->getUser();
+        if ($user instanceof User):
+            $postalAddress = $user->isOwnerPostalAddress($postalAddressID);
+            if ($postalAddress !== NULL):
+                try {
+                    $user->getPostalAddresses()->removeElement($postalAddress);
+                    $this->getEntityManager()->persist($user);
+                    $this->getEntityManager()->flush();
+                    $this->getEntityManager()->remove($postalAddress);
+                    $this->getEntityManager()->flush();
+                    $deleted = TRUE;
+                } catch (Exception $e) {
+                    $this->registerPersistException($method, $e->getCode(), $e->getMessage(), $e->getTrace());
+                }
+            else:
+                $this->registerAppError(
+                    $method, AppError::ERROR_USER_WRONG_POSTAL_ADDRESS,
+                    'Error en la actualización de dirección postal: no pertenece al usuario de la sesión.'
+                );
+            endif;
+        else:
+            $this->registerAppError_UserContextUndefined($method);
+        endif;
+
+        return $deleted ?? FALSE;
+    }
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
     public function getUserData(): ?array
     {
         $user = $this->getUser();
@@ -282,7 +317,7 @@ class UserService extends AppService implements UserServiceInterface
                 ->setSurname($surname)
                 ->setPhoneNumber($phoneNumber);
 
-            $result = $this->persistAndFlush($user);
+            $this->persistAndFlush($user);
         endif;
 
         return empty($this->getErrors());

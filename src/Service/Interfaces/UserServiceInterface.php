@@ -109,6 +109,15 @@ interface UserServiceInterface extends AppServiceInterface
                                         ?int $postalAddressID = NULL): bool;
 
     /**
+     * Delete the postal address referenced by the ID to the user logged.
+     *
+     * @param int|null $postalAddressID The ID of an existing postal address.
+     *
+     * @return bool bool
+     */
+    public function deletePostalAddress(int $postalAddressID): bool;
+
+    /**
      * Gets the data of the user logged.
      *
      *      return array(

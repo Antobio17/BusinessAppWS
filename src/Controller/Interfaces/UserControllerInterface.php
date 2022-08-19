@@ -40,6 +40,15 @@ interface UserControllerInterface extends HasUserServiceInterface
     public function createPostalAddress(Request $request): JsonResponse;
 
     /**
+     * Route to delete a postal address for a user.
+     *
+     * @param Request $request Request of the route.
+     *
+     * @return JsonResponse JsonResponse
+     */
+    public function deletePostalAddress(Request $request): JsonResponse;
+
+    /**
      * Route to get data of the user logged.
      *
      * @param Request $request Request of the route.

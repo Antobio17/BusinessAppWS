@@ -171,6 +171,38 @@ class UserController extends AppController implements UserControllerInterface
     }
 
     /**
+     * @Route("/api/user/delete/address")
+     *
+     * @inheritDoc
+     * @return JsonResponse JsonResponse
+     */
+    public function deletePostalAddress(Request $request): JsonResponse
+    {
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
+        $postalAddressID = $this->getParamFromRequest($request, static::REQUEST_FIELD_POSTAL_ADDRESS_ID);
+
+        # Data Validation
+        $validationErrors = array_merge(
+            $this->validateRequiredRequestFields(array(
+                static::REQUEST_FIELD_POSTAL_ADDRESS_ID => $postalAddressID,
+            )),
+            $this->validateRequestNumericFields(array(
+                static::REQUEST_FIELD_POSTAL_ADDRESS_ID => $postalAddressID,
+            ))
+        );
+
+        $data = NULL;
+        if (empty($validationErrors)):
+            if ($this->getUserService()->setBusinessContext($domain)):
+                $postalAddressID = (int)$postalAddressID;
+                $data = $this->getUserService()->deletePostalAddress($postalAddressID);
+            endif;
+        endif;
+
+        return $this->createJsonResponse_Put($data, $validationErrors, $this->getUserService());
+    }
+
+    /**
      * @Route("/api/get/user/data")
      *
      * @inheritDoc
