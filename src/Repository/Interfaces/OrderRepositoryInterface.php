@@ -25,13 +25,15 @@ interface OrderRepositoryInterface
      *
      * @param BusinessInterface $business Business to which the products belong.
      * @param User $user The user of the business.
+     * @param array $status Array of status to match.
      * @param int|null $offset The offset of the query.
      * @param int|null $limit The limit of the query.
      * @param bool $resultAsArray Boolean to return the result as array or as an entity.
      *
      * @return array array
      */
-    public function findByUser(BusinessInterface $business, User $user, ?int $offset = NULL, ?int $limit = NULL,
+    public function findByUser(BusinessInterface $business, User $user, array $status = array(),
+                               ?int $offset = NULL, ?int $limit = NULL,
         bool $resultAsArray = TRUE): array;
 
     /**

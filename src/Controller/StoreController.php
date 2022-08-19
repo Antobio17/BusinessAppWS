@@ -187,6 +187,7 @@ class StoreController extends AppController implements StoreControllerInterface
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
         $offset = $this->getParamFromRequest($request, static::REQUEST_FIELD_OFFSET);
         $limit = $this->getParamFromRequest($request, static::REQUEST_FIELD_LIMIT);
+        $status = $this->getParamFromRequest($request, static::REQUEST_FIELD_STATUS);
 
         # Data Validation
         $validationErrors = $this->validateRequestNumericFields(array(
@@ -197,7 +198,8 @@ class StoreController extends AppController implements StoreControllerInterface
         if (empty($validationErrors) && $this->getStoreService()->setBusinessContext($domain)):
             $offset = $offset !== NULL ? (int)$offset : NULL;
             $limit = $limit !== NULL ? (int)$limit : NULL;
-            $data = $this->getStoreService()->getUserOrders($offset, $limit);
+            $status = is_array($status) ? $status : array();
+            $data = $this->getStoreService()->getUserOrders($status, $offset, $limit);
         endif;
 
         return $this->createJsonResponse($data ?? NULL, $validationErrors, $this->getStoreService());
