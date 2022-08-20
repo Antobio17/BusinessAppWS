@@ -65,7 +65,7 @@ class Image extends AbstractORM implements ImageInterface
         $this->__nameConstruct($name);
         $this->__widthConstruct($width);
         $this->__heightConstruct($height);
-        $this->__heightConstruct($alt);
+        $this->__altConstruct($alt);
 
         $this->setHomeConfig($homeConfig);
     }
@@ -100,7 +100,6 @@ class Image extends AbstractORM implements ImageInterface
      */
     public function __toArray(): array
     {
-        /** @noinspection PhpUndefinedMethodInspection */
         return array_merge(
             parent::__toArray(),
             array(
@@ -108,6 +107,7 @@ class Image extends AbstractORM implements ImageInterface
                 $this->__nameToArray(),
                 $this->__widthToArray(),
                 $this->__heightToArray(),
+                $this->__altToArray(),
             ),
         );
     }

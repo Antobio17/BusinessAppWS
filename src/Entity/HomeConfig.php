@@ -48,6 +48,8 @@ class HomeConfig extends AbstractBusinessContext implements HomeConfigInterface
     {
         parent::__construct($business);
 
+        $this->__socialSectionConstruct();
+        $this->__servicesSectionConstruct(array());
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -63,6 +65,15 @@ class HomeConfig extends AbstractBusinessContext implements HomeConfigInterface
         return array_merge(
             parent::__toArray(),
         );
+    }
+
+    /**
+     * @inheritDoc
+     * @return string string
+     */
+    public function __toString(): string
+    {
+        return $this->getBusiness()->getName();
     }
 
     /********************************************** PROTECTED METHODS *********************************************/

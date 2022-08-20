@@ -16,6 +16,13 @@ interface HomeConfigInterface extends HasIntroSectionInterface, HasSocialSection
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 
+    /**
+     * ToString function of the entity.
+     *
+     * @return string string
+     */
+    public function __toString(): string;
+
     /*********************************************** STATIC METHODS ***********************************************/
 
 }

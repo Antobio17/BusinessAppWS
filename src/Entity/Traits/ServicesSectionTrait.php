@@ -51,7 +51,7 @@ trait ServicesSectionTrait
      */
     public function __construct(array $servicesData)
     {
-        $this->setServicesData($servicesData);
+        $this->setServicesData($servicesData ?? array());
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
