@@ -6,9 +6,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 
 /**
- * BusinessCrudControllerInterface
+ * ShiftCrudControllerInterface
  */
-interface BusinessCrudControllerInterface
+interface ShiftCrudControllerInterface
 {
 
     /************************************************** ROUTING ***************************************************/

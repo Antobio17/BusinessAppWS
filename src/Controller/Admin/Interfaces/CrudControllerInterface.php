@@ -29,6 +29,7 @@ interface CrudControllerInterface
 
     /**
      * Method to create the index query builder and apply filters in the list view of the entities.
+     *
      * @param SearchDto $searchDto
      * @param EntityDto $entityDto
      * @param FieldCollection $fields
@@ -38,6 +39,13 @@ interface CrudControllerInterface
      */
     public function createIndexQueryBuilder(SearchDto        $searchDto, EntityDto $entityDto, FieldCollection $fields,
                                             FilterCollection $filters): QueryBuilder;
+
+    /**
+     * Method to configure the base params of the CRUD.
+     *
+     * @return Crud Crud
+     */
+    public function configureCrud(Crud $crud): Crud;
 
     /**
      * Method to configure the actions of the views.

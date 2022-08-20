@@ -5,14 +5,21 @@ namespace App\Controller\Admin;
 use App\Entity\User;
 use App\Entity\Business;
 use App\Entity\PostalAddress;
+use App\Form\Types\ShiftType;
 use Doctrine\ORM\QueryBuilder;
+use App\Form\Types\PostalAddressType;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use App\Controller\Admin\Interfaces\BusinessCrudControllerInterface;
@@ -23,6 +30,8 @@ class BusinessCrudController extends AbstractCrudController implements BusinessC
     /************************************************* CONSTANTS **************************************************/
 
     /************************************************* PROPERTIES *************************************************/
+
+    /************************************************* CONSTRUCT **************************************************/
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
@@ -38,7 +47,7 @@ class BusinessCrudController extends AbstractCrudController implements BusinessC
                                             FilterCollection $filters): QueryBuilder
     {
         if ($this->getUser() instanceof User):
-            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+            /** @noinspection PhpUndefinedMethodInspection */
             $business = $this->getUser()->getBusiness();
         endif;
 
@@ -58,11 +67,10 @@ class BusinessCrudController extends AbstractCrudController implements BusinessC
      */
     public function configureCrud(Crud $crud): Crud
     {
-        return $crud
+        return parent::configureCrud($crud)
             ->setEntityLabelInSingular('Negocio')
             ->setEntityLabelInPlural('Negocios')
-            ->setDateFormat('H:i:s d-m-Y')
-            ->setSearchFields(['domain', 'name', 'phoneNumber', 'email'])
+            ->setSearchFields(array('domain', 'name', 'phoneNumber', 'email'))
             ->setPageTitle(Crud::PAGE_NEW, 'Nuevo Negocio')
             ->setHelp(
                 Crud::PAGE_NEW,
@@ -87,12 +95,45 @@ class BusinessCrudController extends AbstractCrudController implements BusinessC
     public function configureFields(string $pageName): iterable
     {
         return array(
+            FormField::addPanel('Información General'),
             IdField::new('id')->hideOnForm(),
             TextField::new('domain', 'Dominio'),
             TextField::new('name', 'Nombre'),
             TextField::new('phoneNumber', 'Teléfono'),
             TextField::new('email'),
+            FormField::addPanel('Dirección Postal'),
+            AssociationField::new('postalAddress')
+                ->hideOnIndex()
+                ->setLabel(FALSE)
+                ->setFormType(PostalAddressType::class)
+                ->setFormTypeOptions(array(
+                    'by_reference' => FALSE,
+                )),
+            FormField::addPanel('Horario'),
+            CollectionField::new('shifts')
+                ->hideWhenCreating()
+                ->hideOnIndex()
+                ->allowAdd(FALSE)
+                ->allowDelete(FALSE)
+                ->setLabel(FALSE)
+                ->setEntryType(ShiftType::class)
+                ->setFormTypeOptions(array(
+                    'by_reference' => FALSE,
+                )),
         );
+    }
+
+    /**
+     * @inheritDoc
+     * @return Filters Filters
+     */
+    public function configureFilters(Filters $filters): Filters
+    {
+        return parent::configureFilters($filters)
+            ->add(TextFilter::new('name', 'Nombre'))
+            ->add(TextFilter::new('domain', 'Dominio'))
+            ->add(TextFilter::new('phoneNumber', 'Número de teléfono'))
+            ->add(TextFilter::new('email', 'Email'));
     }
 
     /**
@@ -103,7 +144,13 @@ class BusinessCrudController extends AbstractCrudController implements BusinessC
     {
         parent::configureActions($actions);
 
+        if (!in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())):
+            $actions
+                ->disable('delete');
+        endif;
+
         return $actions
+            ->disable('detail')
             # PAGE_INDEX
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action->setLabel('Nuevo Negocio');

@@ -62,7 +62,7 @@ abstract class AbstractCrudController extends EAAbstractCrudController implement
                                             FilterCollection $filters): QueryBuilder
     {
         if ($this->getUser() instanceof User):
-            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+            /** @noinspection PhpUndefinedMethodInspection */
             $business = $this->getUser()->getBusiness();
         endif;
 
@@ -78,6 +78,23 @@ abstract class AbstractCrudController extends EAAbstractCrudController implement
 
     /**
      * @inheritDoc
+     * @return Crud Crud
+     */
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            # Date, Time and Number Formatting Options
+            ->setDateFormat('H:i:s d-m-Y')
+            # Search and Pagination Options
+            ->setSearchFields(array('id'))
+            ->setDefaultSort(array('id' => 'DESC'))
+            ->setPaginatorPageSize(25)
+            # Other
+            ->showEntityActionsInlined();
+    }
+
+    /**
+     * @inheritDoc
      * @return Actions Actions
      */
     public function configureActions(Actions $actions): Actions
@@ -86,13 +103,13 @@ abstract class AbstractCrudController extends EAAbstractCrudController implement
             # PAGE_INDEX
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
             ->update(Crud::PAGE_INDEX, Action::DETAIL, function (Action $action) {
-                return $action->setIcon('fa fa-eye')->setLabel('Ver');
+                return $action->setIcon('fa fa-eye')->setLabel(FALSE);
             })
             ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
-                return $action->setIcon('fa fa-pencil')->setLabel('Editar');
+                return $action->setIcon('fa fa-pencil')->setLabel(FALSE);
             })
             ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
-                return $action->setIcon('fa fa-trash')->setLabel('Eliminar');
+                return $action->setIcon('fa fa-trash')->setLabel(FALSE);
             })
             # PAGE_NEW
             ->remove(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)

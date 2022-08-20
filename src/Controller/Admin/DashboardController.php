@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Shift;
 use App\Entity\User;
 use RuntimeException;
 use App\Entity\Business;
@@ -24,7 +25,7 @@ class DashboardController extends AbstractDashboardController implements Dashboa
     /************************************************** ROUTING ***************************************************/
 
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/{_locale}/admin", name="admin")
      *
      * @inheritDoc
      * @return Response Response
@@ -78,7 +79,10 @@ class DashboardController extends AbstractDashboardController implements Dashboa
 
         $roles = $this->getUser() !== NULL ? $this->getUser()->getRoles() : array();
         if (in_array(User::ROLE_ADMIN, $roles) || in_array(User::ROLE_WORKER, $roles)):
+            yield MenuItem::section('Config. Negocio', 'fas fa-cog');
             yield MenuItem::linkToCrud('Negocios', 'fas fa-briefcase', Business::class);
+            yield MenuItem::linkToCrud('Turnos', 'fas fa-clock', Shift::class);
+            yield MenuItem::section('Config. Usuarios', 'fas fa-cog');
             yield MenuItem::linkToCrud('Usuarios', 'fas fa-user', User::class);
         endif;
     }
