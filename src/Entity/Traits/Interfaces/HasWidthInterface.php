@@ -2,46 +2,37 @@
 
 namespace App\Entity\Traits\Interfaces;
 
-use App\Entity\Image;
-
 /**
- * SocialSectionTrait interface
+ * WidthTrait interface
  */
-interface HasSocialSectionInterface extends HasDataInterface
+interface HasWidthInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
-     * Gets the SocialData property of the Entity.
+     * Gets the Width property.
      *
-     * @return array array
+     * @return int int
      */
-    public function getSocialImages(): array;
+    public function getWidth(): int;
 
     /**
-     * Add an image to property collection of the Entity.
+     * Sets the Width property.
      *
-     * @param Image $socialImage The image to set.
+     * @param int $width The Width to be set.
      *
      * @return $this $this
      */
-    public function addSocialImage(Image $socialImage): self;
+    public function setWidth(int $width): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
-
-    /**
-     * Gets the social images as an array.
-     *
-     * @return array array
-     */
-    public function getSocialImagesAsArray(): array;
 
     /**
      * ToArray function of the property.
      *
      *      Returns array(
-     *          $this->__dataToArray()
+     *          'width' => $this->>getWidth()
      *      )
      *
      * @return array array

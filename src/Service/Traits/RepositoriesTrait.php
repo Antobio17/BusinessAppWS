@@ -4,6 +4,7 @@ namespace App\Service\Traits;
 
 use App\Entity\Category;
 use App\Entity\HomeConfig;
+use App\Entity\Image;
 use App\Entity\Order;
 use App\Entity\Product;
 use App\Entity\Shift;
@@ -15,6 +16,7 @@ use App\Entity\PostalAddress;
 use App\Repository\CategoryRepository;
 use App\Repository\Interfaces\CategoryRepositoryInterface;
 use App\Repository\Interfaces\HomeConfigRepositoryInterface;
+use App\Repository\Interfaces\ImageRepositoryInterface;
 use App\Repository\Interfaces\ShiftRepositoryInterface;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
@@ -129,6 +131,15 @@ trait RepositoriesTrait
     public function getShiftRepository(): ShiftRepositoryInterface
     {
         return $this->getEntityManager()->getRepository(Shift::class);
+    }
+
+    /**
+     * @inheritDoc
+     * @return ImageRepositoryInterface ImageRepositoryInterface
+     */
+    public function getImageRepository(): ImageRepositoryInterface
+    {
+        return $this->getEntityManager()->getRepository(Image::class);
     }
 
     /********************************************** PROTECTED METHODS *********************************************/

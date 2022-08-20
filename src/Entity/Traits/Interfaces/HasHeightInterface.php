@@ -2,46 +2,37 @@
 
 namespace App\Entity\Traits\Interfaces;
 
-use App\Entity\Image;
-
 /**
- * SocialSectionTrait interface
+ * HeightTrait interface
  */
-interface HasSocialSectionInterface extends HasDataInterface
+interface HasHeightInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
-     * Gets the SocialData property of the Entity.
+     * Gets the Height property.
      *
-     * @return array array
+     * @return int int
      */
-    public function getSocialImages(): array;
+    public function getHeight(): int;
 
     /**
-     * Add an image to property collection of the Entity.
+     * Sets the Height property.
      *
-     * @param Image $socialImage The image to set.
+     * @param int $height The Height to be set.
      *
      * @return $this $this
      */
-    public function addSocialImage(Image $socialImage): self;
+    public function setHeight(int $height): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
-
-    /**
-     * Gets the social images as an array.
-     *
-     * @return array array
-     */
-    public function getSocialImagesAsArray(): array;
 
     /**
      * ToArray function of the property.
      *
      *      Returns array(
-     *          $this->__dataToArray()
+     *          'height' => $this->>getHeight()
      *      )
      *
      * @return array array

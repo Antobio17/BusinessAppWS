@@ -2,46 +2,37 @@
 
 namespace App\Entity\Traits\Interfaces;
 
-use App\Entity\Image;
-
 /**
- * SocialSectionTrait interface
+ * AltTrait interface
  */
-interface HasSocialSectionInterface extends HasDataInterface
+interface HasAltInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
-     * Gets the SocialData property of the Entity.
+     * Gets the Alt property of the Entity.
      *
-     * @return array array
+     * @return string string
      */
-    public function getSocialImages(): array;
+    public function getAlt(): string;
 
     /**
-     * Add an image to property collection of the Entity.
+     * Sets the Alt property of the Entity.
      *
-     * @param Image $socialImage The image to set.
+     * @param string $alt Alt of the Entity to set.
      *
      * @return $this $this
      */
-    public function addSocialImage(Image $socialImage): self;
+    public function setAlt(string $alt): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
-
-    /**
-     * Gets the social images as an array.
-     *
-     * @return array array
-     */
-    public function getSocialImagesAsArray(): array;
 
     /**
      * ToArray function of the property.
      *
      *      Returns array(
-     *          $this->__dataToArray()
+     *          'alt' => $this->getAlt()
      *      )
      *
      * @return array array

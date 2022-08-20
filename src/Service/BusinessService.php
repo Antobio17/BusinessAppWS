@@ -62,7 +62,9 @@ class BusinessService extends AppService implements BusinessServiceInterface
                         'bossName' => $homeConfig->getName(),
                         'description' => $homeConfig->getDescription()
                     ),
-                    'social' => $homeConfig->getSocialData(),
+                    'social' => array(
+                        'images' => $homeConfig->getSocialImagesAsArray()
+                    ),
                     'services' => $homeConfig->getServicesData(),
                     'contact' => array(
                         'businessName' => $business->getName(),

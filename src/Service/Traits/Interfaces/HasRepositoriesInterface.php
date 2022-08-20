@@ -3,6 +3,7 @@
 namespace App\Service\Traits\Interfaces;
 
 use App\Repository\Interfaces\HomeConfigRepositoryInterface;
+use App\Repository\Interfaces\ImageRepositoryInterface;
 use App\Repository\Interfaces\ShiftRepositoryInterface;
 use App\Repository\UserRepository;
 use App\Repository\Interfaces\OrderRepositoryInterface;
@@ -92,6 +93,13 @@ interface HasRepositoriesInterface
      * @return ShiftRepositoryInterface ShiftRepositoryInterface
      */
     public function getShiftRepository(): ShiftRepositoryInterface;
+
+    /**
+     * Facade that returns an instance of the ImageRepositoryInterface.
+     *
+     * @return ImageRepositoryInterface ImageRepositoryInterface
+     */
+    public function getImageRepository(): ImageRepositoryInterface;
 
     /*********************************************** STATIC METHODS ***********************************************/
 

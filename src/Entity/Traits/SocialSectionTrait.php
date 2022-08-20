@@ -2,6 +2,9 @@
 
 namespace App\Entity\Traits;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\Common\Collections\Collection;
 use App\Entity\Traits\Interfaces\HasSocialSectionInterface;
 
 /**
@@ -14,10 +17,12 @@ trait SocialSectionTrait
 
     /************************************************* PROPERTIES *************************************************/
 
-    use DataTrait {
-        DataTrait::__construct as protected __dataConstruct;
-        DataTrait::__toArray as protected __dataToArray;
-    }
+    /**
+     * One Business has many shifts.
+     *
+     * @OneToMany(targetEntity="Image", mappedBy="homeConfig", cascade={"all"})
+     */
+    protected Collection $socialImages;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
@@ -25,7 +30,7 @@ trait SocialSectionTrait
      * @inheritDoc
      * @return array array
      */
-    public function getSocialData(): array
+    public function getSocialImages(): array
     {
         return $this->getData();
     }
@@ -34,7 +39,7 @@ trait SocialSectionTrait
      * @inheritDoc
      * @return $this $this
      */
-    public function setSocialData(array $socialData): self
+    public function addSocialImage(array $socialData): self
     {
         return $this->setData($socialData);
     }
@@ -44,11 +49,10 @@ trait SocialSectionTrait
     /**
      *  SocialSectionTrait constructor.
      *
-     * @param array $socialData Data related to the social section.
      */
-    public function __construct(array $socialData)
+    public function __construct()
     {
-        $this->__dataConstruct($socialData);
+        $this->socialImages = new ArrayCollection();
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
@@ -57,10 +61,23 @@ trait SocialSectionTrait
      * @inheritDoc
      * @return array array
      */
+    public function getSocialImagesAsArray(): array
+    {
+        foreach ($this->getSocialImages() as $image):
+            $socialImages[] = $image->__toArray();
+        endforeach;
+
+        return $socialImages ?? array();
+    }
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
     public function __toArray(): array
     {
         return array(
-            $this->__dataToArray(),
+            $this->getSocialImagesAsArray(),
         );
     }
 
