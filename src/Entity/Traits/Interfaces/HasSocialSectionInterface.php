@@ -3,11 +3,12 @@
 namespace App\Entity\Traits\Interfaces;
 
 use App\Entity\Image;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * SocialSectionTrait interface
  */
-interface HasSocialSectionInterface extends HasDataInterface
+interface HasSocialSectionInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -15,9 +16,9 @@ interface HasSocialSectionInterface extends HasDataInterface
     /**
      * Gets the SocialData property of the Entity.
      *
-     * @return array array
+     * @return Image[]|Collection Image[]|Collection
      */
-    public function getSocialImages(): array;
+    public function getSocialImages(): Collection;
 
     /**
      * Add an image to property collection of the Entity.

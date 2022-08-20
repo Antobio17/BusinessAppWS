@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Entity\Image;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\Common\Collections\Collection;
@@ -28,20 +29,22 @@ trait SocialSectionTrait
 
     /**
      * @inheritDoc
-     * @return array array
+     * @return Image[]|Collection Image[]|Collection
      */
-    public function getSocialImages(): array
+    public function getSocialImages(): Collection
     {
-        return $this->getData();
+        return $this->socialImages;
     }
 
     /**
      * @inheritDoc
      * @return $this $this
      */
-    public function addSocialImage(array $socialData): self
+    public function addSocialImage(Image $socialData): self
     {
-        return $this->setData($socialData);
+        $this->socialImages->add($socialData);
+
+        return $this;
     }
 
     /************************************************* CONSTRUCT **************************************************/

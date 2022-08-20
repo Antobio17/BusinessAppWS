@@ -3,13 +3,10 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\Column;
 use App\Entity\Traits\IntroSection;
+use App\Repository\HomeConfigRepository;
 use App\Entity\Traits\SocialSectionTrait;
 use App\Entity\Traits\ServicesSectionTrait;
-use App\Repository\HomeConfigRepository;
-use Doctrine\ORM\Mapping\AttributeOverride;
-use Doctrine\ORM\Mapping\AttributeOverrides;
 use App\Entity\Interfaces\BusinessInterface;
 use App\Entity\Interfaces\HomeConfigInterface;
 
@@ -17,13 +14,6 @@ use App\Entity\Interfaces\HomeConfigInterface;
  * HomeConfig entity.
  *
  * @ORM\Entity(repositoryClass=HomeConfigRepository::class)
- * @AttributeOverrides({
- *      @AttributeOverride(name="data",
- *          column=@Column(
- *              name = "social_data"
- *          )
- *      )
- * })
  */
 class HomeConfig extends AbstractBusinessContext implements HomeConfigInterface
 {
