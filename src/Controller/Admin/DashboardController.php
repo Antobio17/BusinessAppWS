@@ -5,7 +5,9 @@ namespace App\Controller\Admin;
 use App\Entity\User;
 use RuntimeException;
 use App\Entity\Shift;
+use App\Entity\Image;
 use App\Entity\Business;
+use App\Entity\HomeConfig;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -36,7 +38,7 @@ class DashboardController extends AbstractDashboardController implements Dashboa
     }
 
     /**
-     * @Route("/login", name="login")
+     * @Route("/{_locale}/admin/login", name="login")
      *
      * @inheritDoc
      * @return Response Response
@@ -47,7 +49,7 @@ class DashboardController extends AbstractDashboardController implements Dashboa
     }
 
     /**
-     * @Route("/logout", name="logout")
+     * @Route("/{_locale}/logout", name="logout")
      *
      * @inheritDoc
      * @return Response Response
@@ -82,6 +84,8 @@ class DashboardController extends AbstractDashboardController implements Dashboa
             yield MenuItem::section('Config. Negocio', 'fas fa-cog');
             yield MenuItem::linkToCrud('Negocios', 'fas fa-briefcase', Business::class);
             yield MenuItem::linkToCrud('Turnos', 'fas fa-clock', Shift::class);
+            yield MenuItem::linkToCrud('Home', 'fas fa-home', HomeConfig::class);
+            yield MenuItem::linkToCrud('Red Social', 'fas fa-camera', Image::class);
             yield MenuItem::section('Config. Usuarios', 'fas fa-cog');
             yield MenuItem::linkToCrud('Usuarios', 'fas fa-user', User::class);
         endif;

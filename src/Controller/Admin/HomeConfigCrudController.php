@@ -2,26 +2,28 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\HomeConfig;
 use App\Entity\User;
-use App\Entity\Shift;
+use App\Entity\Image;
 use App\Service\BusinessService;
 use App\Service\Traits\BusinessServiceTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use App\Controller\Admin\Interfaces\ShiftCrudControllerInterface;
+use App\Controller\Admin\Interfaces\HomeConfigCrudControllerInterface;
 
-class ShiftCrudController extends AbstractCrudController implements ShiftCrudControllerInterface
+class HomeConfigCrudController extends AbstractCrudController implements HomeConfigCrudControllerInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
@@ -33,11 +35,11 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
     /************************************************* CONSTRUCT **************************************************/
 
     /**
-     * ShiftCrudController construct
+     * ImageCrudController construct
      *
      * @param EntityRepository $entityRepository EntityRepository to override the query builds.
      */
-    public function __construct(EntityRepository $entityRepository, BusinessService  $businessService)
+    public function __construct(EntityRepository $entityRepository, BusinessService $businessService)
     {
         parent::__construct($entityRepository);
 
@@ -57,19 +59,18 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
     public function configureCrud(Crud $crud): Crud
     {
         return parent::configureCrud($crud)
-            ->setEntityLabelInSingular('Turno')
-            ->setEntityLabelInPlural('Turnos')
-            ->setSearchFields(array('opensAt', 'closesAt'))
-            ->setPageTitle(Crud::PAGE_NEW, 'Nuevo Turno')
+            ->setEntityLabelInSingular('Configuración Home')
+            ->setEntityLabelInPlural('Configuraciones Home')
+            ->setSearchFields(array('name', 'description'))
+            ->setPageTitle(Crud::PAGE_NEW, 'Nueva Configuración')
             ->setHelp(
                 Crud::PAGE_NEW,
-                'En esta vista podrás crear un nuevo turno para tu negocio con los datos que sean 
-                especificados.'
+                'En esta vista podrás crear una nueva configuración de Home de tu negocio.'
             )
-            ->setPageTitle(Crud::PAGE_EDIT, 'Editar Turno')
+            ->setPageTitle(Crud::PAGE_EDIT, 'Editar Configuración')
             ->setHelp(
                 Crud::PAGE_EDIT,
-                'En esta vista podrás editar el turno seleccionada.'
+                'En esta vista podrás editar la configuración seleccionada.'
             );
     }
 
@@ -81,19 +82,23 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
     {
         /** @noinspection PhpUndefinedMethodInspection */
         return array(
-            FormField::addPanel('Información General'),
+            FormField::addPanel('Sección de Introducción'),
             IdField::new('id')->hideOnForm(),
-            ChoiceField::new('weekDay', 'Día de la semana')
-                ->setChoices(Shift::getDaysChoices()),
-            TextField::new('opensAt', 'Hora de apertura')
-                ->setHelp('*  Hora de apertura del turno (Formato: 09:00:00'),
-            TextField::new('closesAt', 'Hora de cierre')
-                ->setHelp('*  Hora de cierre del turno (Formato: 14:00:00'),
-            AssociationField::new('business', 'Negocio')
-                ->setDisabled(
-                    !in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())
-                    || $pageName === Crud::PAGE_EDIT
-                ),
+            TextField::new('src', 'Imagen')->hideOnForm(),
+            ImageField::new('src', 'Imagen')
+                ->setUploadDir('public/images/')
+                ->onlyOnForms()
+                ->setUploadedFileNamePattern(
+                    fn (UploadedFile $file): string => sprintf(
+                        '%d-%s',
+                        date_create()->getTimestamp(),
+                        $file->getClientOriginalName()
+                    )
+                )->setHelp('*  Imagen del CEO del negocio.'),
+            TextField::new('name', 'Nombre')
+                ->setHelp('*  Nombre completo del CEO del negocio.'),
+            TextareaField::new('description', 'Descripción')
+                ->setHelp('*  Descripción del CEO del negocio para la introducción.'),
         );
     }
 
@@ -104,11 +109,8 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
     public function configureFilters(Filters $filters): Filters
     {
         return parent::configureFilters($filters)
-            ->add(ChoiceFilter::new(
-                'weekDay', 'Día de la semana')->setChoices(Shift::getDaysChoices())
-            )
-            ->add(TextFilter::new('opensAt', 'Apertura'))
-            ->add(TextFilter::new('closesAt', 'Cierre'));
+            ->add(TextFilter::new('name', 'Nombre completo del CEO'))
+            ->add(TextFilter::new('description', 'Descripción'));
     }
 
     /**
@@ -119,7 +121,12 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
     {
         parent::configureActions($actions);
 
-        if (empty($this->getBusinessService()->getBusinessRepository()->findAll())):
+        /** @noinspection PhpUndefinedMethodInspection */
+        $business = $this->getUser()->getBusiness();
+        if (
+            empty($this->getBusinessService()->getBusinessRepository()->findAll()) || ($business !== NULL
+                && !empty($this->getBusinessService()->getHomeConfigRepository()->findByBusiness($business)))
+        ):
             $actions
                 ->disable('new');
         endif;
@@ -128,15 +135,16 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
             ->disable('detail')
             # PAGE_INDEX
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
-                return $action->setLabel('Nuevo Turno');
+                return $action->setLabel('Nueva Imagen');
             });
     }
 
     /**
      * @param string $entityFqcn
-     * @return Shift Shift
+     *
+     * @return HomeConfig HomeConfig
      */
-    public function createEntity(string $entityFqcn): Shift
+    public function createEntity(string $entityFqcn): HomeConfig
     {
         /** @noinspection PhpUndefinedMethodInspection */
         $business = $this->getUser()->getBusiness();
@@ -145,7 +153,7 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
             $business = $allBusiness[0];
         endif;
 
-        return new Shift($business, '', '', 0);
+        return new HomeConfig($business);
     }
 
     /*********************************************** STATIC METHODS ***********************************************/
@@ -156,7 +164,7 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
      */
     public static function getEntityFqcn(): string
     {
-        return Shift::class;
+        return HomeConfig::class;
     }
 
 }

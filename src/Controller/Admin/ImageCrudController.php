@@ -3,25 +3,25 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-use App\Entity\Shift;
+use App\Entity\Image;
 use App\Service\BusinessService;
 use App\Service\Traits\BusinessServiceTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use App\Controller\Admin\Interfaces\ShiftCrudControllerInterface;
+use App\Controller\Admin\Interfaces\ImageCrudControllerInterface;
 
-class ShiftCrudController extends AbstractCrudController implements ShiftCrudControllerInterface
+class ImageCrudController extends AbstractCrudController implements ImageCrudControllerInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
@@ -33,11 +33,11 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
     /************************************************* CONSTRUCT **************************************************/
 
     /**
-     * ShiftCrudController construct
+     * ImageCrudController construct
      *
      * @param EntityRepository $entityRepository EntityRepository to override the query builds.
      */
-    public function __construct(EntityRepository $entityRepository, BusinessService  $businessService)
+    public function __construct(EntityRepository $entityRepository, BusinessService $businessService)
     {
         parent::__construct($entityRepository);
 
@@ -57,19 +57,18 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
     public function configureCrud(Crud $crud): Crud
     {
         return parent::configureCrud($crud)
-            ->setEntityLabelInSingular('Turno')
-            ->setEntityLabelInPlural('Turnos')
-            ->setSearchFields(array('opensAt', 'closesAt'))
-            ->setPageTitle(Crud::PAGE_NEW, 'Nuevo Turno')
+            ->setEntityLabelInSingular('Imagen Red Social')
+            ->setEntityLabelInPlural('Imágenes Red Social')
+            ->setSearchFields(array('name', 'alt'))
+            ->setPageTitle(Crud::PAGE_NEW, 'Nueva Imagen')
             ->setHelp(
                 Crud::PAGE_NEW,
-                'En esta vista podrás crear un nuevo turno para tu negocio con los datos que sean 
-                especificados.'
+                'En esta vista podrás crear una nueva imagen para la sección de Red Social de tu negocio.'
             )
-            ->setPageTitle(Crud::PAGE_EDIT, 'Editar Turno')
+            ->setPageTitle(Crud::PAGE_EDIT, 'Editar Imagen')
             ->setHelp(
                 Crud::PAGE_EDIT,
-                'En esta vista podrás editar el turno seleccionada.'
+                'En esta vista podrás editar la imagen seleccionada.'
             );
     }
 
@@ -83,13 +82,26 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
         return array(
             FormField::addPanel('Información General'),
             IdField::new('id')->hideOnForm(),
-            ChoiceField::new('weekDay', 'Día de la semana')
-                ->setChoices(Shift::getDaysChoices()),
-            TextField::new('opensAt', 'Hora de apertura')
-                ->setHelp('*  Hora de apertura del turno (Formato: 09:00:00'),
-            TextField::new('closesAt', 'Hora de cierre')
-                ->setHelp('*  Hora de cierre del turno (Formato: 14:00:00'),
-            AssociationField::new('business', 'Negocio')
+            TextField::new('name', 'Imagen')->hideOnForm(),
+            ImageField::new('name', 'Imagen')
+                ->setUploadDir('public/images/')
+                ->onlyOnForms()
+                ->setUploadedFileNamePattern(
+                    fn (UploadedFile $file): string => sprintf(
+                        '%d-%s',
+                        date_create()->getTimestamp(),
+                        $file->getClientOriginalName()
+                    )
+                ),
+            IntegerField::new('width', 'Anchura (px)')
+                ->setDisabled(TRUE)
+                ->setHelp('*  Anchura de la imagen en píxeles'),
+            IntegerField::new('height', 'Altura  (px)')
+                ->setDisabled(TRUE)
+                ->setHelp('*  Altura de la imagen en píxeles'),
+            TextField::new('alt', 'Alt')
+                ->setHelp('*  Propiedad HTML alt de la imagen'),
+            AssociationField::new('homeConfig', 'Configuración de Home')
                 ->setDisabled(
                     !in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())
                     || $pageName === Crud::PAGE_EDIT
@@ -104,11 +116,8 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
     public function configureFilters(Filters $filters): Filters
     {
         return parent::configureFilters($filters)
-            ->add(ChoiceFilter::new(
-                'weekDay', 'Día de la semana')->setChoices(Shift::getDaysChoices())
-            )
-            ->add(TextFilter::new('opensAt', 'Apertura'))
-            ->add(TextFilter::new('closesAt', 'Cierre'));
+            ->add(TextFilter::new('name', 'Imagen'))
+            ->add(TextFilter::new('alt', 'Alt'));
     }
 
     /**
@@ -128,15 +137,15 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
             ->disable('detail')
             # PAGE_INDEX
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
-                return $action->setLabel('Nuevo Turno');
+                return $action->setLabel('Nueva Imagen');
             });
     }
 
     /**
      * @param string $entityFqcn
-     * @return Shift Shift
+     * @return Image Image
      */
-    public function createEntity(string $entityFqcn): Shift
+    public function createEntity(string $entityFqcn): Image
     {
         /** @noinspection PhpUndefinedMethodInspection */
         $business = $this->getUser()->getBusiness();
@@ -145,7 +154,9 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
             $business = $allBusiness[0];
         endif;
 
-        return new Shift($business, '', '', 0);
+        $homeConfig = $this->getBusinessService()->getHomeConfigRepository()->findByBusiness($business);
+
+        return new Image($homeConfig, '', 300, 300, '');
     }
 
     /*********************************************** STATIC METHODS ***********************************************/
@@ -156,7 +167,7 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
      */
     public static function getEntityFqcn(): string
     {
-        return Shift::class;
+        return Image::class;
     }
 
 }
