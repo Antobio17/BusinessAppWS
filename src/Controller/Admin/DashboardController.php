@@ -2,9 +2,9 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Shift;
 use App\Entity\User;
 use RuntimeException;
+use App\Entity\Shift;
 use App\Entity\Business;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
