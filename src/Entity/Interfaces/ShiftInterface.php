@@ -33,7 +33,14 @@ interface ShiftInterface extends HasOpensAtInterface, HasClosesAtInterface, HasW
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
-     * ToArray function of the property.
+     * Returns the week day formatted.
+     *
+     * @return string string
+     */
+    public function getWeekDayFormatted(): string;
+
+    /**
+     * ToArray function of the entity.
      *
      *      Returns array(
      *          'businessID' => $this->>getBusiness()->getID(),
@@ -44,6 +51,12 @@ interface ShiftInterface extends HasOpensAtInterface, HasClosesAtInterface, HasW
      * @return array array
      */
     public function __toArray(): array;
+
+    /**
+     * ToString function of the entity.
+     * @return string string
+     */
+    public function __toString(): string;
 
     /*********************************************** STATIC METHODS ***********************************************/
 

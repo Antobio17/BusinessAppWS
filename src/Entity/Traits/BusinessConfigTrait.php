@@ -21,7 +21,7 @@ trait BusinessConfigTrait
     /**
      * One Business has many shifts.
      *
-     * @OneToMany(targetEntity="Shift", mappedBy="business", cascade={"persist"})
+     * @OneToMany(targetEntity="Shift", mappedBy="business", cascade={"all"})
      */
     protected Collection $shifts;
 
@@ -48,6 +48,17 @@ trait BusinessConfigTrait
     public function addShift(Shift $shift): self
     {
         $this->shifts->add($shift);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     * @return $this $this
+     */
+    public function removeShift(Shift $shift): self
+    {
+        $this->shifts->removeElement($shift);
 
         return $this;
     }

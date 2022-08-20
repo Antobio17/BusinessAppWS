@@ -23,7 +23,7 @@ abstract class AbstractORM implements ORMInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(name="id", type="integer")
      */
-    protected int $id;
+    protected ?int $id = NULL;
 
     /************************************************* CONSTRUCT **************************************************/
 
@@ -33,7 +33,7 @@ abstract class AbstractORM implements ORMInterface
      * @inheritDoc
      * @return int int
      */
-    public function getID(): int
+    public function getID(): ?int
     {
         return $this->id;
     }

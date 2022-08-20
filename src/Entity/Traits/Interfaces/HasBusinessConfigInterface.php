@@ -29,6 +29,15 @@ interface HasBusinessConfigInterface extends HasAppointmentDurationInterface
      */
     public function addShift(Shift $shift): self;
 
+    /**
+     * Remove a shift from the property of the Entity.
+     *
+     * @param Shift $shift The shift to remove.
+     *
+     * @return $this $this
+     */
+    public function removeShift(Shift $shift): self;
+
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**

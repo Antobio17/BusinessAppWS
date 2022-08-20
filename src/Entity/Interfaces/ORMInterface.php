@@ -15,9 +15,9 @@ interface ORMInterface
      *
      *      returns int: the ID of the user.
      *
-     * @return int int
+     * @return int|null int|null
      */
-    public function getID(): int;
+    public function getID(): ?int;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 

@@ -97,6 +97,15 @@ class Shift extends AbstractORM implements ShiftInterface
 
     /**
      * @inheritDoc
+     * @return string string
+     */
+    public function getWeekDayFormatted(): string
+    {
+        return array_flip(static::getDaysChoices())[$this->getWeekDay()];
+    }
+
+    /**
+     * @inheritDoc
      * @return array array
      */
     public function __toArray(): array
@@ -112,8 +121,36 @@ class Shift extends AbstractORM implements ShiftInterface
         );
     }
 
+    /**
+     * @inheritDoc
+     * @return string string
+     */
+    public function __toString(): string
+    {
+        return sprintf(
+            '%s de %s a %s',
+            $this->getWeekDayFormatted(),
+            $this->getOpensAt(),
+            $this->getClosesAt()
+        );
+    }
+
     /********************************************** PROTECTED METHODS *********************************************/
 
     /*********************************************** STATIC METHODS ***********************************************/
 
+    /**
+     * @return int[] int[]
+     */
+    static function getDaysChoices(): array{
+        return array(
+            'Lunes' => static::MONDAY,
+            'Martes' => static::TUESDAY,
+            'Miércoles' => static::WEDNESDAY,
+            'Jueves' => static::THURSDAY,
+            'Viernes' => static::FRIDAY,
+            'Sábado' => static::SATURDAY,
+            'Domingo' => static::SUNDAY,
+        );
+    }
 }
