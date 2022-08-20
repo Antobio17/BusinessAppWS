@@ -128,7 +128,10 @@ class ImageCrudController extends AbstractCrudController implements ImageCrudCon
     {
         parent::configureActions($actions);
 
-        if (empty($this->getBusinessService()->getBusinessRepository()->findAll())):
+        /** @noinspection PhpUndefinedMethodInspection */
+        $business = $this->getUser()->getBusiness();
+        if (empty($this->getBusinessService()->getBusinessRepository()->findAll()) || ($business !== NULL
+                && empty($this->getBusinessService()->getHomeConfigRepository()->findByBusiness($business)))):
             $actions
                 ->disable('new');
         endif;

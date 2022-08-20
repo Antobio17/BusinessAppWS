@@ -132,7 +132,7 @@ class HomeConfigCrudController extends AbstractCrudController implements HomeCon
         endif;
 
         return $actions
-            ->disable('detail')
+            ->disable('detail', 'delete')
             # PAGE_INDEX
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action->setLabel('Nueva Imagen');
