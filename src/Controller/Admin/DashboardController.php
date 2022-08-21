@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Appointment;
 use App\Entity\BusinessService;
 use App\Entity\SocialImage;
 use App\Entity\User;
@@ -89,6 +90,8 @@ class DashboardController extends AbstractDashboardController implements Dashboa
             yield MenuItem::linkToCrud('Home', 'fas fa-home', HomeConfig::class);
             yield MenuItem::linkToCrud('Red Social', 'fas fa-camera', SocialImage::class);
             yield MenuItem::linkToCrud('Servicios', 'fas fa-tag', BusinessService::class);
+            yield MenuItem::section('Config. Citas', 'fas fa-cog');
+            yield MenuItem::linkToCrud('Citas', 'fas fa-calendar-alt', Appointment::class);
             yield MenuItem::section('Config. Usuarios', 'fas fa-cog');
             yield MenuItem::linkToCrud('Usuarios', 'fas fa-user', User::class);
         endif;

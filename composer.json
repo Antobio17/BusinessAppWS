@@ -6,6 +6,7 @@
     "require": {
         "php": ">=7.4",
         "ext-ctype": "*",
+        "ext-intl": "*",
         "ext-iconv": "*",
         "ext-json": "^7.4",
         "ext-openssl": "^7.4",
