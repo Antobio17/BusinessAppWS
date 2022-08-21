@@ -23,4 +23,19 @@ interface OrderInterface extends HasPostalAddressInterface, HasAmountInterface, 
 
     /*********************************************** STATIC METHODS ***********************************************/
 
+    /**
+     * Gets the status choices of the entity.
+     *
+     *      return array(
+     *          'Pendiente' => static::STATUS_PENDING,
+     *          'En Preparación' => static::STATUS_PREPARING,
+     *          'Cancelado' => static::STATUS_CANCELLED,
+     *          'Enviado' => static::STATUS_SENT,
+     *          'Entregado' => static::STATUS_DELIVERED
+     *      )
+     *
+     * @return array array
+     */
+    public static function getStatusChoices(): array;
+
 }

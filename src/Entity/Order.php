@@ -96,7 +96,7 @@ class Order extends AbstractUserContext implements OrderInterface
      */
     public function __construct(BusinessInterface $business, UserInterface $user, PostalAddress $postalAddress,
                                 string            $uuid, float $amount = 0.0, array $data = array(), int $status = 0,
-                                ?DateTime          $createdAt = NULL, ?DateTime $sentAt = NULL)
+                                ?DateTime         $createdAt = NULL, ?DateTime $sentAt = NULL)
     {
         parent::__construct($business, $user);
 
@@ -133,5 +133,20 @@ class Order extends AbstractUserContext implements OrderInterface
     /********************************************** PROTECTED METHODS *********************************************/
 
     /*********************************************** STATIC METHODS ***********************************************/
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
+    public static function getStatusChoices(): array
+    {
+        return array(
+            'Pendiente' => static::STATUS_PENDING,
+            'En Preparación' => static::STATUS_PREPARING,
+            'Cancelado' => static::STATUS_CANCELLED,
+            'Enviado' => static::STATUS_SENT,
+            'Entregado' => static::STATUS_DELIVERED,
+        );
+    }
 
 }

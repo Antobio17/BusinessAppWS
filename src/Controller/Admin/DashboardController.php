@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Appointment;
 use App\Entity\BusinessService;
+use App\Entity\Order;
 use App\Entity\SocialImage;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
@@ -110,6 +111,22 @@ class DashboardController extends AbstractDashboardController implements Dashboa
                             '%sT%s', $endDate->format('Y-m-d'), $endDate->format('H:i')
                         ),
                     )
+                ));
+            yield MenuItem::section('Config. Pedidos', 'fas fa-cog');
+            yield MenuItem::linkToCrud('Pedidos', 'fas fa-shopping-cart', Order::class);
+            yield MenuItem::linkToCrud('Pendientes', 'fas fa-hourglass-start', Order::class)
+                ->setQueryParameter('filters', array(
+                    'status' => array(
+                        'comparison' => ComparisonType::EQ,
+                        'value' => Order::STATUS_PENDING,
+                    ),
+                ));
+            yield MenuItem::linkToCrud('En Preparación', 'fas fa-hourglass-half', Order::class)
+                ->setQueryParameter('filters', array(
+                    'status' => array(
+                        'comparison' => ComparisonType::EQ,
+                        'value' => Order::STATUS_PREPARING,
+                    ),
                 ));
             yield MenuItem::section('Config. Usuarios', 'fas fa-cog');
             yield MenuItem::linkToCrud('Usuarios', 'fas fa-user', User::class);
