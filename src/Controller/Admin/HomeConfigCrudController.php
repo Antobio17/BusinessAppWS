@@ -2,9 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\HomeConfig;
-use App\Entity\User;
 use App\Entity\Image;
+use App\Entity\HomeConfig;
 use App\Service\BusinessService;
 use App\Service\Traits\BusinessServiceTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -14,11 +13,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use App\Controller\Admin\Interfaces\HomeConfigCrudControllerInterface;
@@ -62,6 +61,11 @@ class HomeConfigCrudController extends AbstractCrudController implements HomeCon
             ->setEntityLabelInSingular('Configuración Home')
             ->setEntityLabelInPlural('Configuraciones Home')
             ->setSearchFields(array('name', 'description'))
+            ->setPageTitle(Crud::PAGE_DETAIL, 'Ver Configuración de Home')
+            ->setHelp(
+                Crud::PAGE_DETAIL,
+                'En esta vista podrás ver la Configuración de Home seleccionada pero no editarla.'
+            )
             ->setPageTitle(Crud::PAGE_NEW, 'Nueva Configuración')
             ->setHelp(
                 Crud::PAGE_NEW,
@@ -90,6 +94,7 @@ class HomeConfigCrudController extends AbstractCrudController implements HomeCon
             TextareaField::new('description', 'Descripción')
                 ->setHelp('*  Descripción del CEO del negocio para la introducción.'),
             FormField::addPanel('Imagen'),
+            TextField::new('image.name', 'Imagen')->onlyOnDetail(),
             ImageField::new('image.name', 'Imagen')
                 ->setUploadDir('public/images/')
                 ->onlyOnForms()
@@ -102,13 +107,11 @@ class HomeConfigCrudController extends AbstractCrudController implements HomeCon
                 ),
             IntegerField::new('image.width', 'Anchura (px)')
                 ->setDisabled(TRUE)
-                ->setValue(300)
-                ->onlyOnForms()
+                ->hideOnIndex()
                 ->setHelp('*  Anchura de la imagen en píxeles'),
             IntegerField::new('image.height', 'Altura  (px)')
                 ->setDisabled(TRUE)
-                ->setValue(300)
-                ->onlyOnForms()
+                ->hideOnIndex()
                 ->setHelp('*  Altura de la imagen en píxeles'),
             TextField::new('image.alt', 'Alt')
                 ->setHelp('*  Propiedad HTML alt de la imagen')
@@ -146,7 +149,7 @@ class HomeConfigCrudController extends AbstractCrudController implements HomeCon
         endif;
 
         return $actions
-            ->disable('detail', 'delete')
+            ->disable('delete')
             # PAGE_INDEX
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action->setLabel('Nueva Configuración');

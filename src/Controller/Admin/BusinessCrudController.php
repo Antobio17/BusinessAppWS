@@ -102,8 +102,9 @@ class BusinessCrudController extends AbstractCrudController implements BusinessC
             TextField::new('phoneNumber', 'Teléfono'),
             TextField::new('email'),
             FormField::addPanel('Dirección Postal'),
+            TextField::new('postalAddress.address', 'Dirección')->hideOnForm(),
             AssociationField::new('postalAddress')
-                ->hideOnIndex()
+                ->onlyOnForms()
                 ->setLabel(FALSE)
                 ->setFormType(PostalAddressType::class)
                 ->setFormTypeOptions(array(
@@ -150,7 +151,6 @@ class BusinessCrudController extends AbstractCrudController implements BusinessC
         endif;
 
         return $actions
-            ->disable('detail')
             # PAGE_INDEX
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action->setLabel('Nuevo Negocio');
