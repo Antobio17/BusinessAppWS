@@ -70,13 +70,10 @@ trait ImageTrait
     public function __toArray(): array
     {
         return array_merge(
-            parent::__toArray(),
-            array(
-                $this->__nameToArray(),
-                $this->__widthToArray(),
-                $this->__heightToArray(),
-                $this->__altToArray(),
-            ),
+            $this->__nameToArray(),
+            $this->__widthToArray(),
+            $this->__heightToArray(),
+            $this->__altToArray(),
         );
     }
 

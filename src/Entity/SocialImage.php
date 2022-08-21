@@ -83,9 +83,9 @@ class SocialImage extends AbstractORM implements SocialImageInterface
     {
         return array_merge(
             parent::__toArray(),
-            $this->__imageToArray(),
             array(
                 'homeConfigID' => $this->getHomeConfig()->getID(),
+                'image' => $this->__imageToArray(),
             ),
         );
     }
