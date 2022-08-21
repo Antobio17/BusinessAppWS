@@ -85,6 +85,11 @@ class HomeConfigCrudController extends AbstractCrudController implements HomeCon
             FormField::addPanel('Sección de Introducción'),
             IdField::new('id')->hideOnForm(),
             TextField::new('image.name', 'Imagen')->onlyOnIndex(),
+            TextField::new('name', 'Nombre')
+                ->setHelp('*  Nombre completo del CEO del negocio.'),
+            TextareaField::new('description', 'Descripción')
+                ->setHelp('*  Descripción del CEO del negocio para la introducción.'),
+            FormField::addPanel('Imagen'),
             ImageField::new('image.name', 'Imagen')
                 ->setUploadDir('public/images/')
                 ->onlyOnForms()
@@ -108,10 +113,6 @@ class HomeConfigCrudController extends AbstractCrudController implements HomeCon
             TextField::new('image.alt', 'Alt')
                 ->setHelp('*  Propiedad HTML alt de la imagen')
                 ->setRequired(TRUE),
-            TextField::new('name', 'Nombre')
-                ->setHelp('*  Nombre completo del CEO del negocio.'),
-            TextareaField::new('description', 'Descripción')
-                ->setHelp('*  Descripción del CEO del negocio para la introducción.'),
         );
     }
 
