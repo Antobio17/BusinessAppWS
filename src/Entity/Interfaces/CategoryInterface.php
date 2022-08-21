@@ -15,6 +15,13 @@ interface CategoryInterface extends HasNameInterface, HasDescriptionInterface
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 
+    /**
+     * Returns the entity in a string identifier.
+     *
+     * @return string string
+     */
+    public function __toString(): string;
+
     /*********************************************** STATIC METHODS ***********************************************/
 
 }

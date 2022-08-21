@@ -61,6 +61,15 @@ class Category extends AbstractORM implements CategoryInterface
         );
     }
 
+    /**
+     * @inheritDoc
+     * @return string string
+     */
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+
     /********************************************** PROTECTED METHODS *********************************************/
 
     /*********************************************** STATIC METHODS ***********************************************/

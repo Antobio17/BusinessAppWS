@@ -2,6 +2,7 @@
 
 namespace App\Entity\Interfaces;
 
+use App\Entity\Image;
 use App\Entity\Product;
 use App\Entity\Traits\Interfaces\HasAmountInterface;
 use App\Entity\Traits\Interfaces\HasCategoryInterface;
@@ -16,7 +17,7 @@ use App\Entity\Traits\Interfaces\HasStockInterface;
  * Product interface.
  */
 interface ProductInterface extends HasNameInterface, HasCodeInterface, HasDescriptionInterface, HasAmountInterface,
-    HasStockInterface, HasCategoryInterface, HasDiscountPercentInterface, HasSRCInterface
+    HasStockInterface, HasCategoryInterface, HasDiscountPercentInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -36,6 +37,22 @@ interface ProductInterface extends HasNameInterface, HasCodeInterface, HasDescri
      * @return Product Product
      */
     public function setPrice(float $price): self;
+
+    /**
+     * Gets the property Image of the entity.
+     *
+     * @return Image Image
+     */
+    public function getImage(): Image;
+
+    /**
+     * Sets the property Image of the entity.
+     *
+     * @param Image $image The image to set.
+     *
+     * @return $this $this
+     */
+    public function setImage(Image $image): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 

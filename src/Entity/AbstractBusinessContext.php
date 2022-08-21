@@ -46,7 +46,9 @@ abstract class AbstractBusinessContext extends AbstractORM implements BusinessCo
     {
         return array_merge(
             parent::__toArray(),
-            $this->__businessToArray()
+            array(
+                'businessID' => $this->getBusiness()->getID()
+            )
         );
     }
 

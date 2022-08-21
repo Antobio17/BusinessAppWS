@@ -15,6 +15,8 @@ use App\Entity\Traits\StockTrait;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProductRepository;
 use App\Entity\Interfaces\ProductInterface;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\OneToOne;
 
 /**
  * Product entity.
@@ -63,10 +65,13 @@ class Product extends AbstractBusinessContext implements ProductInterface
         DiscountPercentTrait::__toArray as protected __discountPercentToArray;
     }
 
-    use SRCTrait {
-        SRCTrait::__construct as protected __srcConstruct;
-        SRCTrait::__toArray as protected __srcToArray;
-    }
+    /**
+     * One BusinessService has One Image.
+     *
+     * @OneToOne(targetEntity="App\Entity\Image", cascade={"all"})
+     * @JoinColumn(name="image_id", referencedColumnName="id")
+     */
+    protected Image $image;
 
     /************************************************* CONSTRUCT **************************************************/
 
@@ -79,12 +84,12 @@ class Product extends AbstractBusinessContext implements ProductInterface
      * @param string $description Description of the product.
      * @param float $price Price of the product.
      * @param CategoryInterface $category Category of the product.
-     * @param string $src Image SRC of the product.
+     * @param Image $image Image of the product.
      * @param int $stock Stock of the product.
      * @param int $discountPercent Discount percent associated to the product.
      */
     public function __construct(BusinessInterface $business, string $name, string $code, string $description,
-                                float $price, CategoryInterface $category, string $src, int $stock = 0,
+                                float $price, CategoryInterface $category, Image $image, int $stock = 0,
                                 int $discountPercent = 0)
     {
         parent::__construct($business);
@@ -95,8 +100,9 @@ class Product extends AbstractBusinessContext implements ProductInterface
         $this->__priceConstruct($price);
         $this->__stockConstruct($stock);
         $this->__categoryConstruct($category);
-        $this->__srcConstruct($src);
         $this->__discountPercentConstruct($discountPercent);
+
+        $this->setImage($image);
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -119,6 +125,26 @@ class Product extends AbstractBusinessContext implements ProductInterface
         return $this->setAmount($price);
     }
 
+    /**
+     * @inheritDoc
+     * @return Image Image
+     */
+    public function getImage(): Image
+    {
+        return $this->image;
+    }
+
+    /**
+     * @inheritDoc
+     * @return $this $this
+     */
+    public function setImage(Image $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
@@ -135,8 +161,10 @@ class Product extends AbstractBusinessContext implements ProductInterface
             $this->__priceToArray(),
             $this->__stockToArray(),
             $this->__categoryToArray(),
-            $this->__srcToArray(),
             $this->__discountPercentToArray(),
+            array(
+                'image' => $this->getImage()->__toArray(),
+            )
         );
     }
 

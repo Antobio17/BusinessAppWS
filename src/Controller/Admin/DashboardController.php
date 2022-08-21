@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Appointment;
 use App\Entity\BusinessService;
 use App\Entity\Order;
+use App\Entity\Product;
 use App\Entity\SocialImage;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
@@ -92,6 +93,7 @@ class DashboardController extends AbstractDashboardController implements Dashboa
             yield MenuItem::linkToCrud('Home', 'fas fa-home', HomeConfig::class);
             yield MenuItem::linkToCrud('Red Social', 'fas fa-camera', SocialImage::class);
             yield MenuItem::linkToCrud('Servicios', 'fas fa-tag', BusinessService::class);
+            yield MenuItem::linkToCrud('Productos', 'fas fa-shopping-bag', Product::class);
             yield MenuItem::section('Config. Citas', 'fas fa-cog');
             yield MenuItem::linkToCrud('Citas', 'fas fa-calendar-alt', Appointment::class);
             $startDate = date_create()->setTime(0,0);
