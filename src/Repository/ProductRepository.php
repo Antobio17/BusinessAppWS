@@ -45,7 +45,7 @@ class ProductRepository extends AppRepository implements ProductRepositoryInterf
      */
     public function findByFilters(BusinessInterface $business, ?int $offset = NULL, ?int $limit = NULL,
                                   ?string           $sort = NULL, bool $onStock = TRUE, bool $outOfStock = TRUE,
-                                  array             $categoryExclusion = array(), bool $resultAsArray = TRUE): array
+                                  array             $categoryExclusion = array(), bool $resultAsArray = FALSE): array
     {
         $alias = 'prd';
 

@@ -15,7 +15,7 @@ interface CategoryRepositoryInterface
      *
      * @return array
      */
-    public function findByIDs(array $categoryIDs, bool $resultAsArray = TRUE): array;
+    public function findByIDs(array $categoryIDs, bool $resultAsArray = FALSE): array;
 
     /*********************************************** STATIC METHODS ***********************************************/
 }

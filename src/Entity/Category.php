@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Interfaces\BusinessInterface;
 use App\Entity\Traits\NameTrait;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CategoryRepository;
@@ -13,7 +14,7 @@ use App\Entity\Interfaces\CategoryInterface;
  *
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
-class Category extends AbstractORM implements CategoryInterface
+class Category extends AbstractBusinessContext implements CategoryInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
@@ -35,11 +36,14 @@ class Category extends AbstractORM implements CategoryInterface
     /**
      *  Category constructor.
      *
+     * @param BusinessInterface $business Business to belong the category.
      * @param string $name Name of the category.
      * @param string $description Description of the category.
      */
-    public function __construct(string $name, string $description)
+    public function __construct(BusinessInterface $business, string $name, string $description)
     {
+        parent::__construct($business);
+
         $this->__nameConstruct($name);
         $this->__descriptionConstruct($description);
     }

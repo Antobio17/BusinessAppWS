@@ -25,7 +25,7 @@ interface ProductRepositoryInterface
      */
     public function findByFilters(BusinessInterface $business, ?int $offset = NULL, ?int $limit = NULL,
                                   ?string           $sort = NULL, bool $onStock = TRUE, bool $outOfStock = TRUE,
-                                  array             $categoryExclusion = array(), bool $resultAsArray = TRUE): array;
+                                  array             $categoryExclusion = array(), bool $resultAsArray = FALSE): array;
 
     /**
      * Finds the Category IDs of the products of a business.

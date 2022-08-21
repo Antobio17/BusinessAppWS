@@ -35,8 +35,7 @@ class StoreService extends AppService implements StoreServiceInterface
             );
         else:
             $products = $this->getProductRepository()->findByFilters(
-                $this->getBusiness(), $offset, $limit, $sort, $onStock, $outOfStock, $categoryExclusion,
-                FALSE
+                $this->getBusiness(), $offset, $limit, $sort, $onStock, $outOfStock, $categoryExclusion
             );
             foreach ($products as $product):
                 $productsArray[] = $product->__toArray();
@@ -146,7 +145,10 @@ class StoreService extends AppService implements StoreServiceInterface
             endforeach;
             $categoryIDs = array_values($categoryIDs);
             $categories = $this->getCategoryRepository()->findByIDs($categoryIDs);
-            $result = array('categories' => $categories);
+            foreach ($categories as $category):
+                $categoriesArray[] = $category->__toArray();
+            endforeach;
+            $result = array('categories' => $categoriesArray ?? array());
         endif;
 
         return $result ?? NULL;

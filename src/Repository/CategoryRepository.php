@@ -31,7 +31,7 @@ class CategoryRepository extends AppRepository implements CategoryRepositoryInte
      * @inheritDoc
      * @return array
      */
-    public function findByIDs(array $categoryIDs, bool $resultAsArray = TRUE): array
+    public function findByIDs(array $categoryIDs, bool $resultAsArray = FALSE): array
     {
         $alias = 'cat';
 
