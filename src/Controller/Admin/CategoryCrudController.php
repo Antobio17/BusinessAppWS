@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-use App\Entity\Shift;
+use App\Entity\Category;
 use App\Service\BusinessService;
 use App\Service\Traits\BusinessServiceTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -18,9 +18,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use App\Controller\Admin\Interfaces\ShiftCrudControllerInterface;
+use App\Controller\Admin\Interfaces\CategoryCrudControllerInterface;
 
-class ShiftCrudController extends AbstractCrudController implements ShiftCrudControllerInterface
+class CategoryCrudController extends AbstractCrudController implements CategoryCrudControllerInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
@@ -32,7 +32,7 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
     /************************************************* CONSTRUCT **************************************************/
 
     /**
-     * ShiftCrudController construct
+     * CategoryCrudController construct
      *
      * @param EntityRepository $entityRepository EntityRepository to override the query builds.
      */
@@ -56,19 +56,19 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
     public function configureCrud(Crud $crud): Crud
     {
         return parent::configureCrud($crud)
-            ->setEntityLabelInSingular('Turno')
-            ->setEntityLabelInPlural('Turnos')
-            ->setSearchFields(array('opensAt', 'closesAt'))
-            ->setPageTitle(Crud::PAGE_NEW, 'Nuevo Turno')
+            ->setEntityLabelInSingular('Categoría')
+            ->setEntityLabelInPlural('Categorías')
+            ->setSearchFields(array('name', 'description'))
+            ->setPageTitle(Crud::PAGE_NEW, 'Nueva Categoría')
             ->setHelp(
                 Crud::PAGE_NEW,
-                'En esta vista podrás crear un nuevo turno para tu negocio con los datos que sean 
-                especificados.'
+                'En esta vista podrás crear una nueva categoría para los productos de tu negocio con 
+                los datos que sean especificados.'
             )
-            ->setPageTitle(Crud::PAGE_EDIT, 'Editar Turno')
+            ->setPageTitle(Crud::PAGE_EDIT, 'Editar Categoría')
             ->setHelp(
                 Crud::PAGE_EDIT,
-                'En esta vista podrás editar el turno seleccionado.'
+                'En esta vista podrás editar la categoría seleccionada.'
             );
     }
 
@@ -81,12 +81,10 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
         return array(
             FormField::addPanel('Información General'),
             IdField::new('id')->hideOnForm(),
-            ChoiceField::new('weekDay', 'Día de la semana')
-                ->setChoices(Shift::getDaysChoices()),
-            TextField::new('opensAt', 'Hora de apertura')
-                ->setHelp('*  Hora de apertura del turno (Formato: 09:00:00)'),
-            TextField::new('closesAt', 'Hora de cierre')
-                ->setHelp('*  Hora de cierre del turno (Formato: 14:00:00)'),
+            TextField::new('name', 'Categoría')
+                ->setHelp('*  Nombre de la categoría'),
+            TextField::new('description', 'Descripción')
+                ->setHelp('*  Descripción de la categoría'),
             AssociationField::new('business', 'Negocio')
                 ->setDisabled(
                     !in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())
@@ -102,11 +100,8 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
     public function configureFilters(Filters $filters): Filters
     {
         return parent::configureFilters($filters)
-            ->add(ChoiceFilter::new(
-                'weekDay', 'Día de la semana')->setChoices(Shift::getDaysChoices())
-            )
-            ->add(TextFilter::new('opensAt', 'Apertura'))
-            ->add(TextFilter::new('closesAt', 'Cierre'));
+            ->add(TextFilter::new('name', 'Categoría'))
+            ->add(TextFilter::new('description', 'Descripción'));
     }
 
     /**
@@ -126,15 +121,15 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
             ->disable('detail')
             # PAGE_INDEX
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
-                return $action->setLabel('Nuevo Turno');
+                return $action->setLabel('Nueva Categoría');
             });
     }
 
     /**
      * @param string $entityFqcn
-     * @return Shift Shift
+     * @return Category Category
      */
-    public function createEntity(string $entityFqcn): Shift
+    public function createEntity(string $entityFqcn): Category
     {
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $business = $this->getUser()->getBusiness();
@@ -143,7 +138,7 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
             $business = $allBusiness[0];
         endif;
 
-        return new Shift($business, '', '', 0);
+        return new Category($business, '', '');
     }
 
     /*********************************************** STATIC METHODS ***********************************************/
@@ -154,7 +149,7 @@ class ShiftCrudController extends AbstractCrudController implements ShiftCrudCon
      */
     public static function getEntityFqcn(): string
     {
-        return Shift::class;
+        return Category::class;
     }
 
 }

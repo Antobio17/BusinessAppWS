@@ -8,6 +8,9 @@ use App\Entity\Product;
 use App\Entity\Category;
 use App\Service\BusinessService;
 use App\Service\Traits\BusinessServiceTrait;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -69,6 +72,12 @@ class ProductCrudController extends AbstractCrudController implements ProductCru
             ->setEntityLabelInSingular('Producto')
             ->setEntityLabelInPlural('Productos')
             ->setSearchFields(array('name', 'code', 'description', 'amount', 'category'))
+            ->setPageTitle(Crud::PAGE_NEW, 'Nuevo Producto')
+            ->setHelp(
+                Crud::PAGE_NEW,
+                'En esta vista podrás crear un nuevo producto para la tienda de tu negocio con 
+                los datos que sean especificados.'
+            )
             ->setPageTitle(Crud::PAGE_EDIT, 'Editar Cita')
             ->setHelp(
                 Crud::PAGE_EDIT,
@@ -82,6 +91,19 @@ class ProductCrudController extends AbstractCrudController implements ProductCru
      */
     public function configureFields(string $pageName): iterable
     {
+        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+        $business = $this->getUser()->getBusiness();
+        if ($business !== NULL):
+            $categoryField = AssociationField::new('category', 'Categoría')
+                ->setQueryBuilder(
+                    fn(QueryBuilder $queryBuilder) => $queryBuilder->addCriteria(
+                        Criteria::create()->andWhere(Criteria::expr()->eq('business', $business->getID()))
+                    )
+                );
+        else:
+            $categoryField = AssociationField::new('category', 'Categoría');
+        endif;
+
         return array(
             FormField::addPanel('Información General'),
             IdField::new('id')->hideOnForm(),
@@ -91,9 +113,14 @@ class ProductCrudController extends AbstractCrudController implements ProductCru
             NumberField::new('amount', 'Total (€)'),
             IntegerField::new('stock', 'Stock'),
             IntegerField::new('discountPercent', 'Descuento (%)'),
-            AssociationField::new('category', 'Categoría'),
+            $categoryField,
+            AssociationField::new('business', 'Negocio')
+                ->setDisabled(
+                    !in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())
+                    || $pageName === Crud::PAGE_EDIT
+                ),
             FormField::addPanel('Imagen del producto'),
-            ImageField::new('image.name', FALSE)->setBasePath('/images')->hideOnForm(),
+            ImageField::new('image.name', 'Imagen')->setBasePath('/images')->hideOnForm(),
             ImageField::new('image.name', 'Imagen')
                 ->setUploadDir('public/images/')
                 ->onlyOnForms()
@@ -152,7 +179,11 @@ class ProductCrudController extends AbstractCrudController implements ProductCru
                 ->disable('new');
         endif;
 
-        return $actions;
+        return $actions
+            # PAGE_INDEX
+            ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+                return $action->setLabel('Nueva Categoría');
+            });
     }
 
     /**
@@ -175,7 +206,7 @@ class ProductCrudController extends AbstractCrudController implements ProductCru
 
         return new Product(
             $business, '', '', '', 0.0,
-            $category ?? new Category('', ''),
+            $category ?? new Category($business, '', ''),
             new Image('', 230, 200, '')
         );
     }

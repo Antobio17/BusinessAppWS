@@ -87,6 +87,11 @@ class BusinessServiceCrudController extends AbstractCrudController implements Bu
             IdField::new('id')->hideOnForm(),
             TextField::new('name', 'Título'),
             TextareaField::new('description', 'Descripción'),
+            AssociationField::new('homeConfig', 'Configuración de Home')
+                ->setDisabled(
+                    !in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())
+                    || $pageName === Crud::PAGE_EDIT
+                ),
             FormField::addPanel('Icono del servicio'),
             ImageField::new('image.name', 'Imagen')->setBasePath('/images')->onlyOnIndex(),
             ImageField::new('image.name', 'Imagen')
@@ -110,11 +115,6 @@ class BusinessServiceCrudController extends AbstractCrudController implements Bu
             TextField::new('image.alt', 'Alt')
                 ->setRequired(TRUE)
                 ->setHelp('*  Propiedad HTML alt de la imagen'),
-            AssociationField::new('homeConfig', 'Configuración de Home')
-                ->setDisabled(
-                    !in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())
-                    || $pageName === Crud::PAGE_EDIT
-                ),
         );
     }
 

@@ -5,14 +5,26 @@ namespace App\Entity;
 use App\Entity\Interfaces\BusinessInterface;
 use App\Entity\Traits\NameTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
 use App\Repository\CategoryRepository;
 use App\Entity\Traits\DescriptionTrait;
 use App\Entity\Interfaces\CategoryInterface;
+use Doctrine\ORM\Mapping\AttributeOverride;
+use Doctrine\ORM\Mapping\AttributeOverrides;
 
 /**
  * Category entity.
  *
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
+ * @AttributeOverrides({
+ *     @AttributeOverride(name="name",
+ *          column=@Column(
+ *              name   = "name",
+ *              unique = false,
+ *              length = 1024
+ *          )
+ *      )
+ * })
  */
 class Category extends AbstractBusinessContext implements CategoryInterface
 {
