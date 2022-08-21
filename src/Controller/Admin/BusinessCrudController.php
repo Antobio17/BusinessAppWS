@@ -163,7 +163,12 @@ class BusinessCrudController extends AbstractCrudController implements BusinessC
      */
     public function createEntity(string $entityFqcn): Business
     {
-        return new Business('', '', '', new PostalAddress('', '', '', '', '', '', ''), array());
+        return new Business(
+            '', '', '',
+            new PostalAddress(
+                '', '', '', '', '', '', ''
+            ), array()
+        );
     }
 
     /*********************************************** STATIC METHODS ***********************************************/
