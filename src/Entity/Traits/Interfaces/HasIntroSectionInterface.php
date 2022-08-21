@@ -2,15 +2,31 @@
 
 namespace App\Entity\Traits\Interfaces;
 
+use App\Entity\Image;
+
 /**
  * IntroSectionTrait interface
  */
-interface HasIntroSectionInterface extends HasSRCInterface, HasNameInterface, HasDescriptionInterface
+interface HasIntroSectionInterface extends HasNameInterface, HasDescriptionInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
+    /**
+     * Gets the property Image of the entity.
+     *
+     * @return Image Image
+     */
+    public function getImage(): Image;
 
+    /**
+     * Sets the property Image of the entity.
+     *
+     * @param Image $image The image to set.
+     *
+     * @return $this $this
+     */
+    public function setImage(Image $image): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 

@@ -101,6 +101,7 @@ class SocialImageCrudController extends AbstractCrudController implements Social
                 ->setDisabled(TRUE)
                 ->setHelp('*  Altura de la imagen en píxeles'),
             TextField::new('alt', 'Alt')
+                ->setRequired(TRUE)
                 ->setHelp('*  Propiedad HTML alt de la imagen'),
             AssociationField::new('homeConfig', 'Configuración de Home')
                 ->setDisabled(

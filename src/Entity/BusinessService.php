@@ -99,6 +99,7 @@ class BusinessService extends AbstractORM implements BusinessServiceInterface
     }
 
     /**
+     * @inheritDoc
      * @return Image Image
      */
     public function getImage(): Image
@@ -107,8 +108,7 @@ class BusinessService extends AbstractORM implements BusinessServiceInterface
     }
 
     /**
-     * @param Image $image
-     *
+     * @inheritDoc
      * @return $this $this
      */
     public function setImage(Image $image): self

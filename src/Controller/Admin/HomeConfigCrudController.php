@@ -84,17 +84,30 @@ class HomeConfigCrudController extends AbstractCrudController implements HomeCon
         return array(
             FormField::addPanel('Sección de Introducción'),
             IdField::new('id')->hideOnForm(),
-            TextField::new('src', 'Imagen')->hideOnForm(),
-            ImageField::new('src', 'Imagen')
+            TextField::new('image.name', 'Imagen')->onlyOnIndex(),
+            ImageField::new('image.name', 'Imagen')
                 ->setUploadDir('public/images/')
                 ->onlyOnForms()
                 ->setUploadedFileNamePattern(
-                    fn (UploadedFile $file): string => sprintf(
+                    fn(UploadedFile $file): string => sprintf(
                         '%d-%s',
                         date_create()->getTimestamp(),
                         $file->getClientOriginalName()
                     )
-                )->setHelp('*  Imagen del CEO del negocio.'),
+                ),
+            IntegerField::new('image.width', 'Anchura (px)')
+                ->setDisabled(TRUE)
+                ->setValue(300)
+                ->onlyOnForms()
+                ->setHelp('*  Anchura de la imagen en píxeles'),
+            IntegerField::new('image.height', 'Altura  (px)')
+                ->setDisabled(TRUE)
+                ->setValue(300)
+                ->onlyOnForms()
+                ->setHelp('*  Altura de la imagen en píxeles'),
+            TextField::new('image.alt', 'Alt')
+                ->setHelp('*  Propiedad HTML alt de la imagen')
+                ->setRequired(TRUE),
             TextField::new('name', 'Nombre')
                 ->setHelp('*  Nombre completo del CEO del negocio.'),
             TextareaField::new('description', 'Descripción')
@@ -135,7 +148,7 @@ class HomeConfigCrudController extends AbstractCrudController implements HomeCon
             ->disable('detail', 'delete')
             # PAGE_INDEX
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
-                return $action->setLabel('Nueva Imagen');
+                return $action->setLabel('Nueva Configuración');
             });
     }
 
@@ -153,7 +166,7 @@ class HomeConfigCrudController extends AbstractCrudController implements HomeCon
             $business = $allBusiness[0];
         endif;
 
-        return new HomeConfig($business);
+        return new HomeConfig($business, new Image('', 300, 300, ''), '', '');
     }
 
     /*********************************************** STATIC METHODS ***********************************************/

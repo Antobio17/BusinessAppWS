@@ -58,7 +58,7 @@ class BusinessService extends AppService implements BusinessServiceInterface
 
                 $config = array(
                     'intro' => array(
-                        'imageSrc' => $homeConfig->getSRC(),
+                        'image' => $homeConfig->getImage()->__toArray(),
                         'bossName' => $homeConfig->getName(),
                         'description' => $homeConfig->getDescription()
                     ),

@@ -2,7 +2,7 @@
 
 namespace App\Entity\Interfaces;
 
-use App\Entity\Traits\Interfaces\HasImageInterface;
+use App\Entity\Image;
 
 /**
  * BusinessService interface.
@@ -27,6 +27,22 @@ interface BusinessServiceInterface
      * @return $this $this
      */
     public function setHomeConfig(HomeConfigInterface $homeConfig): self;
+
+    /**
+     * Gets the property Image of the entity.
+     *
+     * @return Image Image
+     */
+    public function getImage(): Image;
+
+    /**
+     * Sets the property Image of the entity.
+     *
+     * @param Image $image The image to set.
+     *
+     * @return $this $this
+     */
+    public function setImage(Image $image): self;
 
     /**
      * Gets the Title property.

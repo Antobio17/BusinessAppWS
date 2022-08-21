@@ -43,11 +43,15 @@ class HomeConfig extends AbstractBusinessContext implements HomeConfigInterface
      *  Order constructor.
      *
      * @param BusinessInterface $business Business to which the HomeConfig belongs.
+     * @param Image $image Image of the HomeConfig.
+     * @param string $name Name of the HomeConfig.
+     * @param string $description Description of the HomeConfig.
      */
-    public function __construct(BusinessInterface $business)
+    public function __construct(BusinessInterface $business, Image $image, string $name, string $description)
     {
         parent::__construct($business);
 
+        $this->__introSectionConstruct($image, $name, $description);
         $this->__socialSectionConstruct();
         $this->__servicesSectionConstruct(array());
     }

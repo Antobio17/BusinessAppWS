@@ -2,6 +2,9 @@
 
 namespace App\Entity\Traits;
 
+use App\Entity\Image;
+use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\JoinColumn;
 use App\Entity\Traits\Interfaces\HasIntroSectionInterface;
 
 /**
@@ -14,10 +17,13 @@ trait IntroSection
 
     /************************************************* PROPERTIES *************************************************/
 
-    use SRCTrait {
-        SRCTrait::__construct as protected __srcConstruct;
-        SRCTrait::__toArray as protected __srcToArray;
-    }
+    /**
+     * One BusinessService has One Image.
+     *
+     * @OneToOne(targetEntity="App\Entity\Image", cascade={"all"})
+     * @JoinColumn(name="image_id", referencedColumnName="id")
+     */
+    protected Image $image;
 
     use NameTrait {
         NameTrait::__construct as protected __nameConstruct;
@@ -31,20 +37,41 @@ trait IntroSection
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
+    /**
+     * @inheritDoc
+     * @return Image Image
+     */
+    public function getImage(): Image
+    {
+        return $this->image;
+    }
+
+    /**
+     * @inheritDoc
+     * @return $this $this
+     */
+    public function setImage(Image $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
     /************************************************* CONSTRUCT **************************************************/
 
     /**
      *  IntroSectionTrait constructor.
      *
-     * @param string $src Image SRC of the section.
+     * @param Image $image Image of the section.
      * @param string $name Name of the section.
      * @param string $description Description of the section.
      */
-    public function __construct(string $name, string $description, string $src)
+    public function __construct(Image $image, string $name, string $description)
     {
         $this->__nameConstruct($name);
         $this->__descriptionConstruct($description);
-        $this->__srcConstruct($src);
+
+        $this->setImage($image);
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
@@ -55,10 +82,12 @@ trait IntroSection
      */
     public function __toArray(): array
     {
-        return array(
+        return array_merge(
             $this->__nameToArray(),
             $this->__descriptionToArray(),
-            $this->__srcToArray(),
+            array(
+                'image' => $this->getImage()->__toArray(),
+            )
         );
     }
 

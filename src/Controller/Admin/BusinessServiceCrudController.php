@@ -109,6 +109,7 @@ class BusinessServiceCrudController extends AbstractCrudController implements Bu
                 ->onlyOnForms()
                 ->setHelp('*  Altura de la imagen en píxeles'),
             TextField::new('image.alt', 'Alt')
+                ->setRequired(TRUE)
                 ->setHelp('*  Propiedad HTML alt de la imagen'),
             AssociationField::new('homeConfig', 'Configuración de Home')
                 ->setDisabled(
