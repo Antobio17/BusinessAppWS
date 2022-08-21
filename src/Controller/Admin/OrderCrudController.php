@@ -58,13 +58,13 @@ class OrderCrudController extends AbstractCrudController implements OrderCrudCon
     public function configureCrud(Crud $crud): Crud
     {
         return parent::configureCrud($crud)
-            ->setEntityLabelInSingular('Cita')
-            ->setEntityLabelInPlural('Citas')
-            ->setSearchFields(array('bookingDate', 'status'))
-            ->setPageTitle(Crud::PAGE_EDIT, 'Editar Cita')
+            ->setEntityLabelInSingular('Pedido')
+            ->setEntityLabelInPlural('Pedidos')
+            ->setSearchFields(array('uuid', 'amount', 'status', 'createdAt', 'sendAt'))
+            ->setPageTitle(Crud::PAGE_EDIT, 'Editar Pedido')
             ->setHelp(
                 Crud::PAGE_EDIT,
-                'En esta vista podrás editar el estado de la cita seleccionada.'
+                'En esta vista podrás editar el estado del pedido seleccionada.'
             );
     }
 
