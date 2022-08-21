@@ -266,4 +266,15 @@ class User extends AbstractORM implements UserInterface, HasBusinessNullableInte
             )
         );
     }
+
+    /**
+     * Returns the entity in a string identifier.
+     *
+     * @return string string
+     */
+    public function __toString(): string
+    {
+        return $this->getEmail();
+    }
+
 }

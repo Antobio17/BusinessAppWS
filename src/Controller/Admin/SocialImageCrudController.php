@@ -79,11 +79,10 @@ class SocialImageCrudController extends AbstractCrudController implements Social
      */
     public function configureFields(string $pageName): iterable
     {
-        /** @noinspection PhpUndefinedMethodInspection */
         return array(
             FormField::addPanel('Información General'),
             IdField::new('id')->hideOnForm(),
-            TextField::new('name', 'Imagen')->hideOnForm(),
+            ImageField::new('name', 'Imagen')->setBasePath('/images')->hideOnForm(),
             ImageField::new('name', 'Imagen')
                 ->setUploadDir('public/images/')
                 ->onlyOnForms()
@@ -130,7 +129,7 @@ class SocialImageCrudController extends AbstractCrudController implements Social
     {
         parent::configureActions($actions);
 
-        /** @noinspection PhpUndefinedMethodInspection */
+        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $business = $this->getUser()->getBusiness();
         if (empty($this->getBusinessService()->getBusinessRepository()->findAll()) || ($business !== NULL
                 && empty($this->getBusinessService()->getHomeConfigRepository()->findByBusiness($business)))):
@@ -139,7 +138,6 @@ class SocialImageCrudController extends AbstractCrudController implements Social
         endif;
 
         return $actions
-            ->disable('detail')
             # PAGE_INDEX
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action->setLabel('Nueva Imagen');
@@ -152,7 +150,7 @@ class SocialImageCrudController extends AbstractCrudController implements Social
      */
     public function createEntity(string $entityFqcn): SocialImage
     {
-        /** @noinspection PhpUndefinedMethodInspection */
+        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $business = $this->getUser()->getBusiness();
         if ($business === NULL):
             $allBusiness = $this->getBusinessService()->getBusinessRepository()->findAll();

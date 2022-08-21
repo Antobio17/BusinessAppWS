@@ -84,17 +84,16 @@ class HomeConfigCrudController extends AbstractCrudController implements HomeCon
      */
     public function configureFields(string $pageName): iterable
     {
-        /** @noinspection PhpUndefinedMethodInspection */
         return array(
             FormField::addPanel('Sección de Introducción'),
             IdField::new('id')->hideOnForm(),
-            TextField::new('image.name', 'Imagen')->onlyOnIndex(),
+            ImageField::new('image.name', 'Imagen')->setBasePath('/images')->onlyOnIndex(),
             TextField::new('name', 'Nombre')
                 ->setHelp('*  Nombre completo del CEO del negocio.'),
             TextareaField::new('description', 'Descripción')
                 ->setHelp('*  Descripción del CEO del negocio para la introducción.'),
             FormField::addPanel('Imagen'),
-            TextField::new('image.name', 'Imagen')->onlyOnDetail(),
+            ImageField::new('image.name', 'Imagen')->setBasePath('/images')->onlyOnDetail(),
             ImageField::new('image.name', 'Imagen')
                 ->setUploadDir('public/images/')
                 ->onlyOnForms()
@@ -138,7 +137,7 @@ class HomeConfigCrudController extends AbstractCrudController implements HomeCon
     {
         parent::configureActions($actions);
 
-        /** @noinspection PhpUndefinedMethodInspection */
+        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $business = $this->getUser()->getBusiness();
         if (
             empty($this->getBusinessService()->getBusinessRepository()->findAll()) || ($business !== NULL
@@ -163,7 +162,7 @@ class HomeConfigCrudController extends AbstractCrudController implements HomeCon
      */
     public function createEntity(string $entityFqcn): HomeConfig
     {
-        /** @noinspection PhpUndefinedMethodInspection */
+        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $business = $this->getUser()->getBusiness();
         if ($business === NULL):
             $allBusiness = $this->getBusinessService()->getBusinessRepository()->findAll();

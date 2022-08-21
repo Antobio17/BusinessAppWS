@@ -82,14 +82,13 @@ class BusinessServiceCrudController extends AbstractCrudController implements Bu
      */
     public function configureFields(string $pageName): iterable
     {
-        /** @noinspection PhpUndefinedMethodInspection */
         return array(
             FormField::addPanel('Información General'),
             IdField::new('id')->hideOnForm(),
             TextField::new('name', 'Título'),
             TextareaField::new('description', 'Descripción'),
             FormField::addPanel('Icono del servicio'),
-            TextField::new('image.name', 'Imagen')->onlyOnIndex(),
+            ImageField::new('image.name', 'Imagen')->setBasePath('/images')->onlyOnIndex(),
             ImageField::new('image.name', 'Imagen')
                 ->setUploadDir('public/images/')
                 ->onlyOnForms()
@@ -138,7 +137,7 @@ class BusinessServiceCrudController extends AbstractCrudController implements Bu
     {
         parent::configureActions($actions);
 
-        /** @noinspection PhpUndefinedMethodInspection */
+        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $business = $this->getUser()->getBusiness();
         if (empty($this->getBusinessService()->getBusinessRepository()->findAll()) || ($business !== NULL
                 && empty($this->getBusinessService()->getHomeConfigRepository()->findByBusiness($business)))):
@@ -160,7 +159,7 @@ class BusinessServiceCrudController extends AbstractCrudController implements Bu
      */
     public function createEntity(string $entityFqcn): BusinessServiceEntity
     {
-        /** @noinspection PhpUndefinedMethodInspection */
+        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $business = $this->getUser()->getBusiness();
         if ($business === NULL):
             $allBusiness = $this->getBusinessService()->getBusinessRepository()->findAll();

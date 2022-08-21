@@ -47,7 +47,7 @@ class BusinessCrudController extends AbstractCrudController implements BusinessC
                                             FilterCollection $filters): QueryBuilder
     {
         if ($this->getUser() instanceof User):
-            /** @noinspection PhpUndefinedMethodInspection */
+            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
             $business = $this->getUser()->getBusiness();
         endif;
 

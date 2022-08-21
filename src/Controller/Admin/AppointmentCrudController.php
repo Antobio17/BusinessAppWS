@@ -78,11 +78,9 @@ class AppointmentCrudController extends AbstractCrudController implements Appoin
             DateTimeField::new('bookingDateAt', 'Fecha de reserva')->setDisabled(TRUE),
             ChoiceField::new('status', 'Estado')
                 ->setChoices(Appointment::getStatusChoices()),
-            TextField::new('worker.name', 'Nombre Trabajador')
-                ->setHelp('*  Nombre del trabajador del negocio encargado de atender la cita')
+            AssociationField::new('user', 'Cliente')
                 ->setDisabled(TRUE),
-            TextField::new('worker.surname', 'Apellido Trabajador')
-                ->setHelp('*  Apellido del trabajador del negocio encargado de atender la cita')
+            AssociationField::new('worker', 'Trabajador')
                 ->setDisabled(TRUE),
             AssociationField::new('business', 'Negocio')
                 ->setDisabled(TRUE),
@@ -110,18 +108,13 @@ class AppointmentCrudController extends AbstractCrudController implements Appoin
     {
         parent::configureActions($actions);
 
-        if (empty($this->getBusinessService()->getBusinessRepository()->findAll())):
-            $actions
-                ->disable('new');
-        endif;
-
         if (!in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())):
             $actions
                 ->disable('delete');
         endif;
 
         return $actions
-            ->disable('detail');
+            ->disable('new', 'detail');
     }
 
     /*********************************************** STATIC METHODS ***********************************************/

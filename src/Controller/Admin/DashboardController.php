@@ -6,6 +6,7 @@ use App\Entity\Appointment;
 use App\Entity\BusinessService;
 use App\Entity\SocialImage;
 use App\Entity\User;
+use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
 use RuntimeException;
 use App\Entity\Shift;
 use App\Entity\Image;
@@ -92,6 +93,24 @@ class DashboardController extends AbstractDashboardController implements Dashboa
             yield MenuItem::linkToCrud('Servicios', 'fas fa-tag', BusinessService::class);
             yield MenuItem::section('Config. Citas', 'fas fa-cog');
             yield MenuItem::linkToCrud('Citas', 'fas fa-calendar-alt', Appointment::class);
+            $startDate = date_create()->setTime(0,0);
+            $endDate = date_create()->setTime(23,59);
+            yield MenuItem::linkToCrud('Pendientes', 'fas fa-hourglass-start', Appointment::class)
+                ->setQueryParameter('filters', array(
+                    'status' => array(
+                        'comparison' => ComparisonType::EQ,
+                        'value' => Appointment::STATUS_PENDING,
+                    ),
+                    'bookingDateAt' => array(
+                        'comparison' => ComparisonType::BETWEEN,
+                        'value' => sprintf(
+                            '%sT%s', $startDate->format('Y-m-d'), $startDate->format('H:i')
+                        ),
+                        'value2' => sprintf(
+                            '%sT%s', $endDate->format('Y-m-d'), $endDate->format('H:i')
+                        ),
+                    )
+                ));
             yield MenuItem::section('Config. Usuarios', 'fas fa-cog');
             yield MenuItem::linkToCrud('Usuarios', 'fas fa-user', User::class);
         endif;
