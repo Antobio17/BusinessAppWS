@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\SocialImage;
 use App\Entity\User;
 use RuntimeException;
 use App\Entity\Shift;
@@ -85,7 +86,7 @@ class DashboardController extends AbstractDashboardController implements Dashboa
             yield MenuItem::linkToCrud('Negocios', 'fas fa-briefcase', Business::class);
             yield MenuItem::linkToCrud('Turnos', 'fas fa-clock', Shift::class);
             yield MenuItem::linkToCrud('Home', 'fas fa-home', HomeConfig::class);
-            yield MenuItem::linkToCrud('Red Social', 'fas fa-camera', Image::class);
+            yield MenuItem::linkToCrud('Red Social', 'fas fa-camera', SocialImage::class);
             yield MenuItem::section('Config. Usuarios', 'fas fa-cog');
             yield MenuItem::linkToCrud('Usuarios', 'fas fa-user', User::class);
         endif;

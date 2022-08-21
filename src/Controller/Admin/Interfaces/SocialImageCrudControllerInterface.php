@@ -8,7 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 /**
  * ImageCrudControllerInterface
  */
-interface ImageCrudControllerInterface
+interface SocialImageCrudControllerInterface
 {
 
     /************************************************** ROUTING ***************************************************/

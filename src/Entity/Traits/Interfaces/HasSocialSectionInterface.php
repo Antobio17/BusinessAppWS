@@ -2,7 +2,7 @@
 
 namespace App\Entity\Traits\Interfaces;
 
-use App\Entity\Image;
+use App\Entity\SocialImage;
 use Doctrine\Common\Collections\Collection;
 
 /**
@@ -16,18 +16,18 @@ interface HasSocialSectionInterface
     /**
      * Gets the SocialData property of the Entity.
      *
-     * @return Image[]|Collection Image[]|Collection
+     * @return SocialImage[]|Collection SocialImage[]|Collection
      */
     public function getSocialImages(): Collection;
 
     /**
      * Add an image to property collection of the Entity.
      *
-     * @param Image $socialImage The image to set.
+     * @param SocialImage $socialImage The image to set.
      *
      * @return $this $this
      */
-    public function addSocialImage(Image $socialImage): self;
+    public function addSocialImage(SocialImage $socialImage): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 

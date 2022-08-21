@@ -3,25 +3,26 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-use App\Entity\Image;
+use App\Entity\SocialImage;
 use App\Service\BusinessService;
 use App\Service\Traits\BusinessServiceTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use App\Controller\Admin\Interfaces\ImageCrudControllerInterface;
+use App\Controller\Admin\Interfaces\SocialImageCrudControllerInterface;
 
-class ImageCrudController extends AbstractCrudController implements ImageCrudControllerInterface
+class SocialImageCrudController extends AbstractCrudController implements SocialImageCrudControllerInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
@@ -33,7 +34,7 @@ class ImageCrudController extends AbstractCrudController implements ImageCrudCon
     /************************************************* CONSTRUCT **************************************************/
 
     /**
-     * ImageCrudController construct
+     * SocialImageCrudController construct
      *
      * @param EntityRepository $entityRepository EntityRepository to override the query builds.
      */
@@ -81,7 +82,6 @@ class ImageCrudController extends AbstractCrudController implements ImageCrudCon
         /** @noinspection PhpUndefinedMethodInspection */
         return array(
             FormField::addPanel('Información General'),
-            IdField::new('id')->hideOnForm(),
             TextField::new('name', 'Imagen')->hideOnForm(),
             ImageField::new('name', 'Imagen')
                 ->setUploadDir('public/images/')
@@ -146,9 +146,9 @@ class ImageCrudController extends AbstractCrudController implements ImageCrudCon
 
     /**
      * @param string $entityFqcn
-     * @return Image Image
+     * @return SocialImage SocialImage
      */
-    public function createEntity(string $entityFqcn): Image
+    public function createEntity(string $entityFqcn): SocialImage
     {
         /** @noinspection PhpUndefinedMethodInspection */
         $business = $this->getUser()->getBusiness();
@@ -159,7 +159,7 @@ class ImageCrudController extends AbstractCrudController implements ImageCrudCon
 
         $homeConfig = $this->getBusinessService()->getHomeConfigRepository()->findByBusiness($business);
 
-        return new Image($homeConfig, '', 300, 300, '');
+        return new SocialImage($homeConfig, '', 300, 300, '');
     }
 
     /*********************************************** STATIC METHODS ***********************************************/
@@ -170,7 +170,7 @@ class ImageCrudController extends AbstractCrudController implements ImageCrudCon
      */
     public static function getEntityFqcn(): string
     {
-        return Image::class;
+        return SocialImage::class;
     }
 
 }

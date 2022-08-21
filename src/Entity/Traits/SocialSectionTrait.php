@@ -2,10 +2,10 @@
 
 namespace App\Entity\Traits;
 
-use App\Entity\Image;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Entity\SocialImage;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Entity\Traits\Interfaces\HasSocialSectionInterface;
 
 /**
@@ -21,7 +21,7 @@ trait SocialSectionTrait
     /**
      * One Business has many shifts.
      *
-     * @OneToMany(targetEntity="Image", mappedBy="homeConfig", cascade={"all"})
+     * @OneToMany(targetEntity="SocialImage", mappedBy="homeConfig", cascade={"all"})
      */
     protected Collection $socialImages;
 
@@ -29,7 +29,7 @@ trait SocialSectionTrait
 
     /**
      * @inheritDoc
-     * @return Image[]|Collection Image[]|Collection
+     * @return SocialImage[]|Collection SocialImage[]|Collection
      */
     public function getSocialImages(): Collection
     {
@@ -40,7 +40,7 @@ trait SocialSectionTrait
      * @inheritDoc
      * @return $this $this
      */
-    public function addSocialImage(Image $socialData): self
+    public function addSocialImage(SocialImage $socialData): self
     {
         $this->socialImages->add($socialData);
 

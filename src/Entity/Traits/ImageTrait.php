@@ -1,29 +1,44 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Traits;
 
-use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\ImageTrait;
-use Doctrine\ORM\Mapping\ManyToOne;
+use App\Entity\Traits\AltTrait;
+use App\Entity\Traits\NameTrait;
+use App\Entity\Traits\WidthTrait;
+use App\Entity\Traits\HeightTrait;
 use App\Repository\ImageRepository;
-use Doctrine\ORM\Mapping\JoinColumn;
-use App\Entity\Interfaces\ImageInterface;
+use App\Entity\Traits\Interfaces\HasImageInterface;
 
 /**
- * Image entity.
+ * Image trait.
  *
- * @ORM\Entity(repositoryClass=ImageRepository::class)
+ * @see HasImageInterface
  */
-class Image extends AbstractORM implements ImageInterface
+trait ImageTrait
 {
 
     /************************************************* CONSTANTS **************************************************/
 
     /************************************************* PROPERTIES *************************************************/
 
-    use ImageTrait {
-        ImageTrait::__construct as protected __imageConstruct;
-        ImageTrait::__toArray as protected __imageToArray;
+    use NameTrait {
+        NameTrait::__construct as protected __nameConstruct;
+        NameTrait::__toArray as protected __nameToArray;
+    }
+
+    use WidthTrait {
+        WidthTrait::__construct as protected __widthConstruct;
+        WidthTrait::__toArray as protected __widthToArray;
+    }
+
+    use HeightTrait {
+        HeightTrait::__construct as protected __heightConstruct;
+        HeightTrait::__toArray as protected __heightToArray;
+    }
+
+    use AltTrait {
+        AltTrait::__construct as protected __altConstruct;
+        AltTrait::__toArray as protected __altToArray;
     }
 
     /************************************************* CONSTRUCT **************************************************/
@@ -38,7 +53,10 @@ class Image extends AbstractORM implements ImageInterface
      */
     public function __construct(string $name, int $width, int $height, string $alt)
     {
-        $this->__imageConstruct($name, $width, $height, $alt);
+        $this->__nameConstruct($name);
+        $this->__widthConstruct($width);
+        $this->__heightConstruct($height);
+        $this->__altConstruct($alt);
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -53,8 +71,22 @@ class Image extends AbstractORM implements ImageInterface
     {
         return array_merge(
             parent::__toArray(),
-            $this->__imageToArray(),
+            array(
+                $this->__nameToArray(),
+                $this->__widthToArray(),
+                $this->__heightToArray(),
+                $this->__altToArray(),
+            ),
         );
+    }
+
+    /**
+     * @inheritDoc
+     * @return string string
+     */
+    public function __toString(): string
+    {
+        return $this->getName();
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
