@@ -2,11 +2,11 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Image;
 use App\Entity\User;
 use App\Entity\SocialImage;
 use App\Service\BusinessService;
 use App\Service\Traits\BusinessServiceTrait;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -18,11 +18,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use App\Entity\BusinessService as BusinessServiceEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use App\Controller\Admin\Interfaces\SocialImageCrudControllerInterface;
+use App\Controller\Admin\Interfaces\BusinessServiceCrudControllerInterface;
 
-class SocialImageCrudController extends AbstractCrudController implements SocialImageCrudControllerInterface
+class BusinessServiceCrudController extends AbstractCrudController implements BusinessServiceCrudControllerInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
@@ -58,18 +60,19 @@ class SocialImageCrudController extends AbstractCrudController implements Social
     public function configureCrud(Crud $crud): Crud
     {
         return parent::configureCrud($crud)
-            ->setEntityLabelInSingular('Imagen de Red Social')
-            ->setEntityLabelInPlural('Imágenes de Red Social')
-            ->setSearchFields(array('name', 'alt'))
-            ->setPageTitle(Crud::PAGE_NEW, 'Nueva Imagen')
+            ->setEntityLabelInSingular('Servicio de Negocio')
+            ->setEntityLabelInPlural('Servicios de Negocio')
+            ->setSearchFields(array('name', 'description'))
+            ->setPageTitle(Crud::PAGE_NEW, 'Nuevo Servicio')
             ->setHelp(
                 Crud::PAGE_NEW,
-                'En esta vista podrás crear una nueva imagen para la sección de Red Social de tu negocio.'
+                'En esta vista podrás crear un nuevo servicio para la sección de Servicios ofrecidos 
+                de tu negocio.'
             )
-            ->setPageTitle(Crud::PAGE_EDIT, 'Editar Imagen')
+            ->setPageTitle(Crud::PAGE_EDIT, 'Editar Servicio')
             ->setHelp(
                 Crud::PAGE_EDIT,
-                'En esta vista podrás editar la imagen seleccionada.'
+                'En esta vista podrás editar el servicio seleccionada.'
             );
     }
 
@@ -83,8 +86,11 @@ class SocialImageCrudController extends AbstractCrudController implements Social
         return array(
             FormField::addPanel('Información General'),
             IdField::new('id')->hideOnForm(),
-            TextField::new('name', 'Imagen')->hideOnForm(),
-            ImageField::new('name', 'Imagen')
+            TextField::new('name', 'Título'),
+            TextareaField::new('description', 'Descripción'),
+            FormField::addPanel('Icono del servicio'),
+            TextField::new('image.name', 'Imagen')->onlyOnIndex(),
+            ImageField::new('image.name', 'Imagen')
                 ->setUploadDir('public/images/')
                 ->onlyOnForms()
                 ->setUploadedFileNamePattern(
@@ -94,13 +100,15 @@ class SocialImageCrudController extends AbstractCrudController implements Social
                         $file->getClientOriginalName()
                     )
                 ),
-            IntegerField::new('width', 'Anchura (px)')
+            IntegerField::new('image.width', 'Anchura (px)')
                 ->setDisabled(TRUE)
+                ->onlyOnForms()
                 ->setHelp('*  Anchura de la imagen en píxeles'),
-            IntegerField::new('height', 'Altura  (px)')
+            IntegerField::new('image.height', 'Altura  (px)')
                 ->setDisabled(TRUE)
+                ->onlyOnForms()
                 ->setHelp('*  Altura de la imagen en píxeles'),
-            TextField::new('alt', 'Alt')
+            TextField::new('image.alt', 'Alt')
                 ->setHelp('*  Propiedad HTML alt de la imagen'),
             AssociationField::new('homeConfig', 'Configuración de Home')
                 ->setDisabled(
@@ -117,8 +125,8 @@ class SocialImageCrudController extends AbstractCrudController implements Social
     public function configureFilters(Filters $filters): Filters
     {
         return parent::configureFilters($filters)
-            ->add(TextFilter::new('name', 'Imagen'))
-            ->add(TextFilter::new('alt', 'Alt'));
+            ->add(TextFilter::new('name', 'Título'))
+            ->add(TextFilter::new('description', 'Descripción'));
     }
 
     /**
@@ -141,15 +149,15 @@ class SocialImageCrudController extends AbstractCrudController implements Social
             ->disable('detail')
             # PAGE_INDEX
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
-                return $action->setLabel('Nueva Imagen');
+                return $action->setLabel('Nuevo Servicio');
             });
     }
 
     /**
      * @param string $entityFqcn
-     * @return SocialImage SocialImage
+     * @return BusinessServiceEntity BusinessServiceEntity
      */
-    public function createEntity(string $entityFqcn): SocialImage
+    public function createEntity(string $entityFqcn): BusinessServiceEntity
     {
         /** @noinspection PhpUndefinedMethodInspection */
         $business = $this->getUser()->getBusiness();
@@ -160,7 +168,9 @@ class SocialImageCrudController extends AbstractCrudController implements Social
 
         $homeConfig = $this->getBusinessService()->getHomeConfigRepository()->findByBusiness($business);
 
-        return new SocialImage($homeConfig, '', 300, 300, '');
+        return new BusinessServiceEntity(
+            $homeConfig, new Image('', 60, 60, ''), '', ''
+        );
     }
 
     /*********************************************** STATIC METHODS ***********************************************/
@@ -171,7 +181,7 @@ class SocialImageCrudController extends AbstractCrudController implements Social
      */
     public static function getEntityFqcn(): string
     {
-        return SocialImage::class;
+        return BusinessServiceEntity::class;
     }
 
 }

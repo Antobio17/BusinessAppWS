@@ -2,8 +2,12 @@
 
 namespace App\Entity\Traits;
 
+use App\Entity\BusinessService;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\Interfaces\HasServicesSectionInterface;
+use Doctrine\ORM\Mapping\OneToMany;
 
 /**
  * Trait to implement ServicesSectionTrait property.
@@ -16,28 +20,30 @@ trait ServicesSectionTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="text")
+     * One Business has many shifts.
+     *
+     * @OneToMany(targetEntity="App\Entity\BusinessService", mappedBy="homeConfig", cascade={"all"})
      */
-    protected string $servicesData;
+    protected Collection $businessServices;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return string string
+     * @return BusinessService[]|Collection BusinessService[]|Collection
      */
-    public function getServicesData(): array
+    public function getBusinessServices(): Collection
     {
-        return json_decode($this->servicesData, TRUE);
+        return $this->businessServices;
     }
 
     /**
      * @inheritDoc
      * @return $this $this
      */
-    public function setServicesData(array $data): self
+    public function addBusinessService(BusinessService $businessServices): self
     {
-        $this->servicesData = json_encode($data);
+        $this->businessServices->add($businessServices);
 
         return $this;
     }
@@ -47,11 +53,10 @@ trait ServicesSectionTrait
     /**
      *  ServicesSectionTrait constructor.
      *
-     * @param array $servicesData Data related to the services section.
      */
-    public function __construct(array $servicesData)
+    public function __construct()
     {
-        $this->setServicesData($servicesData ?? array());
+        $this->businessServices = new ArrayCollection();
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/
@@ -60,10 +65,23 @@ trait ServicesSectionTrait
      * @inheritDoc
      * @return array array
      */
+    public function getBusinessServicesAsArray(): array
+    {
+        foreach ($this->getBusinessServices() as $service):
+            $businessServices[] = $service->__toArray();
+        endforeach;
+
+        return $businessServices ?? array();
+    }
+
+    /**
+     * @inheritDoc
+     * @return array array
+     */
     public function __toArray(): array
     {
         return array(
-            'servicesData' => $this->getServicesData(),
+            $this->getBusinessServicesAsArray(),
         );
     }
 

@@ -14,7 +14,7 @@ interface HasSocialSectionInterface
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
-     * Gets the SocialData property of the Entity.
+     * Gets the social images collection of the Entity.
      *
      * @return SocialImage[]|Collection SocialImage[]|Collection
      */

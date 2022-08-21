@@ -5,9 +5,9 @@ namespace App\Entity\Interfaces;
 use App\Entity\Traits\Interfaces\HasImageInterface;
 
 /**
- * SocialImage interface.
+ * BusinessService interface.
  */
-interface SocialImageInterface extends HasImageInterface
+interface BusinessServiceInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -27,6 +27,22 @@ interface SocialImageInterface extends HasImageInterface
      * @return $this $this
      */
     public function setHomeConfig(HomeConfigInterface $homeConfig): self;
+
+    /**
+     * Gets the Title property.
+     *
+     * @return string string
+     */
+    public function getTitle(): string;
+
+    /**
+     * Sets the Title property.
+     *
+     * @param string $title The title to be set.
+     *
+     * @return $this $this
+     */
+    public function setTitle(string $title): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 

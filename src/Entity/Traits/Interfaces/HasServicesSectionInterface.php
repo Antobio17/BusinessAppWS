@@ -2,6 +2,9 @@
 
 namespace App\Entity\Traits\Interfaces;
 
+use App\Entity\BusinessService;
+use Doctrine\Common\Collections\Collection;
+
 /**
  * ServicesSectionTrait interface
  */
@@ -11,28 +14,35 @@ interface HasServicesSectionInterface
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
-     * Gets the ServicesData property of the Entity.
+     * Gets the business services' collection of the Entity.
      *
-     * @return array array
+     * @return BusinessService[]|Collection BusinessService[]|Collection
      */
-    public function getServicesData(): array;
+    public function getBusinessServices(): Collection;
 
     /**
-     * Sets the ServicesData property of the Entity.
+     * Add a service to property collection of the Entity.
      *
-     * @param array $servicesData ServicesData of the Entity to set.
+     * @param BusinessService $businessServices The image to set.
      *
      * @return $this $this
      */
-    public function setServicesData(array $servicesData): self;
+    public function addBusinessService(BusinessService $businessServices): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
+
+    /**
+     * Gets the business services as an array.
+     *
+     * @return array array
+     */
+    public function getBusinessServicesAsArray(): array;
 
     /**
      * ToArray function of the property.
      *
      *      Returns array(
-     *          'servicesData' => $this->getSectionData()
+     *          'businessServices' => $this->getSectionData()
      *      )
      *
      * @return array array

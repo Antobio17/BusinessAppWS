@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Interfaces\BusinessContextInterface;
 use App\Entity\Interfaces\BusinessInterface;
 use App\Entity\Interfaces\PostalAddressInterface;
 use App\Entity\Traits\BusinessNullableTrait;
@@ -19,7 +18,6 @@ use App\Repository\UserRepository;
 use App\Entity\Traits\SurnameTrait;
 use App\Entity\Traits\PasswordTrait;
 use App\Entity\Traits\PhoneNumberTrait;
-use App\Entity\Traits\PostalAddressTrait;
 use Doctrine\ORM\Mapping\AttributeOverride;
 use Doctrine\ORM\Mapping\AttributeOverrides;
 use App\Entity\Traits\Interfaces\HasNameInterface;
