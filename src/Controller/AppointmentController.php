@@ -18,6 +18,7 @@ class AppointmentController extends AppController implements AppointmentControll
 
     public const REQUEST_FIELD_BOOKING_DATE_AT = 'bookingDateAt';
     public const REQUEST_FIELD_USER_EMAIL = 'userEmail';
+    public const REQUEST_FIELD_PHONE_NUMBER = 'phoneNumber';
 
     /************************************************* PROPERTIES *************************************************/
 
@@ -133,7 +134,7 @@ class AppointmentController extends AppController implements AppointmentControll
     {
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
         $bookingDateAt = $this->getParamFromRequest($request, static::REQUEST_FIELD_BOOKING_DATE_AT);
-        $userEmail = $this->getParamFromRequest($request, static::REQUEST_FIELD_USER_EMAIL);
+        $phoneNumber = $this->getParamFromRequest($request, static::REQUEST_FIELD_PHONE_NUMBER);
 
         # Data Validation
         $validationErrors = $this->validateRequestDateFields(array(
@@ -144,7 +145,7 @@ class AppointmentController extends AppController implements AppointmentControll
         if (empty($validationErrors)):
             if ($this->getAppointmentService()->setBusinessContext($domain)):
                 $bookingDateAt = date_create()->setTimestamp($bookingDateAt);
-                $appointment = $this->getAppointmentService()->bookUserAppointment($bookingDateAt, $userEmail);
+                $appointment = $this->getAppointmentService()->bookUserAppointment($bookingDateAt, $phoneNumber);
             endif;
         endif;
 

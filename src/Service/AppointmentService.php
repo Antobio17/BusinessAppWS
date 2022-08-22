@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Interfaces\AppointmentInterface;
+use App\Service\Traits\UserServiceTrait;
 use Exception;
 use DateTime;
 use DateInterval;
@@ -21,6 +22,8 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
 
     /************************************************* PROPERTIES *************************************************/
 
+    use UserServiceTrait;
+
     /************************************************* CONSTRUCT **************************************************/
 
     /**
@@ -31,9 +34,12 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
      * @param bool $testMode Boolean to set the Test Mode.
      *
      */
-    public function __construct(ManagerRegistry $doctrine, TelegramService $telegramService, bool $testMode = FALSE)
+    public function __construct(ManagerRegistry $doctrine, TelegramService $telegramService,
+                                UserService     $userService, bool $testMode = FALSE)
     {
         parent::__construct($doctrine, $telegramService, $testMode);
+
+        $this->setUserService($userService);
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -102,14 +108,14 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
      * @inheritDoc
      * @return Appointment|null Appointment|null
      */
-    public function bookUserAppointment(DateTime $bookingDateAt, ?string $userEmail = NULL): ?Appointment
+    public function bookUserAppointment(DateTime $bookingDateAt, ?string $phoneNumber = NULL): ?Appointment
     {
         $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
         $user = NULL;
         $worker = NULL;
 
         # User validation
-        $this->_validateUsersForBookAppointment($user, $worker, $userEmail);
+        $this->_validateUsersForBookAppointment($user, $worker, $phoneNumber);
 
         $appointment = NULL;
         if ($user !== NULL && empty($this->getErrors())):
@@ -128,7 +134,9 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
                     AppError::ERROR_APPOINTMENT_BOOK_ERROR,
                     'Error al intentar reservar la cita: no se puede reservar una cita anterior a la actual',
                 );
-            elseif (($worker = $this->_getAvailableWorker($bookingDateAt, $worker)) === NULL):
+            elseif (($worker = $this->_getAvailableWorker($bookingDateAt)) === NULL):
+                # We could pass a worker to _getAvailableWorker if we want to book the appointment for the specific
+                # worker
                 $this->registerAppError(
                     $method,
                     AppError::ERROR_APPOINTMENT_BOOK_ERROR,
@@ -226,22 +234,30 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
      *
      * @param UserInterface|null $user The client of the appointment.
      * @param UserInterface|null $worker The worker of the appointment.
-     * @param string|null $userEmail User's email in case the management is made by the worker.
+     * @param string|null $phoneNumber User's email in case the management is made by the worker.
      */
-    protected function _validateUsersForBookAppointment(?UserInterface &$user, ?UserInterface &$worker, ?string $userEmail)
+    protected function _validateUsersForBookAppointment(?UserInterface &$user, ?UserInterface &$worker,
+                                                        ?string        $phoneNumber)
     {
         $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
 
-        if (in_array(User::ROLE_WORKER, $this->getUser()->getRoles()) && $userEmail !== NULL):
+        $skipCheck = FALSE;
+        $business = $this->getBusiness();
+        if (in_array(User::ROLE_WORKER, $this->getUser()->getRoles()) && $phoneNumber !== NULL):
             $worker = $this->getUser();
-            $user = $this->getUserRepository()->findByEmail($this->getBusiness(), $userEmail);
+            $user = $this->getUserRepository()->findByPhoneNumber($business, $phoneNumber);
+
             if ($user === NULL):
-                $this->registerAppError(
-                    $method,
-                    AppError::ERROR_APPOINTMENT_BOOK_USER_UNDEFINED,
-                    'Error al intentar reservar una cita por trabajador: el email introducido no pertenece a ningún usuario'
+                $password = ToolsHelper::randStr(20);
+                $user = new User(
+                    $business, NULL, $password, $phoneNumber, 'Usuario', 'Sin Email'
                 );
+                $encodedPassword = $this->getUserService()->getUserPasswordHasher()->hashPassword($user, $password);
+                $user->setPassword($encodedPassword);
+                $user = $this->persistAndFlush($user) ? $user : NULL;
             endif;
+
+            $skipCheck = $user !== NULL;
         elseif (in_array(User::ROLE_WORKER, $this->getUser()->getRoles())):
             $this->registerAppError(
                 $method,
@@ -252,18 +268,16 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
             $user = $this->getUser();
         endif;
 
-        if ($user !== NULL):
-            if (
-                !empty($this->getAppointmentRepository()->findByStatus(
-                    $this->getBusiness(), Appointment::STATUS_PENDING, $user
-                ))
-            ):
-                $this->registerAppError(
-                    $method,
-                    AppError::ERROR_APPOINTMENT_BOOK_ALREADY_EXIST,
-                    'Error al intentar reservar una cita: ya existe una cita pendiente para el usuario'
-                );
-            endif;
+        if (
+            !$skipCheck && $user !== NULL && !empty($this->getAppointmentRepository()->findByStatus(
+                $business, Appointment::STATUS_PENDING, $user
+            ))
+        ):
+            $this->registerAppError(
+                $method,
+                AppError::ERROR_APPOINTMENT_BOOK_ALREADY_EXIST,
+                'Error al intentar reservar una cita: ya existe una cita pendiente para el usuario'
+            );
         endif;
     }
 
