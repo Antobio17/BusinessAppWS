@@ -37,11 +37,11 @@ interface AppointmentServiceInterface extends AppServiceInterface
      * Book a user's appointment if it is a valid date for the reservation.
      *
      * @param DateTime $bookingDateAt The dato of the book.
-     * @param string|null $userEmail User's email in case the reservation is made by the worker.
+     * @param string|null $phoneNumber User's email in case the reservation is made by the worker.
      *
      * @return Appointment|null Appointment|null
      */
-    public function bookUserAppointment(DateTime $bookingDateAt, ?string $userEmail = NULL): ?Appointment;
+    public function bookUserAppointment(DateTime $bookingDateAt, ?string $phoneNumber = NULL): ?Appointment;
 
     /**
      * Cancel a user's book appointment in case the user have one.
