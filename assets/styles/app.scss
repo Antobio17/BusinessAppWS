@@ -6,6 +6,17 @@ body {
   height: 100%;
 }
 
+/** INDEX **/
+.page-welcome {
+  .sub-title {
+    color: #b1b1b1 !important;
+  }
+
+  .section-info {
+    margin: 50px 0;
+  }
+}
+
 /** LOGIN **/
 .page-login {
   width: 100%;

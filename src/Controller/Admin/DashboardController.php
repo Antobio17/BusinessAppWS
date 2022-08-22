@@ -41,7 +41,18 @@ class DashboardController extends AbstractDashboardController implements Dashboa
      */
     public function index(): Response
     {
-        return parent::index();
+        if (
+            $this->getUser() === NULL || (
+                !in_array(User::ROLE_WORKER, $this->getUser()->getRoles())
+                && !in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())
+            )
+        ):
+            $response = $this->redirectToRoute('login');
+        else:
+            $response = $this->render('admin/index.html.twig');
+        endif;
+
+        return $response;
     }
 
     /**
@@ -56,7 +67,7 @@ class DashboardController extends AbstractDashboardController implements Dashboa
     }
 
     /**
-     * @Route("/{_locale}/logout", name="logout")
+     * @Route("/logout", name="logout")
      *
      * @inheritDoc
      * @return Response Response
@@ -99,8 +110,8 @@ class DashboardController extends AbstractDashboardController implements Dashboa
             yield MenuItem::linkToCrud('Productos', 'fas fa-shopping-bag', Product::class);
             yield MenuItem::section('Config. Citas', 'fas fa-cog');
             yield MenuItem::linkToCrud('Citas', 'fas fa-calendar-alt', Appointment::class);
-            $startDate = date_create()->setTime(0,0);
-            $endDate = date_create()->setTime(23,59);
+            $startDate = date_create()->setTime(0, 0);
+            $endDate = date_create()->setTime(23, 59);
             yield MenuItem::linkToCrud('Pendientes', 'fas fa-hourglass-start', Appointment::class)
                 ->setQueryParameter('filters', array(
                     'status' => array(

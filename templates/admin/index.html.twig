@@ -1,0 +1,62 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block body_class parent() ~ ' page-welcome' %}
+
+{# {% block configured_stylesheets %} #}
+{# {{ include('@EasyAdmin/includes/_css_assets.html.twig', { assets: ea.assets.cssAssets ?? [] }, with_context = false) }} #}
+{# {{ encore_entry_link_tags('app') }} #}
+{# {% endblock %} #}
+
+{% block content_title %}
+    ¡Bienvenido a Business App!
+{% endblock content_title %}
+
+{% block main %}
+    <h5 class="text-muted">Tu panel de control para la gestión de tu negocio de una manera rápida y cómoda.</h5>
+
+    <section class="mt-5 mb-5">
+        <h5>Configura tu negocio desde las diferentes secciones del panel:</h5>
+        <div class="row">
+            <fieldset class="col-12 col-md-5 p-5 m-1">
+                <legend><i class="menu-icon fa-fw fas fa-briefcase"></i> Configuración de negocio</legend>
+                <p class="mb-0">
+                    En esta sección encontrarás todo lo referente a la configuración general del negocio y su
+                    página de Home en la Web. Podrás:
+                </p>
+                <ul>
+                    <li>
+                        Configurar la información principal del negocio (número de teléfono,
+                        email de contacto, nombre, etc).
+                    </li>
+                    <li>
+                        Crear los turnos para los horarios de trabajo establecidos.
+                    </li>
+                    <li>
+                        Configurar las diferentes secciones del Home de la Web con las imágenes y textos que desees.
+                    </li>
+                </ul>
+            </fieldset>
+            <fieldset class="col-12 col-md-5 p-5 m-1">
+                <legend><i class="menu-icon fa-fw fas fa-shopping-bag"></i> Configuración de Tienda</legend>
+                <p class="mb-0">
+                    En esta sección podrás crear categorías de productos para tu negocio como los productos en si.
+                    Además podrás ver, editar, eliminar y crear nuevos cada vez que lo necesites.
+                </p>
+            </fieldset>
+            <fieldset class="col-12 col-md-5 p-5 m-1">
+                <legend><i class="menu-icon fa-fw fas fa-calendar-alt"></i> Configuración de Citas</legend>
+                <p class="mb-0">
+                    En esta sección podrás ver todo el historial de citas de tu negocio, así como las citas pendientes
+                    del día actual para facilitar el marcado de estas como finalizadas.
+                </p>
+            </fieldset>
+            <fieldset class="col-12 col-md-5 p-5 m-1">
+                <legend><i class="menu-icon fa-fw fas fa-shopping-cart"></i> Configuración de Pedidos</legend>
+                <p class="mb-0">
+                    En esta sección podrás ver todo el historial de pedidos de tu negocio, así como los pedidos
+                    pendientes de preparación o de envío para facilitar la gestión de los mismos.
+                </p>
+            </fieldset>
+        </div>
+    </section>
+{% endblock %}
