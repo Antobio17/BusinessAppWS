@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\AbstractORM;
 use App\Entity\User;
+use App\Helper\ToolsHelper;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\NonUniqueResultException;
@@ -90,6 +92,34 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('isWorker', $isWorker)
             ->getQuery()
             ->execute();
+    }
+
+    /**
+     * Finds the user of the business specified.
+     *
+     * @param BusinessInterface $business Business to which the user belongs.
+     * @param string $phoneNumber Boolean to get only the workers of the business.
+     *
+     * @return UserInterface|null UserInterface|null
+     */
+    public function findByPhoneNumber(BusinessInterface $business, string $phoneNumber): ?UserInterface
+    {
+        $alias = 'use';
+
+        $phoneNumber = ToolsHelper::encrypt($phoneNumber, getenv(AbstractORM::SECRET_ENCRYPTION_TOKEN));
+        try {
+            $user = $this->createQueryBuilder($alias)
+                ->andWhere(sprintf('%s.business = :business', $alias))
+                ->setParameter('business', $business)
+                ->andWhere(sprintf('%s.email IS NULL', $alias))
+                ->andWhere($alias . '.phoneNumber = :phoneNumber')
+                ->setParameter('phoneNumber', $phoneNumber)
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+        }
+
+        return $user ?? NULL;
     }
 
 }

@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\AppError;
+use App\Entity\User;
 use App\Helper\ToolsHelper;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Service\Interfaces\BusinessServiceInterface;
@@ -100,6 +101,8 @@ class BusinessService extends AppService implements BusinessServiceInterface
                 'shifts' => $business->getShiftsAsArray(),
                 'appointmentDuration' => $business->getAppointmentDuration(),
                 'numWorkers' => count($workers),
+                'isWorker' =>
+                    $this->getUser() !== NULL && in_array(User::ROLE_WORKER, $this->getUser()->getRoles())
             );
         endif;
 

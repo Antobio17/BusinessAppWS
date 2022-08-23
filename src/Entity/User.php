@@ -6,6 +6,8 @@ use App\Entity\Interfaces\BusinessInterface;
 use App\Entity\Interfaces\PostalAddressInterface;
 use App\Entity\Traits\BusinessNullableTrait;
 use App\Entity\Traits\Interfaces\HasBusinessNullableInterface;
+use App\Entity\Traits\EmailNullableTrait;
+use App\Entity\Traits\Interfaces\HasEmailNullableInterface;
 use App\Entity\Traits\Interfaces\HasIsWorkerInterface;
 use App\Entity\Traits\IsWorkerTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,7 +15,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use App\Entity\Traits\NameTrait;
-use App\Entity\Traits\EmailTrait;
 use App\Repository\UserRepository;
 use App\Entity\Traits\SurnameTrait;
 use App\Entity\Traits\PasswordTrait;
@@ -21,7 +22,6 @@ use App\Entity\Traits\PhoneNumberTrait;
 use Doctrine\ORM\Mapping\AttributeOverride;
 use Doctrine\ORM\Mapping\AttributeOverrides;
 use App\Entity\Traits\Interfaces\HasNameInterface;
-use App\Entity\Traits\Interfaces\HasEmailInterface;
 use App\Entity\Traits\Interfaces\HasSurnameInterface;
 use App\Entity\Traits\Interfaces\HasPasswordInterface;
 use Doctrine\ORM\Mapping\JoinTable;
@@ -31,12 +31,21 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\Table(name="user", uniqueConstraints={
+ *      @ORM\UniqueConstraint(name="identifying_tuple", columns={"email", "phone_number", "business_id"})
+ * })
  * @AttributeOverrides({
  *      @AttributeOverride(name="email",
  *          column=@Column(
  *              name   = "email",
  *              unique = false,
- *              length = 1024
+ *              length = 1024,
+ *              nullable = true
+ *          )
+ *      ),
+ *     @AttributeOverride(name="phoneNumber",
+ *          column=@Column(
+ *              unique = false,
  *          )
  *      ),
  *     @AttributeOverride(name="name",
@@ -49,7 +58,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  * })
  */
 class User extends AbstractORM implements UserInterface, HasBusinessNullableInterface,
-    PasswordAuthenticatedUserInterface, HasEmailInterface, HasPasswordInterface, HasPhoneNumberInterface,
+    PasswordAuthenticatedUserInterface, HasEmailNullableInterface, HasPasswordInterface, HasPhoneNumberInterface,
     HasNameInterface, HasSurnameInterface, HasIsWorkerInterface
 {
 
@@ -66,9 +75,9 @@ class User extends AbstractORM implements UserInterface, HasBusinessNullableInte
         BusinessNullableTrait::__toArray as protected __businessToArray;
     }
 
-    use EmailTrait {
-        EmailTrait::__construct as protected __emailConstruct;
-        EmailTrait::__toArray as protected __emailToArray;
+    use EmailNullableTrait {
+        EmailNullableTrait::__construct as protected __emailConstruct;
+        EmailNullableTrait::__toArray as protected __emailToArray;
     }
 
     use PasswordTrait {
@@ -116,15 +125,15 @@ class User extends AbstractORM implements UserInterface, HasBusinessNullableInte
      * User Construct.
      *
      * @param BusinessInterface|null $business Business to which the user belongs.
-     * @param string $email The email of the new user.
+     * @param string|null $email The email of the new user.
      * @param string $password The password of the new user.
      * @param string $phoneNumber The phone number of the new user.
      * @param string $name The name of the new user.
      * @param string $surname The surname of the new user.
      * @param array $roles The roles of the new user.
-     *
+     * @param bool $isWorker If the user is a worker.
      */
-    public function __construct(?BusinessInterface $business, string $email, string $password, string $phoneNumber,
+    public function __construct(?BusinessInterface $business, ?string $email, string $password, string $phoneNumber,
                                 string             $name, string $surname, array $roles = array(),
                                 bool $isWorker = FALSE)
     {
@@ -183,7 +192,7 @@ class User extends AbstractORM implements UserInterface, HasBusinessNullableInte
      */
     public function getUserIdentifier(): string
     {
-        return $this->getEmail();
+        return $this->getEmail() ?? $this->getPhoneNumber();
     }
 
     /**
@@ -274,7 +283,7 @@ class User extends AbstractORM implements UserInterface, HasBusinessNullableInte
      */
     public function __toString(): string
     {
-        return $this->getEmail();
+        return $this->getEmail() ?? $this->getPhoneNumber();
     }
 
 }
