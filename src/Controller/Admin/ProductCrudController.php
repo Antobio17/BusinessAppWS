@@ -123,6 +123,7 @@ class ProductCrudController extends AbstractCrudController implements ProductCru
             ImageField::new('image.name', 'Imagen')->setBasePath('/images')->hideOnForm(),
             ImageField::new('image.name', 'Imagen')
                 ->setUploadDir('public/images/')
+                ->setRequired($pageName === Crud::PAGE_NEW)
                 ->onlyOnForms()
                 ->setUploadedFileNamePattern(
                     fn(UploadedFile $file): string => sprintf(
@@ -182,7 +183,7 @@ class ProductCrudController extends AbstractCrudController implements ProductCru
         return $actions
             # PAGE_INDEX
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
-                return $action->setLabel('Nueva Categoría');
+                return $action->setLabel('Nuevo Producto');
             });
     }
 

@@ -6,7 +6,6 @@ use App\Entity\User;
 use App\Entity\SocialImage;
 use App\Service\BusinessService;
 use App\Service\Traits\BusinessServiceTrait;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -85,6 +84,7 @@ class SocialImageCrudController extends AbstractCrudController implements Social
             ImageField::new('name', 'Imagen')->setBasePath('/images')->hideOnForm(),
             ImageField::new('name', 'Imagen')
                 ->setUploadDir('public/images/')
+                ->setRequired($pageName === Crud::PAGE_NEW)
                 ->onlyOnForms()
                 ->setUploadedFileNamePattern(
                     fn (UploadedFile $file): string => sprintf(

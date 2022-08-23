@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\Image;
 use App\Entity\User;
-use App\Entity\SocialImage;
 use App\Service\BusinessService;
 use App\Service\Traits\BusinessServiceTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -96,6 +95,7 @@ class BusinessServiceCrudController extends AbstractCrudController implements Bu
             ImageField::new('image.name', 'Imagen')->setBasePath('/images')->onlyOnIndex(),
             ImageField::new('image.name', 'Imagen')
                 ->setUploadDir('public/images/')
+                ->setRequired($pageName === Crud::PAGE_NEW)
                 ->onlyOnForms()
                 ->setUploadedFileNamePattern(
                     fn (UploadedFile $file): string => sprintf(

@@ -19,7 +19,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use App\Controller\Admin\Interfaces\HomeConfigCrudControllerInterface;
 
 class HomeConfigCrudController extends AbstractCrudController implements HomeConfigCrudControllerInterface
@@ -96,6 +95,7 @@ class HomeConfigCrudController extends AbstractCrudController implements HomeCon
             ImageField::new('image.name', 'Imagen')->setBasePath('/images')->onlyOnDetail(),
             ImageField::new('image.name', 'Imagen')
                 ->setUploadDir('public/images/')
+                ->setRequired($pageName === Crud::PAGE_NEW)
                 ->onlyOnForms()
                 ->setUploadedFileNamePattern(
                     fn(UploadedFile $file): string => sprintf(
