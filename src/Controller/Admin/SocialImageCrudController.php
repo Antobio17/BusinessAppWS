@@ -6,8 +6,13 @@ use App\Entity\User;
 use App\Entity\SocialImage;
 use App\Service\BusinessService;
 use App\Service\Traits\BusinessServiceTrait;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -49,6 +54,30 @@ class SocialImageCrudController extends AbstractCrudController implements Social
     /************************************************** ROUTING ***************************************************/
 
     /*********************************************** PUBLIC METHODS ***********************************************/
+
+    /**
+     * @inheritDoc
+     * @return QueryBuilder QueryBuilder
+     */
+    public function createIndexQueryBuilder(SearchDto        $searchDto, EntityDto $entityDto, FieldCollection $fields,
+                                            FilterCollection $filters): QueryBuilder
+    {
+        /** @noinspection DuplicatedCode */
+        if ($this->getUser() instanceof User && !in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())):
+            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+            $business = $this->getUser()->getBusiness();
+            $homeConfig = $this->getBusinessService()->getHomeConfigRepository()->findByBusiness($business);
+        endif;
+
+        $queryBuilder = $this->getEntityRepository()->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
+
+        if (isset($homeConfig)):
+            $queryBuilder->andWhere('entity.homeConfig = :homeConfig');
+            $queryBuilder->setParameter('homeConfig', $homeConfig->getID());
+        endif;
+
+        return $queryBuilder;
+    }
 
     /**
      * @inheritDoc

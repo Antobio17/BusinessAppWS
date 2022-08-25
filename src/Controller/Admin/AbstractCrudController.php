@@ -62,7 +62,7 @@ abstract class AbstractCrudController extends EAAbstractCrudController implement
                                             FilterCollection $filters): QueryBuilder
     {
         if ($this->getUser() instanceof User):
-            /** @noinspection PhpUndefinedMethodInspection */
+            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
             $business = $this->getUser()->getBusiness();
         endif;
 
