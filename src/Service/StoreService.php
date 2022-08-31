@@ -83,7 +83,10 @@ class StoreService extends AppService implements StoreServiceInterface
             endif;
 
             if (empty($this->getErrors())):
+                # TODO semaphore
+                $this->_checkProductAvailability($productsData, $method);
                 $order = new Order($this->getBusiness(), $user, $postalAddress, $UUID, $amount, $productsData);
+                # TODO end semaphore
                 $created = $this->persistAndFlush($order);
             endif;
         endif;
@@ -180,6 +183,53 @@ class StoreService extends AppService implements StoreServiceInterface
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
+
+    /**
+     * Checks the product availability in the business to create the order.
+     *
+     * @param array $productsData The products to check.
+     * @param string $method Method that call the function.
+     *
+     * @return bool bool
+     */
+    protected function _checkProductAvailability(array $productsData, string $method): bool
+    {
+        $available = TRUE;
+
+        foreach ($productsData as $productData):
+            $product = $this->getProductRepository()->find($productData['productID']);
+            if ($product === NULL):
+                $this->registerAppError(
+                    $method, AppError::ERROR_STORE_PRODUCT_NOT_EXIST,
+                    sprintf('Error: El producto %s no existe', $product['name'])
+                );
+                $available = FALSE;
+            elseif ($product->getStock() < $productData['number']):
+                if ($product->getStock() === 0):
+                    $message = sprintf('Error: No hay stock del producto %s', $product->getName());
+                else:
+                    $message = sprintf(
+                        'Error: Solo quedan %d existencias del producto %s',
+                        $product->getName(), $product->getStock()
+                    );
+                endif;
+
+                $this->registerAppError($method, AppError::ERROR_STORE_PRODUCT_NOT_EXIST, $message);
+                $available = FALSE;
+            else:
+                $product->setStock($product->getStock() - (int)$productData['number']);
+                $this->getEntityManager()->persist($product);
+            endif;
+        endforeach;
+
+        if ($available):
+            $this->getEntityManager()->flush();
+        else:
+            $this->getEntityManager()->clear();
+        endif;
+
+        return $available;
+    }
 
     /*********************************************** STATIC METHODS ***********************************************/
 

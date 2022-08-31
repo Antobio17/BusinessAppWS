@@ -120,6 +120,7 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
         $appointment = NULL;
         if ($user !== NULL && empty($this->getErrors())):
             # BookingDate validations
+            # TODO semaphore
             if (!$this->getBusiness()->checkHourInShifts(
                 (int)date('w', $bookingDateAt->getTimestamp()), $bookingDateAt->format('H:i:s')
             )):
@@ -153,6 +154,7 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
                 );
                 $this->persistAndFlush($appointment);
             endif;
+            # TODO end semaphore
         endif;
 
         return $appointment;

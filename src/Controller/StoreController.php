@@ -273,14 +273,14 @@ class StoreController extends AppController implements StoreControllerInterface
                         )
                     );
                 elseif (
-                    !isset($product[static::PRODUCT_DATA_KEY_ID])
-                    || !is_numeric($product[static::PRODUCT_DATA_KEY_ID])
+                    !isset($product[static::PRODUCT_DATA_KEY_NUMBER])
+                    || !is_numeric($product[static::PRODUCT_DATA_KEY_NUMBER])
                 ):
                     $validationErrors[] = array(
-                        'field' => static::PRODUCT_DATA_KEY_ID,
+                        'field' => static::PRODUCT_DATA_KEY_NUMBER,
                         'message' => sprintf(
                             'The data %s of the product is required and it must be an integer',
-                            static::PRODUCT_DATA_KEY_ID
+                            static::PRODUCT_DATA_KEY_NUMBER
                         )
                     );
                 endif;

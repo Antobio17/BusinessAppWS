@@ -189,7 +189,7 @@ class AppController extends AbstractController implements AppControllerInterface
             endif;
         else:
             $response['code'] = Response::HTTP_BAD_REQUEST;
-            $response['message'] = 'Validation failed';
+            $response['message'] = 'Error en la validación';
             $response['errors'] = $validationErrors;
         endif;
 
