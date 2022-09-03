@@ -62,8 +62,7 @@ class BusinessRepository extends AppRepository implements BusinessRepositoryInte
 
         try {
             $result = $this->createQueryBuilder($alias)
-                ->andWhere($alias . '.alias LIKE :domain')
-                ->setParameter('domain', $domain)
+                ->andWhere($alias . '.alias LIKE %' . $domain . '%')
                 ->orderBy($alias . '.id', 'ASC')
                 ->getQuery()
                 ->getOneOrNullResult();
