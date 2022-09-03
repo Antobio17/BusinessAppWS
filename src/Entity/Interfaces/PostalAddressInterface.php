@@ -22,6 +22,13 @@ interface PostalAddressInterface extends HasNameInterface, HasAddressInterface, 
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
+     * ToString function of the property.
+     *
+     * @return string string
+     */
+    public function __toString(): string;
+
+    /**
      * ToArray function of the property.
      *
      *      Returns array(

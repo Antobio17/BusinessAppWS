@@ -118,7 +118,7 @@ class CategoryCrudController extends AbstractCrudController implements CategoryC
         endif;
 
         return $actions
-            ->disable('detail')
+            ->disable('detail', 'delete')
             # PAGE_INDEX
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action->setLabel('Nueva Categoría');

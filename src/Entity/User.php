@@ -237,6 +237,20 @@ class User extends AbstractORM implements UserInterface, HasBusinessNullableInte
     }
 
     /**
+     * Remove a postal address from the user.
+     *
+     * @param PostalAddressInterface $postalAddress The postal address to remove.
+     *
+     * @return $this $this
+     */
+    public function removePostalAddress(PostalAddressInterface $postalAddress): self
+    {
+        $this->getPostalAddresses()->removeElement($postalAddress);
+
+        return $this;
+    }
+
+    /**
      * Checks if the ID of the postal address belongs to the user.
      *
      * @param int $postalAddressID ID os the postal address to check.

@@ -88,10 +88,6 @@ class PostalAddress extends AbstractORM implements PostalAddressInterface
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 
-    /********************************************** PROTECTED METHODS *********************************************/
-
-    /*********************************************** STATIC METHODS ***********************************************/
-
     /**
      * @inheritDoc
      * @return array array
@@ -109,5 +105,20 @@ class PostalAddress extends AbstractORM implements PostalAddressInterface
             $this->__stateToArray()
         );
     }
+
+    /**
+     * @inheritDoc
+     * @return string string
+     */
+    public function __toString(): string
+    {
+        return sprintf(
+            '(%s, %d, %s, %s)',
+            $this->getAddress(), $this->getPostalCode(), $this->getProvince(), $this->getState()
+        );
+    }
+    /********************************************** PROTECTED METHODS *********************************************/
+
+    /*********************************************** STATIC METHODS ***********************************************/
 
 }
