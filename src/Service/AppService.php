@@ -8,6 +8,8 @@ use App\Helper\ToolsHelper;
 use App\Service\Traits\BusinessTrait;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Interfaces\ORMInterface;
+use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\LockInterface;
 use App\Service\Traits\RepositoriesTrait;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Interfaces\AppErrorInterface;
@@ -19,6 +21,8 @@ class AppService extends AbstractController implements AppServiceInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
+
+    public const LOCK_PREFIX = 'lock';
 
     /************************************************* PROPERTIES *************************************************/
 
@@ -38,6 +42,11 @@ class AppService extends AbstractController implements AppServiceInterface
     protected TelegramServiceInterface $telegramService;
 
     /**
+     * @var LockFactory
+     */
+    protected LockFactory $lockFactory;
+
+    /**
      * @var AppErrorInterface[]
      */
     protected array $errors;
@@ -53,17 +62,40 @@ class AppService extends AbstractController implements AppServiceInterface
      *
      * @param ManagerRegistry $doctrine Doctrine to manage the ORM.
      * @param TelegramService $telegramService Service of Telegram.
+     * @param LockFactory $lockFactory The lock factory instance.
      * @param bool $testMode Boolean to set the Test Mode.
      */
-    public function __construct(ManagerRegistry $doctrine, TelegramService $telegramService, bool $testMode = FALSE)
+    public function __construct(ManagerRegistry $doctrine, TelegramService $telegramService,
+                                LockFactory     $lockFactory, bool $testMode = FALSE)
     {
         $this->setEntityManager($doctrine->getManager())
             ->setTelegramService($telegramService)
+            ->setLockFactory($lockFactory)
             ->setTestMode($testMode)
             ->setErrors();
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
+
+    /**
+     * @inheritDoc
+     * @return LockFactory LockFactory
+     */
+    public function getLockFactory(): LockFactory
+    {
+        return $this->lockFactory;
+    }
+
+    /**
+     * @inheritDoc
+     * @return $this $this
+     */
+    public function setLockFactory(LockFactory $lockFactory): self
+    {
+        $this->lockFactory = $lockFactory;
+
+        return $this;
+    }
 
     /**
      * @inheritDoc
@@ -178,6 +210,28 @@ class AppService extends AbstractController implements AppServiceInterface
 
     /**
      * @inheritDoc
+     * @return LockInterface LockInterface
+     */
+    public function createLock(string $lockName, ?float $ttl = 300.0): LockInterface
+    {
+        return $this->getLockFactory()->createLock($lockName, $ttl);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function releaseLock(string $method, LockInterface $lock, ?float $ttl = 300.0): void
+    {
+        $lock->release();
+        if ($lock->isExpired()):
+            $this->registerAppError(
+                $method, AppError::ERROR_SEMAPHORE, sprintf('Expiración de semáforo con TTL %f', $ttl)
+            );
+        endif;
+    }
+
+    /**
+     * @inheritDoc
      * @return bool bool
      */
     public function persistAndFlush(ORMInterface $object): bool
@@ -272,6 +326,23 @@ class AppService extends AbstractController implements AppServiceInterface
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
+
+    /**
+     * Funcionalidad para obtener el nombre del lock para bloquear creación de entidad.
+     *
+     * @param string $FQNClassName Nombre de la entidad.
+     * @param string $value Valor identificativo de la entidad a evitar duplicidades.
+     *
+     * @return string string
+     * @noinspection MethodVisibilityInspection
+     */
+    protected function _getLockName_createEntityFromValue(string $FQNClassName, string $value): string
+    {
+        $className = ToolsHelper::clearFQNClassName($FQNClassName);
+        $snakeName = ToolsHelper::getStrLikeSnakeCase($className);
+
+        return sprintf('%s_%s_%s', static::LOCK_PREFIX, $snakeName, $value);
+    }
 
     /**
      * Adds a new AppError registered in a Service.

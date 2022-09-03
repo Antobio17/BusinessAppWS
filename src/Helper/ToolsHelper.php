@@ -107,4 +107,25 @@ class ToolsHelper implements ToolsHelperInterface
 
         return $randomString;
     }
+
+    /**
+     * Method to transform a string into SnakeCase.
+     *
+     * @see https://stackoverflow.com/questions/1993721/how-to-convert-pascalcase-to-snake-case
+     */
+    public static function getStrLikeSnakeCase(string $str, string $separator = '_'): string
+    {
+        $snakeValue = strtolower(preg_replace(['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'], '$1_$2', $str));
+        $snakeValue = $separator === '_' ? $snakeValue : str_replace('_', $separator, $snakeValue);
+        if ($separator !== ' '):
+            $snakeValue = str_replace(' ', $separator, $snakeValue);
+        endif;
+
+        while (strpos($snakeValue, $separator . $separator)):
+            $snakeValue = str_replace($separator . $separator, $separator, $snakeValue);
+        endwhile;
+
+        return $snakeValue;
+    }
+
 }

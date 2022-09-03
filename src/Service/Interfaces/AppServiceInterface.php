@@ -8,6 +8,8 @@ use Doctrine\Persistence\ObjectManager;
 use App\Entity\Interfaces\AppErrorInterface;
 use App\Service\Traits\Interfaces\HasBusinessInterface;
 use App\Service\Traits\Interfaces\HasRepositoriesInterface;
+use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\LockInterface;
 
 interface AppServiceInterface extends HasRepositoriesInterface, HasBusinessInterface
 {
@@ -15,6 +17,22 @@ interface AppServiceInterface extends HasRepositoriesInterface, HasBusinessInter
     /************************************************** ROUTING ***************************************************/
 
     /******************************************** GETTERS AND SETTERS *********************************************/
+
+    /**
+     * Gets the Lock Factory property.
+     *
+     * @return LockFactory LockFactory
+     */
+    public function getLockFactory(): LockFactory;
+
+    /**
+     * Sets the Lock Factory property.
+     *
+     * @param LockFactory $lockFactory The Lock Factory to set.
+     *
+     * @return $this $this
+     */
+    public function setLockFactory(LockFactory $lockFactory): self;
 
     /**
      * Gets the Test Mode property.
@@ -90,6 +108,21 @@ interface AppServiceInterface extends HasRepositoriesInterface, HasBusinessInter
      * @return bool bool
      */
     public function setBusinessContext(?string $domain): bool;
+
+    /**
+     * Creates a lock to avoid the collisions.
+     *
+     * @param string $lockName Name of the lock.
+     * @param float|null $ttl TTL of the lock to expire.
+     *
+     * @return LockInterface LockInterface
+     */
+    public function createLock(string $lockName, ?float $ttl = 300.0): LockInterface;
+
+    /**
+     * Release a lock created.
+     */
+    public function releaseLock(string $method, LockInterface $lock, ?float $ttl = 300.0): void;
 
     /**
      * Persists an ORM object.
