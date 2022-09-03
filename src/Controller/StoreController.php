@@ -18,6 +18,8 @@ class StoreController extends AppController implements StoreControllerInterface
     public const REQUEST_FIELD_AMOUNT = 'amount';
     public const REQUEST_FIELD_PRODUCTS_DATA = 'productsData';
     public const REQUEST_FIELD_ORDER_ID = 'orderID';
+    public const REQUEST_FIELD_ORDER_PAYMENT_INTENT_ID = 'paymentIntentID';
+    public const REQUEST_FIELD_ORDER_PAYMENT_INTENT_SUCCESS = 'success';
     public const REQUEST_FIELD_SORT = 'sort';
     public const REQUEST_FIELD_ON_STOCK = 'onStock';
     public const REQUEST_FIELD_OUT_OF_STOCK = 'outOfStock';
@@ -118,11 +120,40 @@ class StoreController extends AppController implements StoreControllerInterface
             $amount = (float)$amount;
             $productsData = json_decode($productsData, TRUE);
             if ($this->getStoreService()->setBusinessContext($domain)):
-                $data = $this->getStoreService()->notifyNewOrder($postalAddressID, $amount, $productsData);
+                $order = $this->getStoreService()->notifyNewOrder($postalAddressID, $amount, $productsData);
+                $data = $order !== NULL ? $order->__toArray() : NULL;
             endif;
         endif;
 
         return $this->createJsonResponse_Creation($data ?? NULL, $validationErrors, $this->getStoreService());
+    }
+
+    /**
+     * @Route("/api/store/order/payment")
+     *
+     * @inheritDoc
+     * @return JsonResponse JsonResponse
+     */
+    public function notifyPaymentOrder(Request $request): JsonResponse
+    {
+        $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
+        $paymentIntentID = $this->getParamFromRequest(
+            $request, static::REQUEST_FIELD_ORDER_PAYMENT_INTENT_ID
+        );
+        $success = $this->getParamFromRequest($request, static::REQUEST_FIELD_ORDER_PAYMENT_INTENT_SUCCESS);
+
+        $validationErrors = $this->validateRequiredRequestFields(array(
+            static::REQUEST_FIELD_ORDER_PAYMENT_INTENT_ID => $paymentIntentID,
+            static::REQUEST_FIELD_ORDER_PAYMENT_INTENT_SUCCESS => $success,
+        ));
+
+        if (empty($validationErrors)):
+            if ($this->getStoreService()->setBusinessContext($domain)):
+                $data = $this->getStoreService()->notifyPaymentOrder($paymentIntentID, $success);
+            endif;
+        endif;
+
+        return $this->createJsonResponse($data ?? NULL, $validationErrors, $this->getStoreService());
     }
 
     /**

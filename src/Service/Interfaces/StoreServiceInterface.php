@@ -2,7 +2,10 @@
 
 namespace App\Service\Interfaces;
 
-interface StoreServiceInterface extends AppServiceInterface
+use App\Entity\Order;
+use App\Service\Traits\Interfaces\HasStripeServiceInterface;
+
+interface StoreServiceInterface extends AppServiceInterface, HasStripeServiceInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -32,9 +35,19 @@ interface StoreServiceInterface extends AppServiceInterface
      * @param float $amount Total amount of the order.
      * @param array $productsData Data of the products of the order.
      *
-     * @return bool bool
+     * @return Order|null Order|null
      */
-    public function notifyNewOrder(int $postalAddressID, float $amount, array $productsData): ?bool;
+    public function notifyNewOrder(int $postalAddressID, float $amount, array $productsData): ?Order;
+
+    /**
+     * Change the status of the order depending on the success of the payment.
+     *
+     * @param string $paymentIntentID PaymentIntentID of the product.
+     * @param bool $success Result of the payment.
+     *
+     * @return bool|null bool|null
+     */
+    public function notifyPaymentOrder(string $paymentIntentID, bool $success): ?bool;
 
     /**
      * Cancel a user's order that it is in pending status.

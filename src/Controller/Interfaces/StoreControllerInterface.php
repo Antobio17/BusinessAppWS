@@ -30,6 +30,15 @@ interface StoreControllerInterface extends HasStoreServiceInterface
     public function notifyNewOrder(Request $request): JsonResponse;
 
     /**
+     * Route to notify the payment status of a user order.
+     *
+     * @param Request $request Request of the route.
+     *
+     * @return JsonResponse JsonResponse
+     */
+    public function notifyPaymentOrder(Request $request): JsonResponse;
+
+    /**
      * Route to cancel an order that has been created, and it has pending status.
      *
      * @param Request $request Request of the route.
