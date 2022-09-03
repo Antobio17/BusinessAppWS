@@ -30,12 +30,11 @@ interface StoreServiceInterface extends AppServiceInterface
      *
      * @param int $postalAddressID ID of the postal address of the user to send the order.
      * @param float $amount Total amount of the order.
-     * @param string $UUID UUID of the order in the third-party application.
      * @param array $productsData Data of the products of the order.
      *
      * @return bool bool
      */
-    public function notifyNewOrder(int $postalAddressID, float $amount, string $UUID, array $productsData): ?bool;
+    public function notifyNewOrder(int $postalAddressID, float $amount, array $productsData): ?bool;
 
     /**
      * Cancel a user's order that it is in pending status.
