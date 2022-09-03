@@ -137,6 +137,13 @@ class DashboardController extends AbstractDashboardController implements Dashboa
                         'value' => Order::STATUS_PENDING,
                     ),
                 ));
+            yield MenuItem::linkToCrud('Pagados', 'fas fa-hourglass-start', Order::class)
+                ->setQueryParameter('filters', array(
+                    'status' => array(
+                        'comparison' => ComparisonType::EQ,
+                        'value' => Order::STATUS_PAID,
+                    ),
+                ));
             yield MenuItem::linkToCrud('En Preparación', 'fas fa-hourglass-half', Order::class)
                 ->setQueryParameter('filters', array(
                     'status' => array(
