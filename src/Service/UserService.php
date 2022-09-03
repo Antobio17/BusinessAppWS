@@ -10,6 +10,7 @@ use App\Entity\PostalAddress;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 use App\Service\Interfaces\UserServiceInterface;
+use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
@@ -42,17 +43,19 @@ class UserService extends AppService implements UserServiceInterface
      *
      * @param ManagerRegistry $doctrine Doctrine to manage the ORM.
      * @param TelegramService $telegramService Service of Telegram.
+     * @param LockFactory $lockFactory The lock factory instance.
      * @param UserPasswordHasherInterface $userPasswordHasher Hasher to encode the user password.
      * @param AuthenticationSuccessHandler $authenticationSuccessHandler Handler to return a response with user's token.
      * @param PasswordHasherFactoryInterface $passwordHasherFactory The Factory PasswordHasher.
      * @param bool $testMode Boolean to set the Test Mode.
      */
     public function __construct(ManagerRegistry                $doctrine, TelegramService $telegramService,
-                                UserPasswordHasherInterface    $userPasswordHasher,
+                                LockFactory                    $lockFactory,
+                                UserPasswordHasherInterface $userPasswordHasher,
                                 AuthenticationSuccessHandler   $authenticationSuccessHandler,
                                 PasswordHasherFactoryInterface $passwordHasherFactory, bool $testMode = FALSE)
     {
-        parent::__construct($doctrine, $telegramService, $testMode);
+        parent::__construct($doctrine, $telegramService, $lockFactory, $testMode);
 
         $this->setUserPasswordHasher($userPasswordHasher);
         $this->setAuthenticationSuccessHandler($authenticationSuccessHandler);

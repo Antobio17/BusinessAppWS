@@ -13,6 +13,7 @@ use App\Entity\Appointment;
 use App\Helper\ToolsHelper;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Service\Interfaces\AppointmentServiceInterface;
+use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class AppointmentService extends AppService implements AppointmentServiceInterface
@@ -31,13 +32,14 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
      *
      * @param ManagerRegistry $doctrine Doctrine to manage the ORM.
      * @param TelegramService $telegramService Service of Telegram.
+     * @param LockFactory $lockFactory The lock factory instance.
+     * @param UserService $userService The user service of the app.
      * @param bool $testMode Boolean to set the Test Mode.
-     *
      */
     public function __construct(ManagerRegistry $doctrine, TelegramService $telegramService,
-                                UserService     $userService, bool $testMode = FALSE)
+                                LockFactory     $lockFactory, UserService $userService, bool $testMode = FALSE)
     {
-        parent::__construct($doctrine, $telegramService, $testMode);
+        parent::__construct($doctrine, $telegramService, $lockFactory, $testMode);
 
         $this->setUserService($userService);
     }
@@ -120,7 +122,14 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
         $appointment = NULL;
         if ($user !== NULL && empty($this->getErrors())):
             # BookingDate validations
-            # TODO semaphore
+            $ttl = 5;
+            $value = sprintf(
+                '%s_%d',
+                ToolsHelper::getStrLikeSnakeCase($this->getBusiness()->getName()), $bookingDateAt->getTimestamp()
+            );
+            $lockName = $this->_getLockName_createEntityFromValue(Appointment::class, $value);
+            $lock = $this->createLock($lockName, $ttl);
+
             if (!$this->getBusiness()->checkHourInShifts(
                 (int)date('w', $bookingDateAt->getTimestamp()), $bookingDateAt->format('H:i:s')
             )):
@@ -154,7 +163,8 @@ class AppointmentService extends AppService implements AppointmentServiceInterfa
                 );
                 $this->persistAndFlush($appointment);
             endif;
-            # TODO end semaphore
+
+            $this->releaseLock($method, $lock, $ttl);
         endif;
 
         return $appointment;

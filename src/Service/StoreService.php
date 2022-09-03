@@ -12,6 +12,7 @@ use App\Service\Interfaces\StripeServiceInterface;
 use App\Service\Traits\StripeServiceTrait;
 use Doctrine\Persistence\ManagerRegistry;
 use Stripe\Exception\ApiErrorException;
+use Symfony\Component\Lock\LockFactory;
 
 class StoreService extends AppService implements StoreServiceInterface
 {
@@ -29,12 +30,15 @@ class StoreService extends AppService implements StoreServiceInterface
      *
      * @param ManagerRegistry $doctrine Doctrine to manage the ORM.
      * @param TelegramService $telegramService Service of Telegram.
+     * @param LockFactory $lockFactory The lock factory instance.
+     * @param StripeServiceInterface $stripeService The stripe service of the app.
      * @param bool $testMode Boolean to set the Test Mode.
      */
     public function __construct(ManagerRegistry        $doctrine, TelegramService $telegramService,
-                                StripeServiceInterface $stripeService, bool $testMode = FALSE)
+                                LockFactory     $lockFactory, StripeServiceInterface $stripeService,
+                                bool $testMode = FALSE)
     {
-        parent::__construct($doctrine, $telegramService, $testMode);
+        parent::__construct($doctrine, $telegramService, $lockFactory, $testMode);
 
         $this->setStripeService($stripeService);
     }
@@ -98,11 +102,16 @@ class StoreService extends AppService implements StoreServiceInterface
             endif;
 
             if (empty($this->getErrors())):
-                # TODO semaphore
+                $ttl = 30;
+                $value = ToolsHelper::getStrLikeSnakeCase($this->getBusiness()->getName());
+                $lockName = $this->_getLockName_createEntityFromValue(Order::class, $value);
+                $lock = $this->createLock($lockName, $ttl);
+
                 $this->_checkProductAvailability($productsData, $method);
                 try {
                     $paymentIntent = $this->getStripeService()->createPaymentIntent(
-                        $amount, $user->getEmail(), json_encode($productsData)
+                        $amount, $user->getEmail(),
+                        sprintf('Intento de pago para el usuario %s.', $user->getEmail() ?? 'Nulo')
                     );
                     if ($paymentIntent->client_secret !== NULL):
                         $order = new Order(
@@ -123,7 +132,8 @@ class StoreService extends AppService implements StoreServiceInterface
                         $e->getCode(), $e->getMessage(), $e->getTrace()
                     );
                 }
-                # TODO end semaphore
+
+                $this->releaseLock($method, $lock, $ttl);
             endif;
         endif;
 

@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Helper\ToolsHelper;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Service\Interfaces\BusinessServiceInterface;
+use Symfony\Component\Lock\LockFactory;
 
 class BusinessService extends AppService implements BusinessServiceInterface
 {
@@ -22,11 +23,13 @@ class BusinessService extends AppService implements BusinessServiceInterface
      *
      * @param ManagerRegistry $doctrine Doctrine to manage the ORM.
      * @param TelegramService $telegramService Service of Telegram.
+     * @param LockFactory $lockFactory The lock factory instance.
      * @param bool $testMode Boolean to set the Test Mode.
      */
-    public function __construct(ManagerRegistry $doctrine, TelegramService $telegramService, bool $testMode = FALSE)
+    public function __construct(ManagerRegistry $doctrine, TelegramService $telegramService,
+                                LockFactory     $lockFactory, bool $testMode = FALSE)
     {
-        parent::__construct($doctrine, $telegramService, $testMode);
+        parent::__construct($doctrine, $telegramService, $lockFactory, $testMode);
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
