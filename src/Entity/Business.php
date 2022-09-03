@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\DomainAliasTrait;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\NameTrait;
 use Doctrine\ORM\Mapping\Column;
@@ -39,6 +40,11 @@ class Business extends AbstractORM implements BusinessInterface
     use DomainTrait {
         DomainTrait::__construct as protected __domainConstruct;
         DomainTrait::__toArray as protected __domainToArray;
+    }
+
+    use DomainAliasTrait {
+        DomainAliasTrait::__construct as protected __domainAliasConstruct;
+        DomainAliasTrait::__toArray as protected __domainAliasToArray;
     }
 
     use NameTrait {
@@ -85,6 +91,7 @@ class Business extends AbstractORM implements BusinessInterface
                                 ?string $email = NULL)
     {
         $this->__domainConstruct($domain);
+        $this->__domainAliasConstruct('');
         $this->__nameConstruct($name);
         $this->__phoneNumberConstruct($phoneNumber);
         $this->__emailConstruct($email);

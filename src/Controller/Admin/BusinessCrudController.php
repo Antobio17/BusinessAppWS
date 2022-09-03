@@ -16,6 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -98,6 +99,9 @@ class BusinessCrudController extends AbstractCrudController implements BusinessC
             FormField::addPanel('Información General'),
             IdField::new('id')->hideOnForm(),
             TextField::new('domain', 'Dominio'),
+            TextareaField::new('domainAlias', 'Alias de Dominio')
+                ->setHelp('Los alias de dominios separados por "comas (,)".')
+                ->hideOnIndex(),
             TextField::new('name', 'Nombre'),
             TextField::new('phoneNumber', 'Teléfono'),
             TextField::new('email'),

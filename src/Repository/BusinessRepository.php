@@ -52,6 +52,27 @@ class BusinessRepository extends AppRepository implements BusinessRepositoryInte
         return $result ?? NULL;
     }
 
+    /**
+     * @inheritDoc
+     * @return BusinessInterface|null BusinessInterface|null
+     */
+    public function findByAlias(string $domain): ?BusinessInterface
+    {
+        $alias = 'bus';
+
+        try {
+            $result = $this->createQueryBuilder($alias)
+                ->andWhere($alias . '.alias LIKE :domain')
+                ->setParameter('domain', $domain)
+                ->orderBy($alias . '.id', 'ASC')
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+        }
+
+        return $result ?? NULL;
+    }
+
     /*********************************************** STATIC METHODS ***********************************************/
 
 }

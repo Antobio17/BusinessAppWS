@@ -187,7 +187,8 @@ class AppService extends AbstractController implements AppServiceInterface
     {
         $business = NULL;
         if ($domain !== NULL):
-            $business = $this->getBusinessRepository()->findByDomain($domain);
+            $business = $this->getBusinessRepository()->findByDomain($domain) ??
+                $this->getBusinessRepository()->findByAlias($domain);
             if ($business === NULL):
                 $this->registerAppError(
                     ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
