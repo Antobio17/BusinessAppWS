@@ -17,17 +17,17 @@ trait UUIDTrait
     /************************************************* PROPERTIES *************************************************/
 
     /**
-     * @ORM\Column(type="string", length=1024, unique=true)
+     * @ORM\Column(type="string", length=1024, unique=true, nullable=true)
      */
-    protected string $uuid;
+    protected ?string $uuid;
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
      * @inheritDoc
-     * @return string string
+     * @return string|null string|null
      */
-    public function getUUID(): string
+    public function getUUID(): ?string
     {
         return $this->uuid;
     }
@@ -36,7 +36,7 @@ trait UUIDTrait
      * @inheritDoc
      * @return $this $this
      */
-    public function setUUID(string $uuid): self
+    public function setUUID(?string $uuid): self
     {
         $this->uuid = $uuid;
 
@@ -48,9 +48,9 @@ trait UUIDTrait
     /**
      *  UUIDTrait constructor.
      *
-     * @param string $uuid UUID of the Entity to set.
+     * @param string|null $uuid UUID of the Entity to set.
      */
-    public function __construct(string $uuid)
+    public function __construct(?string $uuid)
     {
         $this->setUUID($uuid);
     }

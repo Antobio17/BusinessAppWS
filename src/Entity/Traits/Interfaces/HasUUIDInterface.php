@@ -13,18 +13,18 @@ interface HasUUIDInterface
     /**
      * Gets the UUID property of the Entity.
      *
-     * @return string string
+     * @return string|null string|null
      */
-    public function getUUID(): string;
+    public function getUUID(): ?string;
 
     /**
      * Sets the UUID property of the Entity.
      *
-     * @param string $uuid UUID of the Entity to set.
+     * @param string|null $uuid UUID of the Entity to set.
      *
      * @return $this $this
      */
-    public function setUUID(string $uuid): self;
+    public function setUUID(?string $uuid): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 

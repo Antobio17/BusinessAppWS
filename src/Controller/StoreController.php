@@ -16,7 +16,6 @@ class StoreController extends AppController implements StoreControllerInterface
 
     public const REQUEST_FIELD_POSTAL_ADDRESS_ID = 'postalAddressID';
     public const REQUEST_FIELD_AMOUNT = 'amount';
-    public const REQUEST_FIELD_UUID = 'uuid';
     public const REQUEST_FIELD_PRODUCTS_DATA = 'productsData';
     public const REQUEST_FIELD_ORDER_ID = 'orderID';
     public const REQUEST_FIELD_SORT = 'sort';
@@ -24,11 +23,11 @@ class StoreController extends AppController implements StoreControllerInterface
     public const REQUEST_FIELD_OUT_OF_STOCK = 'outOfStock';
     public const REQUEST_FIELD_CATEGORY_EXCLUSION = 'categoryExclusion';
 
-    public const PRODUCT_DATA_KEY_ID = 'productID';
+    public const PRODUCT_DATA_KEY_ID = 'id';
     public const PRODUCT_DATA_KEY_NAME = 'name';
-    public const PRODUCT_DATA_KEY_PRICE = 'price';
+    public const PRODUCT_DATA_KEY_AMOUNT = 'amount';
     public const PRODUCT_DATA_KEY_DISCOUNT_PERCENT = 'discountPercent';
-    public const PRODUCT_DATA_KEY_NUMBER = 'number';
+    public const PRODUCT_DATA_KEY_QUANTITY = 'quantity';
 
     /************************************************* PROPERTIES *************************************************/
 
@@ -96,7 +95,6 @@ class StoreController extends AppController implements StoreControllerInterface
         $domain = $request->server->get(static::REQUEST_SERVER_HTTP_REFERER);
         $postalAddressID = $this->getParamFromRequest($request, static::REQUEST_FIELD_POSTAL_ADDRESS_ID);
         $amount = $this->getParamFromRequest($request, static::REQUEST_FIELD_AMOUNT);
-        $UUID = $this->getParamFromRequest($request, static::REQUEST_FIELD_UUID);
         $productsData = $this->getParamFromRequest($request, static::REQUEST_FIELD_PRODUCTS_DATA);
 
         # Data Validation
@@ -104,7 +102,6 @@ class StoreController extends AppController implements StoreControllerInterface
             $this->validateRequiredRequestFields(array(
                 static::REQUEST_FIELD_POSTAL_ADDRESS_ID => $postalAddressID,
                 static::REQUEST_FIELD_AMOUNT => $amount,
-                static::REQUEST_FIELD_UUID => $UUID,
                 static::REQUEST_FIELD_PRODUCTS_DATA => $productsData,
             )),
             $this->validateRequestNumericFields(array(
@@ -121,7 +118,7 @@ class StoreController extends AppController implements StoreControllerInterface
             $amount = (float)$amount;
             $productsData = json_decode($productsData, TRUE);
             if ($this->getStoreService()->setBusinessContext($domain)):
-                $data = $this->getStoreService()->notifyNewOrder($postalAddressID, $amount, $UUID, $productsData);
+                $data = $this->getStoreService()->notifyNewOrder($postalAddressID, $amount, $productsData);
             endif;
         endif;
 
@@ -251,14 +248,14 @@ class StoreController extends AppController implements StoreControllerInterface
                         )
                     );
                 elseif (
-                    !isset($product[static::PRODUCT_DATA_KEY_PRICE])
-                    || !is_numeric($product[static::PRODUCT_DATA_KEY_PRICE])
+                    !isset($product[static::PRODUCT_DATA_KEY_AMOUNT])
+                    || !is_numeric($product[static::PRODUCT_DATA_KEY_AMOUNT])
                 ):
                     $validationErrors[] = array(
-                        'field' => static::PRODUCT_DATA_KEY_PRICE,
+                        'field' => static::PRODUCT_DATA_KEY_AMOUNT,
                         'message' => sprintf(
                             'The data %s of the product is required and it must be numeric',
-                            static::PRODUCT_DATA_KEY_PRICE
+                            static::PRODUCT_DATA_KEY_AMOUNT
                         )
                     );
                 elseif (
@@ -273,14 +270,14 @@ class StoreController extends AppController implements StoreControllerInterface
                         )
                     );
                 elseif (
-                    !isset($product[static::PRODUCT_DATA_KEY_NUMBER])
-                    || !is_numeric($product[static::PRODUCT_DATA_KEY_NUMBER])
+                    !isset($product[static::PRODUCT_DATA_KEY_QUANTITY])
+                    || !is_numeric($product[static::PRODUCT_DATA_KEY_QUANTITY])
                 ):
                     $validationErrors[] = array(
-                        'field' => static::PRODUCT_DATA_KEY_NUMBER,
+                        'field' => static::PRODUCT_DATA_KEY_QUANTITY,
                         'message' => sprintf(
                             'The data %s of the product is required and it must be an integer',
-                            static::PRODUCT_DATA_KEY_NUMBER
+                            static::PRODUCT_DATA_KEY_QUANTITY
                         )
                     );
                 endif;

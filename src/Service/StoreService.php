@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Controller\StoreController;
 use App\Entity\User;
 use App\Entity\Order;
 use App\Entity\AppError;
@@ -56,7 +57,7 @@ class StoreService extends AppService implements StoreServiceInterface
      * @inheritDoc
      * @return bool bool
      */
-    public function notifyNewOrder(int $postalAddressID, float $amount, string $UUID, array $productsData): ?bool
+    public function notifyNewOrder(int $postalAddressID, float $amount, array $productsData): ?bool
     {
         $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
 
@@ -75,17 +76,10 @@ class StoreService extends AppService implements StoreServiceInterface
                 );
             endif;
 
-            if ($this->getOrderRepository()->findByUUID($UUID) !== NULL):
-                $this->registerAppError(
-                    $method, AppError::ERROR_STORE_UUID_EXIST,
-                    'Error en la creación de pedido: UUID ya registrado.'
-                );
-            endif;
-
             if (empty($this->getErrors())):
                 # TODO semaphore
                 $this->_checkProductAvailability($productsData, $method);
-                $order = new Order($this->getBusiness(), $user, $postalAddress, $UUID, $amount, $productsData);
+                $order = new Order($this->getBusiness(), $user, $postalAddress, $amount, NULL, $productsData);
                 # TODO end semaphore
                 $created = $this->persistAndFlush($order);
             endif;
@@ -197,14 +191,14 @@ class StoreService extends AppService implements StoreServiceInterface
         $available = TRUE;
 
         foreach ($productsData as $productData):
-            $product = $this->getProductRepository()->find($productData['productID']);
+            $product = $this->getProductRepository()->find((int)$productData[StoreController::PRODUCT_DATA_KEY_ID]);
             if ($product === NULL):
                 $this->registerAppError(
                     $method, AppError::ERROR_STORE_PRODUCT_NOT_EXIST,
-                    sprintf('Error: El producto %s no existe', $product['name'])
+                    sprintf('Error: El producto %s no existe', $product[StoreController::PRODUCT_DATA_KEY_NAME])
                 );
                 $available = FALSE;
-            elseif ($product->getStock() < $productData['number']):
+            elseif ($product->getStock() < $productData[StoreController::PRODUCT_DATA_KEY_QUANTITY]):
                 if ($product->getStock() === 0):
                     $message = sprintf('Error: No hay stock del producto %s', $product->getName());
                 else:
@@ -217,7 +211,9 @@ class StoreService extends AppService implements StoreServiceInterface
                 $this->registerAppError($method, AppError::ERROR_STORE_PRODUCT_NOT_EXIST, $message);
                 $available = FALSE;
             else:
-                $product->setStock($product->getStock() - (int)$productData['number']);
+                $product->setStock(
+                    $product->getStock() - (int)$productData[StoreController::PRODUCT_DATA_KEY_QUANTITY]
+                );
                 $this->getEntityManager()->persist($product);
             endif;
         endforeach;
