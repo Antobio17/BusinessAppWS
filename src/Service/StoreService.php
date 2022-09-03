@@ -34,9 +34,9 @@ class StoreService extends AppService implements StoreServiceInterface
      * @param StripeServiceInterface $stripeService The stripe service of the app.
      * @param bool $testMode Boolean to set the Test Mode.
      */
-    public function __construct(ManagerRegistry        $doctrine, TelegramService $telegramService,
+    public function __construct(ManagerRegistry $doctrine, TelegramService $telegramService,
                                 LockFactory     $lockFactory, StripeServiceInterface $stripeService,
-                                bool $testMode = FALSE)
+                                bool            $testMode = FALSE)
     {
         parent::__construct($doctrine, $telegramService, $lockFactory, $testMode);
 
@@ -103,9 +103,16 @@ class StoreService extends AppService implements StoreServiceInterface
 
             if (empty($this->getErrors())):
                 $ttl = 30;
-                $value = ToolsHelper::getStrLikeSnakeCase($this->getBusiness()->getName());
-                $lockName = $this->_getLockName_createEntityFromValue(Order::class, $value);
-                $lock = $this->createLock($lockName, $ttl);
+                $locks = array();
+                $businessName = ToolsHelper::getStrLikeSnakeCase($this->getBusiness()->getName());
+                foreach ($productsData as $productData):
+                    $lockName = $this->_getLockName_createEntityFromValue(
+                        Order::class, sprintf(
+                            '%s_%s', $productData[StoreController::PRODUCT_DATA_KEY_ID], $businessName
+                        )
+                    );
+                    $locks[] = $this->createLock($lockName, $ttl);
+                endforeach;
 
                 $this->_checkProductAvailability($productsData, $method);
                 try {
@@ -133,7 +140,9 @@ class StoreService extends AppService implements StoreServiceInterface
                     );
                 }
 
-                $this->releaseLock($method, $lock, $ttl);
+                foreach ($locks as $lock):
+                    $this->releaseLock($method, $lock, $ttl);
+                endforeach;
             endif;
         endif;
 
