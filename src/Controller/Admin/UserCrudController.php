@@ -3,7 +3,10 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use App\Form\Types\PostalAddressType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -32,10 +35,10 @@ class UserCrudController extends AbstractCrudController implements UserCrudContr
      */
     public function configureCrud(Crud $crud): Crud
     {
-        return $crud
+        return parent::configureCrud($crud)
             ->setEntityLabelInSingular('Usuario')
             ->setEntityLabelInPlural('Usuarios')
-            ->setDateFormat('H:i:s d-m-Y');
+            ->setSearchFields(array('email'));
     }
 
     /**
@@ -54,14 +57,28 @@ class UserCrudController extends AbstractCrudController implements UserCrudContr
      */
     public function configureFields(string $pageName): iterable
     {
+        $disable = !in_array(User::ROLE_ADMIN, $this->getUser()->getRoles());
         return array(
-            IdField::new('id'),
-            AssociationField::new('business', 'Negocio'),
+            FormField::addPanel('Información General'),
+            IdField::new('id')->hideOnForm(),
+            AssociationField::new('business', 'Negocio')->setDisabled($disable),
             TextField::new('email', 'Email'),
             TextField::new('phoneNumber', 'Teléfono'),
             TextField::new('name', 'Nombre'),
             TextField::new('surname', 'Apellidos'),
-            BooleanField::new('isWorker', 'Trabajador')->setDisabled(TRUE),
+            BooleanField::new('isWorker', 'Trabajador')
+                ->setDisabled($pageName !== Crud::PAGE_NEW),
+            FormField::addPanel('Dirección Postal')->hideWhenCreating(),
+            CollectionField::new('postalAddresses')
+                ->hideOnIndex()
+                ->hideWhenCreating()
+                ->allowAdd(FALSE)
+                ->allowDelete(FALSE)
+                ->setLabel(FALSE)
+                ->setEntryType(PostalAddressType::class)
+                ->setFormTypeOptions(array(
+                    'by_reference' => FALSE,
+                )),
         );
     }
 
@@ -74,10 +91,22 @@ class UserCrudController extends AbstractCrudController implements UserCrudContr
         parent::configureActions($actions);
 
         return $actions
+            ->disable('delete')
             # PAGE_INDEX
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action->setLabel('Nuevo Usuario');
             });
+    }
+
+    /**
+     * @return User User
+     */
+    public function createEntity(string $entityFqcn): User
+    {
+        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+        return new User(
+            $this->getUser()->getBusiness(), '', '', '', '', ''
+        );
     }
 
     /*********************************************** STATIC METHODS ***********************************************/

@@ -130,14 +130,16 @@ class DashboardController extends AbstractDashboardController implements Dashboa
                 ));
             yield MenuItem::section('Config. Pedidos', 'fas fa-cog');
             yield MenuItem::linkToCrud('Pedidos', 'fas fa-shopping-cart', Order::class);
-            yield MenuItem::linkToCrud('Pendientes', 'fas fa-hourglass-start', Order::class)
+            yield MenuItem::linkToCrud(
+                'Pendientes de pago', 'fas fa-hourglass-start', Order::class
+            )
                 ->setQueryParameter('filters', array(
                     'status' => array(
                         'comparison' => ComparisonType::EQ,
                         'value' => Order::STATUS_PENDING,
                     ),
                 ));
-            yield MenuItem::linkToCrud('Pagados', 'fas fa-hourglass-start', Order::class)
+            yield MenuItem::linkToCrud('Pagados', 'fas fa-money-check-alt', Order::class)
                 ->setQueryParameter('filters', array(
                     'status' => array(
                         'comparison' => ComparisonType::EQ,

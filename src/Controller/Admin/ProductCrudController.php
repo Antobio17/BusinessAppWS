@@ -169,11 +169,6 @@ class ProductCrudController extends AbstractCrudController implements ProductCru
     {
         parent::configureActions($actions);
 
-        if (!in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())):
-            $actions
-                ->disable('delete');
-        endif;
-
         $categories = $this->getBusinessService()->getCategoryRepository()->findAll();
         if (empty($categories)):
             $actions
