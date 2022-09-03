@@ -39,6 +39,8 @@ class AppError extends AbstractORM implements AppErrorInterface
     public const ERROR_STORE_UUID_EXIST = 41;
     public const ERROR_STORE_INCORRECT_ORDER = 42;
     public const ERROR_STORE_PRODUCT_NOT_EXIST = 43;
+    public const ERROR_STORE_STRIPE_PAYMENT_INTENT_ERROR = 50;
+    public const ERROR_STORE_STRIPE_CLIENT_SECRET_NULL = 51;
 
     public const ERROR_USER_WRONG_POSTAL_ADDRESS = 60;
     public const ERROR_USER_UPDATE_EMAIL_EXIST = 61;

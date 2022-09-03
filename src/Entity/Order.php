@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Interfaces\BusinessInterface;
 use App\Entity\Traits\AmountTrait;
+use App\Entity\Traits\ClientSecretTrait;
 use App\Entity\Traits\CreatedAtTrait;
 use App\Entity\Traits\DataTrait;
 use App\Entity\Traits\PostalAddressTrait;
@@ -37,10 +38,11 @@ class Order extends AbstractUserContext implements OrderInterface
     /************************************************* CONSTANTS **************************************************/
 
     public const STATUS_PENDING = 0;
-    public const STATUS_PREPARING = 1;
-    public const STATUS_CANCELLED = 2;
-    public const STATUS_SENT = 3;
-    public const STATUS_DELIVERED = 4;
+    public const STATUS_PAID = 1;
+    public const STATUS_PREPARING = 2;
+    public const STATUS_CANCELLED = 3;
+    public const STATUS_SENT = 4;
+    public const STATUS_DELIVERED = 5;
 
     /************************************************* PROPERTIES *************************************************/
 
@@ -74,6 +76,11 @@ class Order extends AbstractUserContext implements OrderInterface
         UUIDTrait::__toArray as protected __uuidToArray;
     }
 
+    use ClientSecretTrait {
+        ClientSecretTrait::__construct as protected __clientSecretConstruct;
+        ClientSecretTrait::__toArray as protected __clientSecretToArray;
+    }
+
     use DataTrait {
         DataTrait::__construct as protected __dataConstruct;
         DataTrait::__toArray as protected __dataToArray;
@@ -89,19 +96,22 @@ class Order extends AbstractUserContext implements OrderInterface
      * @param PostalAddress $postalAddress The postal address to send the order.
      * @param float $amount Amount of the order.
      * @param string|null $uuid UUID of the payment order.
+     * @param string|null $clientSecret ClientSecret of the payment order.
      * @param array $data Data related to the products ordered.
      * @param int $status Status of the order.
      * @param DateTime|null $createdAt Date of the creation of the order.
      * @param DateTime|null $sentAt Date when the order was sent.
      */
     public function __construct(BusinessInterface $business, UserInterface $user, PostalAddress $postalAddress,
-                                float             $amount = 0.0, ?string $uuid = NULL, array $data = array(),
-                                int               $status = 0, ?DateTime $createdAt = NULL, ?DateTime $sentAt = NULL)
+                                float             $amount = 0.0, ?string $uuid = NULL, ?string $clientSecret = NULL,
+                                array             $data = array(), int $status = 0, ?DateTime $createdAt = NULL,
+                                ?DateTime $sentAt = NULL)
     {
         parent::__construct($business, $user);
 
         $this->__postalAddressConstruct($postalAddress);
         $this->__uuidConstruct($uuid);
+        $this->__clientSecretConstruct($clientSecret);
         $this->__statusConstruct($status);
         $this->__amountConstruct($amount);
         $this->__dataConstruct($data);
@@ -122,6 +132,7 @@ class Order extends AbstractUserContext implements OrderInterface
         return array_merge(
             parent::__toArray(),
             $this->__uuidToArray(),
+            $this->__clientSecretToArray(),
             $this->__statusToArray(),
             $this->__amountToArray(),
             $this->__createdAtToArray(),
@@ -142,6 +153,7 @@ class Order extends AbstractUserContext implements OrderInterface
     {
         return array(
             'Pendiente' => static::STATUS_PENDING,
+            'Pagado' => static::STATUS_PAID,
             'En Preparación' => static::STATUS_PREPARING,
             'Cancelado' => static::STATUS_CANCELLED,
             'Enviado' => static::STATUS_SENT,

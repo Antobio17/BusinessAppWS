@@ -8,6 +8,10 @@ use App\Entity\Order;
 use App\Entity\AppError;
 use App\Helper\ToolsHelper;
 use App\Service\Interfaces\StoreServiceInterface;
+use App\Service\Interfaces\StripeServiceInterface;
+use App\Service\Traits\StripeServiceTrait;
+use Doctrine\Persistence\ManagerRegistry;
+use Stripe\Exception\ApiErrorException;
 
 class StoreService extends AppService implements StoreServiceInterface
 {
@@ -16,7 +20,24 @@ class StoreService extends AppService implements StoreServiceInterface
 
     /************************************************* PROPERTIES *************************************************/
 
+    use StripeServiceTrait;
+
     /************************************************* CONSTRUCT **************************************************/
+
+    /**
+     * AppService construct.
+     *
+     * @param ManagerRegistry $doctrine Doctrine to manage the ORM.
+     * @param TelegramService $telegramService Service of Telegram.
+     * @param bool $testMode Boolean to set the Test Mode.
+     */
+    public function __construct(ManagerRegistry        $doctrine, TelegramService $telegramService,
+                                StripeServiceInterface $stripeService, bool $testMode = FALSE)
+    {
+        parent::__construct($doctrine, $telegramService, $testMode);
+
+        $this->setStripeService($stripeService);
+    }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
@@ -57,14 +78,14 @@ class StoreService extends AppService implements StoreServiceInterface
      * @inheritDoc
      * @return bool bool
      */
-    public function notifyNewOrder(int $postalAddressID, float $amount, array $productsData): ?bool
+    public function notifyNewOrder(int $postalAddressID, float $amount, array $productsData): ?Order
     {
         $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
 
         $user = $this->getUser();
         if ($this->getBusiness() === NULL):
             $this->registerAppError_BusinessContextUndefined($method);
-        elseif (!$user instanceof User):
+        elseif (!$user instanceof User || $user->getEmail() === NULL):
             $this->registerAppError_UserContextUndefined($method);
         else:
             $postalAddress = $user->isOwnerPostalAddress($postalAddressID);
@@ -79,13 +100,77 @@ class StoreService extends AppService implements StoreServiceInterface
             if (empty($this->getErrors())):
                 # TODO semaphore
                 $this->_checkProductAvailability($productsData, $method);
-                $order = new Order($this->getBusiness(), $user, $postalAddress, $amount, NULL, $productsData);
+                try {
+                    $paymentIntent = $this->getStripeService()->createPaymentIntent(
+                        $amount, $user->getEmail(), json_encode($productsData)
+                    );
+                    if ($paymentIntent->client_secret !== NULL):
+                        $order = new Order(
+                            $this->getBusiness(), $user, $postalAddress, $amount,
+                            $paymentIntent->id, $paymentIntent->client_secret, $productsData
+                        );
+                        $this->persistAndFlush($order);
+                    else:
+                        $this->registerAppError(
+                            $method, AppError::ERROR_STORE_STRIPE_CLIENT_SECRET_NULL,
+                            'Error en el intento de pedido con Stripe: client_secret es nulo.'
+                        );
+                    endif;
+                } catch (ApiErrorException $e) {
+                    $this->registerAppError(
+                        $method, AppError::ERROR_STORE_STRIPE_PAYMENT_INTENT_ERROR,
+                        'Error en el intento de pedido con Stripe.',
+                        $e->getCode(), $e->getMessage(), $e->getTrace()
+                    );
+                }
                 # TODO end semaphore
-                $created = $this->persistAndFlush($order);
             endif;
         endif;
 
-        return $created ?? NULL;
+        return $order ?? NULL;
+    }
+
+    /**
+     * @inheritDoc
+     * @return bool bool
+     */
+    public function notifyPaymentOrder(string $paymentIntentID, bool $success): ?bool
+    {
+        $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
+
+        $user = $this->getUser();
+        if (!$user instanceof User):
+            $this->registerAppError_UserContextUndefined($method);
+        else:
+            $order = $this->getOrderRepository()->findByUUID($paymentIntentID);
+            /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+            if ($order !== NULL && $order->getUser()->getID() === $user->getID()):
+                if ($success && $order->getStatus() === Order::STATUS_PENDING):
+                    $order->setStatus(Order::STATUS_PAID);
+                    $this->persistAndFlush($order);
+                elseif (!$success && $order->getStatus() === Order::STATUS_PENDING):
+                    $productsData = $order->getData();
+                    foreach ($productsData as $productData):
+                        $productID = (int)$productData[StoreController::PRODUCT_DATA_KEY_ID];
+                        $quantity = (int)$productData[StoreController::PRODUCT_DATA_KEY_QUANTITY];
+                        $product = $this->getProductRepository()->find($productID);
+                        if ($product !== NULL):
+                            $product->setStock($product->getStock() + $quantity);
+                            $this->persistAndFlush($product);
+                        endif;
+                    endforeach;
+                    $this->getEntityManager()->remove($order);
+                    $this->getEntityManager()->flush();
+                endif;
+            else:
+                $this->registerAppError(
+                    $method, AppError::ERROR_STORE_INCORRECT_ORDER,
+                    'Error en la notificación de pago del pedido: el pedido no corresponde al usuario.'
+                );
+            endif;
+        endif;
+
+        return empty($this->getErrors());
     }
 
     /**
@@ -103,8 +188,8 @@ class StoreService extends AppService implements StoreServiceInterface
             $this->registerAppError_UserContextUndefined($method);
         else:
             $order = $this->getOrderRepository()->find($orderID);
-            if ($order === NULL || $order->getStatus() !== Order::STATUS_PENDING):
-                $message = $order !== NULL ? 'su estado no es PENDIENTE' : 'no existe';
+            if ($order === NULL || $order->getStatus() !== Order::STATUS_PAID):
+                $message = $order !== NULL ? 'su estado no es PAGADO' : 'no existe';
                 $this->registerAppError(
                     $method, AppError::ERROR_STORE_INCORRECT_ORDER,
                     sprintf('Error en la cancelación del pedido: %s.', $message)

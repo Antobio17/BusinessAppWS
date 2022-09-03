@@ -6,8 +6,8 @@
     "require": {
         "php": ">=7.4",
         "ext-ctype": "*",
-        "ext-intl": "*",
         "ext-iconv": "*",
+        "ext-intl": "*",
         "ext-json": "^7.4",
         "ext-openssl": "^7.4",
         "composer/package-versions-deprecated": "1.11.99.4",
@@ -17,6 +17,7 @@
         "easycorp/easyadmin-bundle": "^3.5",
         "lexik/jwt-authentication-bundle": "^2.14",
         "nelmio/cors-bundle": "^2.2",
+        "stripe/stripe-php": "^9.4",
         "symfony/console": "5.4.*",
         "symfony/dotenv": "5.4.*",
         "symfony/flex": "^1.17|^2",
