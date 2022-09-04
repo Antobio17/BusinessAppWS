@@ -24,6 +24,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use App\Controller\Admin\Interfaces\BusinessCrudControllerInterface;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class BusinessCrudController extends AbstractCrudController implements BusinessCrudControllerInterface
 {
@@ -100,11 +101,14 @@ class BusinessCrudController extends AbstractCrudController implements BusinessC
             IdField::new('id')->hideOnForm(),
             TextField::new('domain', 'Dominio'),
             TextareaField::new('domainAlias', 'Alias de Dominio')
+                ->setRequired(FALSE)
                 ->setHelp('Los alias de dominios separados por "comas (,)".')
                 ->hideOnIndex(),
             TextField::new('name', 'Nombre'),
             TextField::new('phoneNumber', 'Teléfono'),
             TextField::new('email'),
+            TextField::new('clientSecret', 'Clave privada Stripe')
+                ->hideOnIndex(),
             FormField::addPanel('Dirección Postal'),
             TextField::new('postalAddress.address', 'Dirección')->hideOnForm(),
             AssociationField::new('postalAddress')

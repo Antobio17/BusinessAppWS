@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\ClientSecretTrait;
 use App\Entity\Traits\DomainAliasTrait;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\NameTrait;
@@ -65,6 +66,11 @@ class Business extends AbstractORM implements BusinessInterface
     use PostalAddressTrait {
         PostalAddressTrait::__construct as protected __postalAddressConstruct;
         PostalAddressTrait::__toArray as protected __postalAddressToArray;
+    }
+
+    use ClientSecretTrait {
+        ClientSecretTrait::__construct as protected __clientSecretKeyConstruct;
+        ClientSecretTrait::__toArray as protected __clientSecretKeyToArray;
     }
 
     use BusinessConfigTrait {

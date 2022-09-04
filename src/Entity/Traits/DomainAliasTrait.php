@@ -36,9 +36,9 @@ trait DomainAliasTrait
      * @inheritDoc
      * @return $this $this
      */
-    public function setDomainAlias(string $domainAlias): self
+    public function setDomainAlias(?string $domainAlias): self
     {
-        $this->domainAlias = $domainAlias;
+        $this->domainAlias = $domainAlias ?? '';
 
         return $this;
     }
@@ -48,11 +48,11 @@ trait DomainAliasTrait
     /**
      *  DomainAliasTrait constructor.
      *
-     * @param string $domainAlias DomainAlias of the Entity to set.
+     * @param string|null $domainAlias DomainAlias of the Entity to set.
      */
-    public function __construct(string $domainAlias)
+    public function __construct(?string $domainAlias)
     {
-        $this->setDomainAlias($domainAlias);
+        $this->setDomainAlias($domainAlias ?? '');
     }
 
     /*********************************************** PUBLIC METHODS ***********************************************/

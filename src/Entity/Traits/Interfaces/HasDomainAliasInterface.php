@@ -20,11 +20,11 @@ interface HasDomainAliasInterface
     /**
      * Sets the DomainAlias property of the Entity.
      *
-     * @param string $domainAlias DomainAlias of the Entity to set.
+     * @param string|null $domainAlias DomainAlias of the Entity to set.
      *
      * @return $this $this
      */
-    public function setDomainAlias(string $domainAlias): self;
+    public function setDomainAlias(?string $domainAlias): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 

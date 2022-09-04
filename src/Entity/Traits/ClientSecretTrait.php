@@ -57,7 +57,7 @@ trait ClientSecretTrait
      *
      * @param string|null $clientSecret ClientSecret of the Entity to set.
      */
-    public function __construct(?string $clientSecret)
+    public function __construct(?string $clientSecret = NULL)
     {
         $this->setClientSecret($clientSecret);
     }

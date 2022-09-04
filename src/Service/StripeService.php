@@ -32,7 +32,7 @@ class StripeService implements StripeServiceInterface
     public function __construct(ParameterBagInterface $parameterBag)
     {
         /** @noinspection MissingService */
-        $this->stripeClient = new StripeClient ($parameterBag->get('app.stripe_client_secret_key'));
+        $this->initClient($parameterBag->get('app.stripe_client_secret_key'));
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -50,18 +50,29 @@ class StripeService implements StripeServiceInterface
 
     /**
      * @inheritDoc
+     * @return StripeClient StripeClient
+     */
+    public function initClient(string $secretKey): StripeClient
+    {
+        $this->stripeClient = new StripeClient ($secretKey);
+
+        return $this->stripeClient;
+    }
+
+    /**
+     * @inheritDoc
      * @return PaymentIntent|null PaymentIntent|null
      * @throws ApiErrorException
      */
-    public function createPaymentIntent(float $amount, string $userEmail, string $JSONProducts,
+    public function createPaymentIntent(float  $amount, string $userEmail, string $JSONProducts,
                                         string $currency = 'eur'): ?PaymentIntent
     {
         return $paymentIntent = $this->getStripeClient()->paymentIntents->create(array(
-                'amount' => round($amount * 100),
-                'currency' => $currency,
-                'receipt_email' => $userEmail,
-                'description' => $JSONProducts,
-            ));
+            'amount' => round($amount * 100),
+            'currency' => $currency,
+            'receipt_email' => $userEmail,
+            'description' => $JSONProducts,
+        ));
     }
 
     /********************************************** PROTECTED METHODS *********************************************/
