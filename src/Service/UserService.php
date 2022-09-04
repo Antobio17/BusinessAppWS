@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Service\Traits\MailServiceTrait;
 use Exception;
 use App\Entity\User;
 use App\Entity\AppError;
@@ -11,6 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 use App\Service\Interfaces\UserServiceInterface;
 use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
@@ -36,6 +38,8 @@ class UserService extends AppService implements UserServiceInterface
 
     protected PasswordHasherFactoryInterface $passwordHasherFactory;
 
+    use MailServiceTrait;
+
     /************************************************* CONSTRUCT **************************************************/
 
     /**
@@ -51,15 +55,17 @@ class UserService extends AppService implements UserServiceInterface
      */
     public function __construct(ManagerRegistry                $doctrine, TelegramService $telegramService,
                                 LockFactory                    $lockFactory,
-                                UserPasswordHasherInterface $userPasswordHasher,
+                                UserPasswordHasherInterface    $userPasswordHasher,
                                 AuthenticationSuccessHandler   $authenticationSuccessHandler,
-                                PasswordHasherFactoryInterface $passwordHasherFactory, bool $testMode = FALSE)
+                                PasswordHasherFactoryInterface $passwordHasherFactory, MailService $mailService,
+                                bool                           $testMode = FALSE)
     {
         parent::__construct($doctrine, $telegramService, $lockFactory, $testMode);
 
-        $this->setUserPasswordHasher($userPasswordHasher);
-        $this->setAuthenticationSuccessHandler($authenticationSuccessHandler);
-        $this->setPasswordHasherFactoryInterface($passwordHasherFactory);
+        $this->setUserPasswordHasher($userPasswordHasher)
+            ->setAuthenticationSuccessHandler($authenticationSuccessHandler)
+            ->setPasswordHasherFactoryInterface($passwordHasherFactory)
+            ->setMailService($mailService);
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -127,11 +133,36 @@ class UserService extends AppService implements UserServiceInterface
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
+     * @param int $businessID
+     * @param string $email
+     * @param string $token
+     *
+     * @return string
+     */
+    public function verifyUser(int $businessID, string $email, string $token): string
+    {
+        $business = $this->getBusinessRepository()->find($businessID);
+        if ($business !== NULL):
+            $user = $this->getUserRepository()->findByEmail($business, $email);
+            if (
+                $user !== NULL &&
+                md5(sprintf('%s%s', $user->getEmail(), $user->getPassword())) === $token
+            ):
+                $user->setIsVerified(TRUE);
+                $this->persistAndFlush($user);
+            endif;
+        endif;
+
+        return $business->getDomain();
+    }
+
+    /**
      * @inheritDoc
      * @return bool bool
      */
     public function signup(string $email, string $password, string $phoneNumber, string $name, string $surname): bool
     {
+        $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
         $business = $this->getBusiness();
         $user = $this->getUserRepository()->findByEmail($business, $email);
 
@@ -139,14 +170,24 @@ class UserService extends AppService implements UserServiceInterface
             $user = new User($business, $email, $password, $phoneNumber, $name, $surname);
             $encodedPassword = $this->getUserPasswordHasher()->hashPassword($user, $password);
             $user->setPassword($encodedPassword);
-            $this->persistAndFlush($user);
+            $persisted = $this->persistAndFlush($user);
+            if ($persisted):
+                try {
+                    $this->getMailService()->sendVerificationEmail($user);
+                } catch (TransportExceptionInterface $e) {
+                    $user->setIsVerified(TRUE);
+                    $this->persistAndFlush($user);
+                    $this->registerAppError(
+                        $method, AppError::ERROR_SEND_MAIL,
+                        'Error al enviar email de verificación de usuario.',
+                        $e->getCode(), $e->getMessage(), $e->getTrace(), TRUE, FALSE
+                    );
+                }
+            endif;
         else:
             $this->registerAppError(
-                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
-                Response::HTTP_CONFLICT,
-                'El email introducido ya existe.',
-                NULL, NULL, array(),
-                FALSE, FALSE
+                $method, Response::HTTP_CONFLICT, 'El email introducido ya existe.',
+                NULL, NULL, array(), FALSE, FALSE
             );
         endif;
 
@@ -166,19 +207,27 @@ class UserService extends AppService implements UserServiceInterface
 
         $token = NULL;
         if ($user !== NULL):
-            if ($this->passwordHasherFactory->getPasswordHasher($user)->verify($user->getPassword(), $password)):
+            if (
+                $this->passwordHasherFactory->getPasswordHasher($user)->verify($user->getPassword(), $password)
+                && $user->getIsVerified()
+            ):
                 $JSONToken = $this->getAuthenticationSuccessHandler()->handleAuthenticationSuccess($user)->getContent();
                 $token = json_decode($JSONToken, TRUE);
             endif;
         endif;
 
-        if ($token === NULL):
+        if (!$user->getIsVerified()):
             $this->registerAppError(
                 ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
                 Response::HTTP_UNAUTHORIZED,
-                'El email o contraseña no son correctos.',
-                NULL, NULL, array(),
-                FALSE, FALSE
+                'Aún no has verificado la cuenta. Por favor revisa la bandeja de tu correo electrónico.',
+                NULL, NULL, array(), FALSE, FALSE
+            );
+        elseif ($token === NULL):
+            $this->registerAppError(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
+                Response::HTTP_UNAUTHORIZED, 'El email o contraseña no son correctos.',
+                NULL, NULL, array(), FALSE, FALSE
             );
         endif;
 

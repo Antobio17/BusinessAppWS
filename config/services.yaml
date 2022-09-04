@@ -4,6 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.back_end_url: '%env(resolve:BACK_END_URL)%'
+    app.back_end_email: '%env(resolve:BACK_END_EMAIL)%'
     app.secret_encryption_token: '%env(resolve:SECRET_ENCRYPTION_TOKEN)%'
     app.telegram_bot_api_token: '%env(resolve:TELEGRAM_BOT_API_TOKEN)%'
     app.telegram_chat_id_developer: '%env(resolve:TELEGRAM_CHAT_ID_DEVELOPER)%'

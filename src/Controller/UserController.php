@@ -6,6 +6,7 @@ use App\Entity\AppError;
 use App\Helper\ToolsHelper;
 use App\Service\Traits\UserServiceTrait;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\Interfaces\UserServiceInterface;
@@ -30,8 +31,12 @@ class UserController extends AppController implements UserControllerInterface
     public const REQUEST_FIELD_PROVINCE = 'province';
     public const REQUEST_FIELD_STATE = 'state';
     public const REQUEST_FIELD_POSTAL_ADDRESS_ID = 'postalAddressID';
+    public const REQUEST_FIELD_TOKEN = 'token';
+    public const REQUEST_FIELD_BUSINESS_ID = 'business';
 
     public const COOKIE_LOGIN_EXPIRATION = 259200;
+
+    public const PATH_VERIFY_USER = '/verify/user';
 
     /************************************************* PROPERTIES *************************************************/
 
@@ -55,6 +60,39 @@ class UserController extends AppController implements UserControllerInterface
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /************************************************** ROUTING ***************************************************/
+
+    /**
+     * @Route("/verify/user")
+     *
+     * @inheritDoc
+     * @return RedirectResponse RedirectResponse
+     */
+    public function verifyUser(Request $request): RedirectResponse
+    {
+        $email = $this->getParamFromRequest($request, static::REQUEST_FIELD_EMAIL);
+        $token = $this->getParamFromRequest($request, static::REQUEST_FIELD_TOKEN);
+        $businessID = $this->getParamFromRequest($request, static::REQUEST_FIELD_BUSINESS_ID);
+
+        $validationErrors = array_merge(
+            $this->validateRequiredRequestFields(array(
+                static::REQUEST_FIELD_EMAIL => $email,
+                static::REQUEST_FIELD_TOKEN => $token,
+                static::REQUEST_FIELD_BUSINESS_ID => $businessID,
+            )),
+            $this->validateRequestNumericFields(array(
+                static::REQUEST_FIELD_BUSINESS_ID => $businessID,
+            ))
+        );
+
+        if (empty($validationErrors)):
+            $url = $this->getUserService()->verifyUser((int)$businessID, $email, $token);
+            $response = $this->redirect($url);
+        else:
+            $response = $this->createJsonResponse(NULL, $validationErrors, $this->getUserService());
+        endif;
+
+        return $response;
+    }
 
     /**
      * @Route("/api/signup")

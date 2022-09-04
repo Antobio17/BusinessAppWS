@@ -4,6 +4,10 @@ networks:
   nginx-php-mysql-ws:
 
 services:
+  mailer:
+    image: schickling/mailcatcher
+    ports: [ "1025", "1080" ]
+
   nginx-service:
     image: nginx:stable-alpine
     container_name: nginx-container-ws

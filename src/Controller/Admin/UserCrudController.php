@@ -68,6 +68,7 @@ class UserCrudController extends AbstractCrudController implements UserCrudContr
             TextField::new('surname', 'Apellidos'),
             BooleanField::new('isWorker', 'Trabajador')
                 ->setDisabled($pageName !== Crud::PAGE_NEW),
+            BooleanField::new('isVerified', 'Verificado'),
             FormField::addPanel('Dirección Postal')->hideWhenCreating(),
             CollectionField::new('postalAddresses')
                 ->hideOnIndex()
