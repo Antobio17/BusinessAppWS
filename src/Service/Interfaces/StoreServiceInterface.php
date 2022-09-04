@@ -50,6 +50,11 @@ interface StoreServiceInterface extends AppServiceInterface, HasStripeServiceInt
     public function notifyPaymentOrder(string $paymentIntentID, bool $success): ?bool;
 
     /**
+     * Remove an order and modify the stock of the products.
+     */
+    public function removeOrder(Order $order);
+
+    /**
      * Cancel a user's order that it is in pending status.
      *
      * @param int $orderID ID of the order to cancel.

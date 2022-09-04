@@ -5,7 +5,9 @@ namespace App\Controller\Admin;
 use App\Entity\Order;
 use App\Entity\User;
 use App\Service\BusinessService;
+use App\Service\StoreService;
 use App\Service\Traits\BusinessServiceTrait;
+use App\Service\Traits\StoreServiceTrait;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -34,6 +36,8 @@ class OrderCrudController extends AbstractCrudController implements OrderCrudCon
 
     use BusinessServiceTrait;
 
+    use StoreServiceTrait;
+
     /************************************************* CONSTRUCT **************************************************/
 
     /**
@@ -41,11 +45,13 @@ class OrderCrudController extends AbstractCrudController implements OrderCrudCon
      *
      * @param EntityRepository $entityRepository EntityRepository to override the query builds.
      */
-    public function __construct(EntityRepository $entityRepository, BusinessService $businessService)
+    public function __construct(EntityRepository $entityRepository, BusinessService $businessService,
+                                StoreService     $storeService)
     {
         parent::__construct($entityRepository);
 
-        $this->setBusinessService($businessService);
+        $this->setBusinessService($businessService)
+            ->setStoreService($storeService);
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -116,14 +122,23 @@ class OrderCrudController extends AbstractCrudController implements OrderCrudCon
     {
         parent::configureActions($actions);
 
-        $actions->add(
-            Crud::PAGE_INDEX,
-            Action::new('toPreparingAction', FALSE, 'fas fa-box')
-                ->linkToCrudAction('toPreparingAction')
-                ->displayIf(static function ($entity) {
-                    return $entity->getStatus() === Order::STATUS_PAID;
-                })
-        )
+        $actions
+            ->add(
+                Crud::PAGE_INDEX,
+                Action::new('deletePendingAction', FALSE, 'fas fa-trash')
+                    ->linkToCrudAction('deletePendingAction')
+                    ->displayIf(static function ($entity) {
+                        return $entity->getStatus() === Order::STATUS_PENDING;
+                    })
+            )
+            ->add(
+                Crud::PAGE_INDEX,
+                Action::new('toPreparingAction', FALSE, 'fas fa-box')
+                    ->linkToCrudAction('toPreparingAction')
+                    ->displayIf(static function ($entity) {
+                        return $entity->getStatus() === Order::STATUS_PAID;
+                    })
+            )
             ->add(
                 Crud::PAGE_INDEX,
                 Action::new('toSentAction', FALSE, 'fas fa-truck')
@@ -140,6 +155,22 @@ class OrderCrudController extends AbstractCrudController implements OrderCrudCon
 
         return $actions
             ->disable('new', 'detail');
+    }
+
+    /**
+     * @inheritDoc
+     * @return RedirectResponse RedirectResponse
+     */
+    public function deletePendingAction(Request $request): RedirectResponse
+    {
+        $orderID = (int)$request->get('entityId');
+        $order = $this->getBusinessService()->getOrderRepository()->find($orderID ?? -1);
+
+        if ($order !== NULL && $order->getStatus() === Order::STATUS_PENDING):
+            $this->getStoreService()->removeOrder($order);
+        endif;
+
+        return $this->redirect($request->headers->get('referer'));
     }
 
     /**
