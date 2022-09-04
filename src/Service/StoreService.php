@@ -87,7 +87,8 @@ class StoreService extends AppService implements StoreServiceInterface
         $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
 
         $user = $this->getUser();
-        if ($this->getBusiness() === NULL):
+        $business = $this->getBusiness();
+        if ($business === NULL):
             $this->registerAppError_BusinessContextUndefined($method);
         elseif (!$user instanceof User || $user->getEmail() === NULL):
             $this->registerAppError_UserContextUndefined($method);
@@ -104,7 +105,7 @@ class StoreService extends AppService implements StoreServiceInterface
             if (empty($this->getErrors())):
                 $ttl = 30;
                 $locks = array();
-                $businessName = ToolsHelper::getStrLikeSnakeCase($this->getBusiness()->getName());
+                $businessName = ToolsHelper::getStrLikeSnakeCase($business->getName());
                 foreach ($productsData as $productData):
                     $lockName = $this->_getLockName_createEntityFromValue(
                         Order::class, sprintf(
@@ -116,13 +117,16 @@ class StoreService extends AppService implements StoreServiceInterface
 
                 $this->_checkProductAvailability($productsData, $method);
                 try {
+                    if ($business->getClientSecret() !== NULL):
+                        $this->getStripeService()->initClient($business->getClientSecret());
+                    endif;
                     $paymentIntent = $this->getStripeService()->createPaymentIntent(
                         $amount, $user->getEmail(),
                         sprintf('Intento de pago para el usuario %s.', $user->getEmail() ?? 'Nulo')
                     );
                     if ($paymentIntent->client_secret !== NULL):
                         $order = new Order(
-                            $this->getBusiness(), $user, $postalAddress, $amount,
+                            $business, $user, $postalAddress, $amount,
                             $paymentIntent->id, $paymentIntent->client_secret, $productsData
                         );
                         $this->persistAndFlush($order);

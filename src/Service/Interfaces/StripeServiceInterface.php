@@ -26,6 +26,15 @@ interface StripeServiceInterface
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
+     * Initialize the StripeClient with a secret key provided.
+     *
+     * @param string $secretKey The secret key of the client.
+     *
+     * @return StripeClient StripeClient
+     */
+    public function initClient(string $secretKey): StripeClient;
+
+    /**
      * @param float $amount
      * @param string $userEmail
      * @param string $JSONProducts
