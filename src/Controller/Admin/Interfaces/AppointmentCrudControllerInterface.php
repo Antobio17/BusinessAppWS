@@ -4,6 +4,8 @@ namespace App\Controller\Admin\Interfaces;
 
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * AppointmentCrudControllerInterface
@@ -33,6 +35,15 @@ interface AppointmentCrudControllerInterface
      * @return Filters Filters
      */
     public function configureFilters(Filters $filters): Filters;
+
+    /**
+     * Method to finish an appointment.
+     *
+     * @param Request $request Request of the page.
+     *
+     * @return RedirectResponse RedirectResponse
+     */
+    public function finishAppointmentAction(Request $request): RedirectResponse;
 
     /*********************************************** STATIC METHODS ***********************************************/
 
