@@ -2,23 +2,25 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\Admin\Interfaces\AppointmentCrudControllerInterface;
 use App\Entity\Appointment;
 use App\Entity\User;
 use App\Service\BusinessService;
 use App\Service\Traits\BusinessServiceTrait;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
-use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
-use App\Controller\Admin\Interfaces\AppointmentCrudControllerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class AppointmentCrudController extends AbstractCrudController implements AppointmentCrudControllerInterface
 {
@@ -94,7 +96,7 @@ class AppointmentCrudController extends AbstractCrudController implements Appoin
     public function configureFilters(Filters $filters): Filters
     {
         return parent::configureFilters($filters)
-            ->add(DateTimeFilter::new('bookingDateAt', 'Fecha de reserva'),)
+            ->add(DateTimeFilter::new('bookingDateAt', 'Fecha de reserva'))
             ->add(ChoiceFilter::new(
                 'status', 'Estado')->setChoices(Appointment::getStatusChoices())
             );
@@ -107,6 +109,14 @@ class AppointmentCrudController extends AbstractCrudController implements Appoin
     public function configureActions(Actions $actions): Actions
     {
         parent::configureActions($actions);
+        $actions->add(
+            Crud::PAGE_INDEX,
+            Action::new('finishAppointmentAction', FALSE, 'fas fa-check')
+                ->linkToCrudAction('finishAppointmentAction')
+                ->displayIf(static function ($entity) {
+                    return $entity->getStatus() === Appointment::STATUS_PENDING;
+                })
+        );
 
         if (!in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())):
             $actions
@@ -115,6 +125,23 @@ class AppointmentCrudController extends AbstractCrudController implements Appoin
 
         return $actions
             ->disable('new', 'detail');
+    }
+
+    /**
+     * @inheritDoc
+     * @return RedirectResponse RedirectResponse
+     */
+    public function finishAppointmentAction(Request $request): RedirectResponse
+    {
+        $appointmentID = (int)$request->get('entityId');
+        $appointment = $this->getBusinessService()->getAppointmentRepository()->find($appointmentID ?? -1);
+
+        if ($appointment !== NULL && $appointment->getStatus() === Appointment::STATUS_PENDING):
+            $appointment->setStatus(Appointment::STATUS_DONE);
+            $this->getBusinessService()->persistAndFlush($appointment);
+        endif;
+
+        return $this->redirect($request->headers->get('referer'));
     }
 
     /*********************************************** STATIC METHODS ***********************************************/

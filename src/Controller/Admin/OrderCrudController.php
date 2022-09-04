@@ -6,6 +6,7 @@ use App\Entity\Order;
 use App\Entity\User;
 use App\Service\BusinessService;
 use App\Service\Traits\BusinessServiceTrait;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -21,6 +22,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use App\Controller\Admin\Interfaces\OrderCrudControllerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class OrderCrudController extends AbstractCrudController implements OrderCrudControllerInterface
 {
@@ -113,6 +116,23 @@ class OrderCrudController extends AbstractCrudController implements OrderCrudCon
     {
         parent::configureActions($actions);
 
+        $actions->add(
+            Crud::PAGE_INDEX,
+            Action::new('toPreparingAction', FALSE, 'fas fa-box')
+                ->linkToCrudAction('toPreparingAction')
+                ->displayIf(static function ($entity) {
+                    return $entity->getStatus() === Order::STATUS_PAID;
+                })
+        )
+            ->add(
+                Crud::PAGE_INDEX,
+                Action::new('toSentAction', FALSE, 'fas fa-truck')
+                    ->linkToCrudAction('toSentAction')
+                    ->displayIf(static function ($entity) {
+                        return $entity->getStatus() === Order::STATUS_PREPARING;
+                    })
+            );
+
         if (!in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())):
             $actions
                 ->disable('delete');
@@ -120,6 +140,42 @@ class OrderCrudController extends AbstractCrudController implements OrderCrudCon
 
         return $actions
             ->disable('new', 'detail');
+    }
+
+    /**
+     * @inheritDoc
+     * @return RedirectResponse RedirectResponse
+     */
+    public function toPreparingAction(Request $request): RedirectResponse
+    {
+        /** @noinspection DuplicatedCode */
+        $orderID = (int)$request->get('entityId');
+        $order = $this->getBusinessService()->getOrderRepository()->find($orderID ?? -1);
+
+        if ($order !== NULL && $order->getStatus() === Order::STATUS_PAID):
+            $order->setStatus(Order::STATUS_PREPARING);
+            $this->getBusinessService()->persistAndFlush($order);
+        endif;
+
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+    /**
+     * @inheritDoc
+     * @return RedirectResponse RedirectResponse
+     */
+    public function toSentAction(Request $request): RedirectResponse
+    {
+        /** @noinspection DuplicatedCode */
+        $orderID = (int)$request->get('entityId');
+        $order = $this->getBusinessService()->getOrderRepository()->find($orderID ?? -1);
+
+        if ($order !== NULL && $order->getStatus() === Order::STATUS_PREPARING):
+            $order->setStatus(Order::STATUS_SENT);
+            $this->getBusinessService()->persistAndFlush($order);
+        endif;
+
+        return $this->redirect($request->headers->get('referer'));
     }
 
     /*********************************************** STATIC METHODS ***********************************************/
