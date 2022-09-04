@@ -37,6 +37,13 @@ interface OrderCrudControllerInterface
     public function configureFilters(Filters $filters): Filters;
 
     /**
+     * Method to delete a pending order.
+     *
+     * @return RedirectResponse RedirectResponse
+     */
+    public function deletePendingAction(Request $request): RedirectResponse;
+
+    /**
      * Method to change the status of the order to prepare.
      *
      * @param Request $request Request of the page.

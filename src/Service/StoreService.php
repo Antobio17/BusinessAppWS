@@ -172,18 +172,7 @@ class StoreService extends AppService implements StoreServiceInterface
                     $order->setStatus(Order::STATUS_PAID);
                     $this->persistAndFlush($order);
                 elseif (!$success && $order->getStatus() === Order::STATUS_PENDING):
-                    $productsData = $order->getData();
-                    foreach ($productsData as $productData):
-                        $productID = (int)$productData[StoreController::PRODUCT_DATA_KEY_ID];
-                        $quantity = (int)$productData[StoreController::PRODUCT_DATA_KEY_QUANTITY];
-                        $product = $this->getProductRepository()->find($productID);
-                        if ($product !== NULL):
-                            $product->setStock($product->getStock() + $quantity);
-                            $this->persistAndFlush($product);
-                        endif;
-                    endforeach;
-                    $this->getEntityManager()->remove($order);
-                    $this->getEntityManager()->flush();
+                    $this->removeOrder($order);
                 endif;
             else:
                 $this->registerAppError(
@@ -194,6 +183,35 @@ class StoreService extends AppService implements StoreServiceInterface
         endif;
 
         return empty($this->getErrors());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeOrder(Order $order)
+    {
+        $method = ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__);
+
+        $productsData = $order->getData();
+        foreach ($productsData as $productData):
+            $productID = (int)$productData[StoreController::PRODUCT_DATA_KEY_ID];
+            $quantity = (int)$productData[StoreController::PRODUCT_DATA_KEY_QUANTITY];
+            $product = $this->getProductRepository()->find($productID);
+            if ($product !== NULL):
+                $ttl = 30;
+                $businessName = ToolsHelper::getStrLikeSnakeCase($order->getBusiness()->getName());
+                $lockName = $this->_getLockName_createEntityFromValue(
+                    Order::class, sprintf('%s_%s', $productID, $businessName)
+                );
+                $lock = $this->createLock($lockName, $ttl);
+                $product->setStock($product->getStock() + $quantity);
+                $this->persistAndFlush($product);
+                $this->releaseLock($method, $lock, $ttl);
+            endif;
+        endforeach;
+
+        $this->getEntityManager()->remove($order);
+        $this->getEntityManager()->flush();
     }
 
     /**
