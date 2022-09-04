@@ -2,16 +2,16 @@
 
 namespace App\Controller;
 
+use App\Controller\Interfaces\UserControllerInterface;
 use App\Entity\AppError;
 use App\Helper\ToolsHelper;
+use App\Service\Interfaces\UserServiceInterface;
 use App\Service\Traits\UserServiceTrait;
 use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use App\Service\Interfaces\UserServiceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Controller\Interfaces\UserControllerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AppController implements UserControllerInterface
 {
@@ -65,9 +65,9 @@ class UserController extends AppController implements UserControllerInterface
      * @Route("/verify/user")
      *
      * @inheritDoc
-     * @return RedirectResponse RedirectResponse
+     * @return Response Response
      */
-    public function verifyUser(Request $request): RedirectResponse
+    public function verifyUser(Request $request): Response
     {
         $email = $this->getParamFromRequest($request, static::REQUEST_FIELD_EMAIL);
         $token = $this->getParamFromRequest($request, static::REQUEST_FIELD_TOKEN);
@@ -86,6 +86,9 @@ class UserController extends AppController implements UserControllerInterface
 
         if (empty($validationErrors)):
             $url = $this->getUserService()->verifyUser((int)$businessID, $email, $token);
+        endif;
+
+        if (isset($url)):
             $response = $this->redirect($url);
         else:
             $response = $this->createJsonResponse(NULL, $validationErrors, $this->getUserService());

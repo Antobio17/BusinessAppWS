@@ -133,14 +133,12 @@ class UserService extends AppService implements UserServiceInterface
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
-     * @param int $businessID
-     * @param string $email
-     * @param string $token
-     *
-     * @return string
+     * @inheritDoc
+     * @return string string
      */
-    public function verifyUser(int $businessID, string $email, string $token): string
+    public function verifyUser(int $businessID, string $email, string $token): ?string
     {
+        $persisted = FALSE;
         $business = $this->getBusinessRepository()->find($businessID);
         if ($business !== NULL):
             $user = $this->getUserRepository()->findByEmail($business, $email);
@@ -149,11 +147,22 @@ class UserService extends AppService implements UserServiceInterface
                 md5(sprintf('%s%s', $user->getEmail(), $user->getPassword())) === $token
             ):
                 $user->setIsVerified(TRUE);
-                $this->persistAndFlush($user);
+                $persisted = $this->persistAndFlush($user);
             endif;
         endif;
 
-        return $business->getDomain();
+        if (!$persisted):
+            $this->registerAppError(
+                ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
+                AppError::ERROR_VERIFY_USER,
+                sprintf(
+                    'Ha ocurrido un error en la verificación de usuario. (Business: %s, Email: %s',
+                    $businessID, $email
+                )
+            );
+        endif;
+
+        return $business !== NULL ? $business->getDomain() : NULL;
     }
 
     /**
