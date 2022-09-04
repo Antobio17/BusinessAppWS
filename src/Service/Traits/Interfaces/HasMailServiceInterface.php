@@ -2,31 +2,31 @@
 
 namespace App\Service\Traits\Interfaces;
 
-use App\Service\Interfaces\StripeServiceInterface;
+use App\Service\Interfaces\MailServiceInterface;
 
 /**
- * StripeServiceTrait interface.
+ * MailServiceTrait interface.
  */
-interface HasStripeServiceInterface
+interface HasMailServiceInterface
 {
 
     /******************************************** GETTERS AND SETTERS *********************************************/
 
     /**
-     * Gets the property StripeService.
+     * Gets the property MailService.
      *
-     * @return StripeServiceInterface StripeServiceInterface
+     * @return MailServiceInterface MailServiceInterface
      */
-    public function getStripeService(): StripeServiceInterface;
+    public function getMailService(): MailServiceInterface;
 
     /**
-     * Sets the property StripeService.
+     * Sets the property MailService.
      *
-     * @param StripeServiceInterface $stripeService The service of Stripe to set.
+     * @param MailServiceInterface $mailService The service of Mail to set.
      *
      * @return $this $this
      */
-    public function setStripeService(StripeServiceInterface $stripeService): self;
+    public function setMailService(MailServiceInterface $mailService): self;
 
     /*********************************************** PUBLIC METHODS ***********************************************/
 

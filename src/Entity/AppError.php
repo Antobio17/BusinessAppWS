@@ -27,6 +27,7 @@ class AppError extends AbstractORM implements AppErrorInterface
     public const ERROR_USER_CONTEXT = 2;
     public const ERROR_JWT_SPLIT_TOKEN = 3;
     public const ERROR_SEMAPHORE = 4;
+    public const ERROR_SEND_MAIL = 5;
 
     public const ERROR_TELEGRAM_API = 10;
 

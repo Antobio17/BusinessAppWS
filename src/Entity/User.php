@@ -8,7 +8,9 @@ use App\Entity\Traits\BusinessNullableTrait;
 use App\Entity\Traits\Interfaces\HasBusinessNullableInterface;
 use App\Entity\Traits\EmailNullableTrait;
 use App\Entity\Traits\Interfaces\HasEmailNullableInterface;
+use App\Entity\Traits\Interfaces\HasIsVerifiedInterface;
 use App\Entity\Traits\Interfaces\HasIsWorkerInterface;
+use App\Entity\Traits\IsVerifiedTrait;
 use App\Entity\Traits\IsWorkerTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -59,7 +61,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  */
 class User extends AbstractORM implements UserInterface, HasBusinessNullableInterface,
     PasswordAuthenticatedUserInterface, HasEmailNullableInterface, HasPasswordInterface, HasPhoneNumberInterface,
-    HasNameInterface, HasSurnameInterface, HasIsWorkerInterface
+    HasNameInterface, HasSurnameInterface, HasIsWorkerInterface, HasIsVerifiedInterface
 {
 
     /************************************************* CONSTANTS **************************************************/
@@ -105,6 +107,11 @@ class User extends AbstractORM implements UserInterface, HasBusinessNullableInte
         IsWorkerTrait::__toArray as protected __isWorkerToArray;
     }
 
+    use IsVerifiedTrait {
+        IsVerifiedTrait::__construct as protected __isVerifiedConstruct;
+        IsVerifiedTrait::__toArray as protected __isVerifiedToArray;
+    }
+
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\PostalAddress", cascade={"all"})
      * @JoinTable(name="postal_addresses_users",
@@ -135,7 +142,7 @@ class User extends AbstractORM implements UserInterface, HasBusinessNullableInte
      */
     public function __construct(?BusinessInterface $business, ?string $email, string $password, string $phoneNumber,
                                 string             $name, string $surname, array $roles = array(),
-                                bool $isWorker = FALSE)
+                                bool $isWorker = FALSE, bool $isVerified = FALSE)
     {
         $this->__businessConstruct($business);
         $this->__emailConstruct($email);
@@ -144,6 +151,7 @@ class User extends AbstractORM implements UserInterface, HasBusinessNullableInte
         $this->__nameConstruct($name);
         $this->__surnameConstruct($surname);
         $this->__isWorkerConstruct($isWorker);
+        $this->__isVerifiedConstruct($isVerified);
 
         $this->setRoles(empty($roles) ? array(static::ROLE_USER) : $roles);
 
@@ -284,6 +292,7 @@ class User extends AbstractORM implements UserInterface, HasBusinessNullableInte
             $this->__nameToArray(),
             $this->__surnameToArray(),
             $this->__isWorkerToArray(),
+            $this->__isVerifiedToArray(),
             array(
                 'roles' => $this->getRoles(),
             )

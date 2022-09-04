@@ -26,6 +26,8 @@ class AppController extends AbstractController implements AppControllerInterface
 
     public const ROUTE_ADMIN = 'admin';
 
+    public const BACK_END_URL_KEY_ENV = 'BACK_END_URL';
+
     /************************************************* PROPERTIES *************************************************/
 
     /************************************************** ROUTING ***************************************************/
@@ -145,7 +147,7 @@ class AppController extends AbstractController implements AppControllerInterface
     {
         $content = json_decode($request->getContent(), true);
 
-        return $content[$paramKey] ?? $request->request->get($paramKey) ?? NULL;
+        return $content[$paramKey] ?? $request->request->get($paramKey) ?? $request->query->get($paramKey) ?? NULL;
     }
 
     /**
