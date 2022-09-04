@@ -64,6 +64,17 @@ interface UserServiceInterface extends AppServiceInterface
     /*********************************************** PUBLIC METHODS ***********************************************/
 
     /**
+     * Verifies a user of a business specified.
+     *
+     * @param int $businessID ID of the business to belong the user
+     * @param string $email Email of the user.
+     * @param string $token Token to check the access is secure.
+     *
+     * @return string string
+     */
+    public function verifyUser(int $businessID, string $email, string $token): ?string;
+
+    /**
      * Registers a new user in the application.
      *
      * @param string $email The email of the new user.

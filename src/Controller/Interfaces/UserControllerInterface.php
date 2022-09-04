@@ -13,6 +13,15 @@ interface UserControllerInterface extends HasUserServiceInterface
     /************************************************** ROUTING ***************************************************/
 
     /**
+     * Route to verify a new user created.
+     *
+     * @param Request $request Request of the route.
+     *
+     * @return Response Response
+     */
+    public function verifyUser(Request $request): Response;
+
+    /**
      * Route to access user registration in the application.
      *
      * @param Request $request Request of the route.
