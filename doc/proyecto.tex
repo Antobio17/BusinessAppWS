@@ -21,8 +21,18 @@
 \usepackage{graphicx}
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage[shortlabels]{enumitem} %enumerados personalizados
+\usepackage{listings}
+\usepackage[table,xcdraw]{xcolor} %para incluir colores en tablas
+\usepackage[export]{adjustbox}  %para posicionar
+\usepackage{svg} %para svg
+\usepackage{textcomp}
+\usepackage{subfiles} % Best loaded last in the preamble
+\usepackage[bottom]{footmisc} % Lleva la nota a pie de página abajo el todo
+\usepackage{appendix}
+\usepackage{biblatex}
+\addbibresource{bibliografia.bib}
 
-\usepackage[table,xcdraw]{xcolor}
 \hypersetup{
 	colorlinks=true,	% false: boxed links; true: colored links
 	linkcolor=black,	% color of internal links
@@ -33,7 +43,7 @@
 \pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
 \fancyhead[L]{} % Empty left header
 \fancyhead[C]{} % Empty center header
-\fancyhead[R]{Me Llamo Así} % My name
+\fancyhead[R]{Antonio Jiménez Rodríguez} % My name
 \fancyfoot[L]{} % Empty left footer
 \fancyfoot[C]{} % Empty center footer
 \fancyfoot[R]{\thepage} % Page numbering for right footer
@@ -78,7 +88,7 @@
 	% Estado del arte
 	% 	1. Crítica al estado del arte
 	% 	2. Propuesta
-	\input{secciones/03_estado_del_arte}
+	\input{secciones/03_analisis_del_sistema}
 	
 	\input{secciones/04_planificacion}
 
@@ -88,27 +98,30 @@
 	% 3. Solucion propuesta
 	% 4. Análisis de seguridad
 	\input{secciones/05_analisis}
-
-	% Desarrollo bajo sprints: 
-	% 	1. Permitir registros y login de usuarios
-	% 	2. Desarrollo del sistema de incidencias
-	% 	3. Desarrollo del sistema de denuncias administrativas y accidentes
-	% 	4. Desarrollo del sistema de croquis
-	%   5. Instalación de la aplicación de manera automática
-	\input{secciones/06_implementacion}
+    
+    % Implementación
+	\input{secciones/06_diseño}
+	
+    % Implementación
+	\input{secciones/07_implementacion}
 
 	% Presupuesto
 
 	% Conclusiones
-	\input{secciones/07_conclusiones}
+	\input{secciones/08_conclusiones}
 
 	% Trabajos futuros
 
 
 	
 	\newpage
-	\bibliography{bibliografia}
-	\bibliographystyle{plain}
+% 	\bibliography{bibliografia}
+    \printbibliography[nottype=misc]
+    % \bibliographystyle{unsrt}
+
+
+    \defbibheading{web}{\section*{Páginas de consulta}}
+    \printbibliography[type=misc,heading=web]
 	
 \end{document}
 
