@@ -10,40 +10,40 @@ Al ser un sistema que intenta abarcar varios frentes bastantes amplios existen m
 
 \subsection{Acceso al público}
 
-Está claro que el objetivo principal es llegar a una mayor cantidad de personas y dar el negocio a conocer por la red. Sin embargo, no se puede proporcionar una web en la que todos los sitios sean accesibles por cualquier persona. Para esto se va a implementar un sistema de usuarios por negocio. Un usuario sin identificarse tendrá acceso a la página de presentación del negocio y a la página de productos de la tienda. Por el contrario, sin autenticación no se le dará acceso a la reserva de citas ni a la realización de pedidos online. Con esto también conseguimos quitar una carga al servidor de Back-End ya que por ejemplo, para un usuario nuevo que aun no se ha registrado en el negocio no se harán peticiones desde las webs al servidor para la obtención de todos estos datos.
+Está claro que el objetivo principal es llegar a una mayor cantidad de personas y dar el negocio a conocer por la red. Sin embargo, no se puede proporcionar una web en la que todos los sitios sean accesibles por cualquier persona. Para esto se va a implementar un sistema de usuarios por negocio. Un usuario sin identificarse tendrá acceso a la página de presentación del negocio y a la página de productos de la tienda. Por el contrario, sin autenticación no se le dará acceso a la reserva de citas ni a la realización de pedidos online. Con esto también conseguimos quitar una carga al servidor de Back-End, ya que por ejemplo, para un usuario nuevo que aún no se ha registrado en el negocio no se harán peticiones desde las webs al servidor para la obtención de todos estos datos.
 
 \subsubsection{Ataques al sistema}
 
-Debido al acceso público se pueden dar casos de ataques al sistema. En internet se realizan miles y miles de ataques ciberneticos al segundo y nuestro sistema no tiene porque ser una excepción. Para ello se tendrá especial atención en el trato de datos de inserción en el sistema y se validarán los usuarios registrados con el fin de intentar filtrar lo máximo posible a los usuarios reales de los que no lo son.
+Debido al acceso público se pueden dar casos de ataques al sistema. En internet se realizan miles y miles de ataques cibernéticos al segundo y nuestro sistema no tiene por qué ser una excepción. Para ello se tendrá especial atención en el trato de datos de inserción en el sistema y se validarán los usuarios registrados con el fin de intentar filtrar lo máximo posible a los usuarios reales de los que no lo son.
 
 \subsection{Reserva de citas}
 
-Otro de los bloques principales es la reserva de cita previa. Aquí se debe conseguir no romper la organización del propio negocio, no dandole la posibilidad a un cliente que reserve a una hora y minuto exacto a la que el desee ser atendido, si no que los clientes deberán seleccionar las horas que vienen definidas por el propio negocio. Parece obvio pero una mala gestión de esta parte podría causar un caos en el sistema y en el propio negocio a la hora de atender a estos clientes.
+Otro de los bloques principales es la reserva de cita previa. Aquí se debe conseguir no romper la organización del propio negocio, no dándole la posibilidad a un cliente que reserve a una hora y minuto exacto a la que él desee ser atendido, sino que los clientes deberán seleccionar las horas que vienen definidas por el propio negocio. Parece obvio, pero una mala gestión de esta parte podría causar un caos en el sistema y en el propio negocio a la hora de atender a estos clientes.
 
 Para ello se realizarán todas las comprobaciones y validaciones necesarias antes (al mostrar las citas disponibles a los clientes) y después (una vez el cliente haya enviado su reserva) para no cometer ningún error ni colapso.
 
 \subsubsection{Cancelación de citas}
 
-Este frente puede ser problema para el negocio ya que "cualquiera" podría registrarse con sus datos, realizar una reserva de una cita online y cancelarla cinco minutos antes de tener que ser atendido. Para evitar estó se deberá implementar funcionalidades para que un usuario pueda cancelar una cita dentro de un límite establecido. Si aún así el cliente no asiste a la cita por un motivo no justificado esta deberá poder ser marcada para una posible penalización del cliente.
+Este frente puede ser problema para el negocio, ya que cualquiera podría registrarse con sus datos, realizar una reserva de una cita online y cancelarla cinco minutos antes de tener que ser atendido. Para evitar esto se deberá implementar funcionalidades para que un usuario pueda cancelar una cita dentro de un límite establecido. Si aun así el cliente no asiste a la cita por un motivo no justificado esta deberá poder ser marcada para una posible penalización.
 
 \subsection{Compra de productos}
 
-El último gran bloque de este sistema es la compra de productos online ofertados por cada negocio. Desde el sistema y las diferentes webs se podrá acceder a un catálogo de productos gestionado por cada negocio en la que los usuarios podrán crear un carrito de la compra y procesar su pedido. Además tendrá acceso al estado y seguimiento de éste. Los pagos deberán gestionarse por alguna herramienta externa que de soporte para ello y se adaptará la información almacenada en base de datos para los datos proporcionados por la herramienta elegida.
+El último gran bloque de este sistema es la compra de productos online ofertados por cada negocio. Desde el sistema y las diferentes webs se podrá acceder a un catálogo de productos gestionado por cada negocio en la que los usuarios podrán crear un carrito de la compra y procesar su pedido. Además tendrá acceso al estado y seguimiento de este. Los pagos deberán gestionarse por alguna herramienta externa que de soporte para ello y se adaptará la información almacenada en base de datos para los datos proporcionados por la herramienta elegida.
 
 \section{Tipos de usuarios}
 
-Para este sistema se definirán tres tipos de usuarios los cuales podrán interactuar con el de diferente forma debido a los permisos de accesibilidad.
+Para este sistema se definirán tres tipos de usuarios los cuales podrán interactuar con él de diferente forma debido a los permisos de accesibilidad.
 
-\subsubsection{Super-Administrador}
+\subsubsection{Superadministrador}
 
-Este usuario será el que controle todo el aplicativo completo teniendo acceso al total de los datos almacenados en la base de datos. Podrá ver, modificar o eliminar datos si así lo ve oporturno, ya sea por errores producidos o por peticiones de los jefes de los negocios. Además será el encargado de revisar las notificaciones de errores que se registren y deberá mantener el orden en el funcionamiento de cada negocio.
+Este usuario será el que controle todo el aplicativo completo teniendo acceso al total de los datos almacenados en la base de datos. Podrá ver, modificar o eliminar datos si así lo ve oportuno, ya sea por errores producidos o por peticiones de los jefes de los negocios. Además será el encargado de revisar las notificaciones de errores que se registren y deberá mantener el orden en el funcionamiento de cada negocio.
 
 \subsubsection{Trabajadores}
 
-Ellos tendrá acceso completo a los datos almacenados a nivel de negocio. Podrán consultar las citas o pedidos realizados por los siguientes usuarios y notificar a un super-administrador en caso de que se haya encontrado alguna anomalía. Podrán reservar citas para clientes ya registrados o en su defecto reservar citas con el número del cliente que lo desee. Si por ejemplo, una persona mayor que no se maneje bien con el mundo de internet desea una cita en el negocio, el trabajador podría reservar una cita con el número de telefono del cliente sin necesidad de que este esté previamente registrado.
+Ellos tendrán acceso completo a los datos almacenados a nivel de negocio. Podrán consultar las citas o pedidos realizados por los siguientes usuarios y notificar a un superadministrador en caso de que se haya encontrado alguna anomalía. Podrán reservar citas para clientes ya registrados o en su defecto reservar citas con el número del cliente que lo desee. Si por ejemplo, una persona mayor que no se maneje bien con el mundo de internet desea una cita en el negocio, el trabajador podría reservar una cita con el número de teléfono del cliente sin necesidad de que este esté previamente registrado.
 
 \subsubsection{Clientes}
 
-Los clientes es el usuario encargado de que el sistema tenga vida. Estos podrán registrarse en los distintos negocios (serán distintas cuentas por negocio), reservar citas previas y realizar pedidos de productos. Debido a que los clientes serán los encargador de alimentar la base de datos deberemos tener gran cuidado a la hora de tratar la información proporcionada para así evitar posibles ataques o errores humanos. Esto lo podemos conseguir sanitizando la innformación y validando los datos en tiempo real mostrandole al usuario los posibles errores cometidos.
+El cliente es el usuario encargado de que el sistema tenga vida. Estos podrán registrarse en los distintos negocios (serán distintas cuentas por negocio), reservar citas previas y realizar pedidos de productos. Debido a que los clientes serán los encargados de alimentar la base de datos deberemos tener gran cuidado a la hora de tratar la información proporcionada para así evitar posibles ataques o errores humanos. Esto lo podemos conseguir sanitizando la información y validando los datos en tiempo real mostrándole al usuario los posibles errores cometidos.
 
 
