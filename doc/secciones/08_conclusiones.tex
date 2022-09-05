@@ -2,8 +2,44 @@
 
 \section{Temporización final}
 
+Sobre la temporización final, se ha cumplido el orden del desarrollo de las fases del proyecto marcadas, sin embargo por motivos de trabajo y finalización de los estudios, los plazos se han ido alargando más de lo deseado.\\
+
+Aun así no ha distado mucho de la primera planificación. Si es verdad que en la fase final del desarrollo, mientras se iba implementando la aplicación Web, se han tenido que realizar refactorizaciones en las diferentes rutas del Web Service, ya que aparecían casuísticas que no se habían tenido en cuenta. Al igual que en el desarrollo de la administración, que se debía adaptar las entidades del sistema al CRUD proporcionado por el Bundle utilizado.
+
 \section{Objetivos alcanzados}
+
+Finalmente, se han conseguido la mayoría de los objetivos alcanzados para este proyecto, los cuales son:
+
+\begin{itemize}
+    \item \textbf{Declaración de las entidades para la Base de Datos}: Se han implementado las diferentes entidades para el manejo de la Base de Datos del sistema. Se han añadido todas las entidades necesarias para facilitar la gestión del sistema tanto en la parte de Front como en la parte de Back.
+    \item \textbf{Desarrollo del Web Service}: Se ha desarrollado el Web Service encargado de servir/gestionar los datos solicitados/enviados por las aplicaciones de Front-End.
+    \item \textbf{Administración Back-End}: Para facilitar la gestión del sistema se ha implementado una administración por permisos de usuario, donde los trabajadores podrán acceder a todos los datos de su negocio y editar la configuración del mismo como pueden ser imágenes del Home, productos de la tienda, turnos de trabajo, etc. Además para los superadministradores les será más sencillo arreglar posibles incidencias que puedan ocurrir en el sistema.
+    \item \textbf{Aplicación Web Front-End}: Se ha desarrollado la aplicación Web con la que un cliente podrá tener acceso a todo lo ofertado por el negocio, como puede ser la venta de productos online, la reserva de citas previas y la gestión de su perfil.
+\end{itemize}
 
 \section{Aprendizaje}
 
+Gracias a haber creado una herramienta completa con un objetivo que cubrir, he podido enfrentarme a problemas, resolverlos y ganar la experiencia para el futuro:
+
+\begin{itemize}
+    \item \textbf{Comunicación entre Web Service y APP Web}: El primer obstáculo, aunque el más pequeño, fue la comunicación entre la aplicación Web y el Web Service. Los problemas de CORS y la recuperación de parámetros fueron los protagonistas.\\
+    Para resolverlo se hizo uso de un Bundle de Symfony con el que se configura el CORS del servidor permitiendo conexiones con el mismo desde aplicaciones externas.\\
+    Para el segundo, se implementó una funcionalidad común para los controladores con los que se obtiene el valor pasado por Request a la ruta llamada. Así no hay problema si los datos vienen por GET o por POST, aunque para la securización de la aplicación nosotros siempre haremos uso de POST.
+    \item \textbf{Securización del Token de Autenticación}: Antes del desarrollo de la aplicación Web se implementó la gestión de sesión de usuario con lo que se conoce como JSON Web Token. En primera instancia se realizó una implementación básica de esta, la cual, tras realizar el inicio de sesión devolvía el token generado para el usuario. Es aquí donde apareció el problema, ¿cómo almacenamos ese token de una forma segura en el Front-End?. Los primeros pensamientos fueron almacenarlo en el local storage del navegador o en una cookie pero estos lugares son susceptibles de ataques de Cross‑Site Scripting, ya que son zonas accesibles desde el JavaScript del navegador.\\
+    Investigando sobre cuál podría ser la mejor forma tomé la decisión de almacenar el token dividido en 2 cookies \cite{secure-jwt}. Una de ellas accesible por el JavaScript, con el que podremos comprobar si el usuario tiene la sesión activa o no en el sistema. La otra parte, que contiene la firma del token, será almacenada en una cookie Http-Only la cual no hay manera de acceder y es enviada en las cabeceras en las peticiones HTTP. Gracias a la configuración del Bundle utilizado para la gestión de este JWT ha sido posible implementar este método para la gestión de sesión de usuario.
+    \item \textbf{ReactJS}: Además de los problemas resueltos, uno de los aprendizajes en este proyecto ha sido el de los framworks de Front-Ent, en este caso ReactJS. Gracias a él la maquetación y desarrollo de front no ha sido tan pesada como puede ser en el caso del uso de HTML, CSS y JavaScript vanilla. Además, la optimización que realiza el framwork sobre el código hace posible un mejor rendimiento para una Web dinámica como la desarrollada.
+\end{itemize}
+
 \section{Desarrollo futuro}
+
+Existes varias iteraciones que desearía haber realizado en este proyecto de fin de carrera, sin embargo, debido al tiempo y otros inconvenientes para su desarrollo no ha sido posible.
+
+Entre ellas cabe mencionar:
+
+\begin{itemize}
+    \item \textbf{Despliegue}: Otro punto clave hubiera sido el despliegue de la aplicación Back-End y varios despliegues del Front-End para tener un buen testeo de la gestión multi-negocio. La principal idea era hacer uso de contenedores para esto, pero ahondando un poco más en materia la mayoría de servidores online ofrecía servicio para \textbf{Kubernetes} por lo que no ha sido posible realizar este despliegue a tiempo.
+    \item \textbf{Limpieza de código y estructuración}: Aunque para este proyecto se han intentado seguir las mejores prácticas posibles, siempre se pueden mejorar las cosas. Conforme se avanza en la carrera profesional se van aprendiendo nuevas técnicas y cambia la visión de las cosas, por lo que alguna refactorización de zonas y mejoras de la lógica de negocio podrían optimizar mucho más el rendimiento de los aplicativos.
+    \item \textbf{Integración Continua}: Este punto considero que es esencial en un proyecto de este estilo, ya que podría convertirse en un proyecto colaborativo debido a sus dimensiones a futuro. Por tiempo no ha sido posible el desarrollo de los test funcionales y unitarios, junto con la integración continua en el repositorio de Github mediante las Github Actions, pero será la primera iteración a desarrollar después de la finalización de este periodo.
+\end{itemize}
+
+Como he comentado y pienso, este proyecto podría ser comercializable o usado por negocios para su gestión online. Para poder llegar a esto deberán completarse los puntos mencionados.

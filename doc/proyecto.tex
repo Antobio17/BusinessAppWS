@@ -30,6 +30,8 @@
 \usepackage{subfiles} % Best loaded last in the preamble
 \usepackage[bottom]{footmisc} % Lleva la nota a pie de página abajo el todo
 \usepackage{appendix}
+\usepackage{biblatex}
+\addbibresource{bibliografia.bib}
 
 \hypersetup{
 	colorlinks=true,	% false: boxed links; true: colored links
@@ -113,8 +115,13 @@
 
 	
 	\newpage
-	\bibliography{bibliografia}
-	\bibliographystyle{plain}
+% 	\bibliography{bibliografia}
+    \printbibliography[nottype=misc]
+    % \bibliographystyle{unsrt}
+
+
+    \defbibheading{web}{\section*{Páginas de consulta}}
+    \printbibliography[type=misc,heading=web]
 	
 \end{document}
 

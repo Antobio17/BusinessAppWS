@@ -2,10 +2,10 @@
 
 \section{Metodología utilizada}
 
-Para el desarrollo de este proyecto se ha elegido como metodología el \textbf{Desarrollo Ágil}.
+Para el desarrollo de este proyecto se ha elegido como metodología el \textbf{Desarrollo Ágil} \cite{tas}.
 En mi opinión, este tipo de enfoque se acerca más al que desarrollan las empresas en la actualidad, donde se
 definen sprints en los que los requisitos y soluciones van evolucionando según la necesidad del proyecto.
-No obstante cada iteración deberá tener su planificación, análisis de requisitos, diseño, tests, etc.
+No obstante cada iteración deberá tener su planificación, análisis de requisitos, diseño, etc.
 
 \section{Temporización}
 
@@ -23,13 +23,6 @@ objetivos principales estarán divididos en diferentes hitos para realizar un de
             sea del negocio, usuarios o trabajadores; cancelación de citas; así como todas las comprobaciones y
             controles para la gestión de estas citas. De la mano de este hito se completará también la gestión
             de inicio de sesión de usuario y la encriptación de datos privados en la base de datos del aplicativo.
-
-            \item \textbf{Integración Continua}: Este hito no hace aportación de nueva funcionalidad
-            para el Web Service en construcción pero si es una parte esencial del proyecto. El objetivo
-            es poder tener una batería de test para la aplicación y mediante
-            Github Actions, que será el Sistema de Integración Continua elegido, lanzar estos tests en los commits
-            que se vayan realizando en el desarrollo del proyecto. Así nos aseguraremos que en toda nueva funcionalidad
-            creada o mejoras de código se realizan las acciones deseadas.
 
             \item \textbf{Gestión de venta de productos online}: Una vez finalizadas las dos etapas anteriores
             pasaremos a desarrollar otro de los puntos principales del problema, la gestión de venta online de
@@ -58,7 +51,7 @@ objetivos principales estarán divididos en diferentes hitos para realizar un de
 
             \end{itemize}
 \end{itemize}
-\subsection{Sprint definidos}
+\subsection{Sprints definidos}
 
 Además de la organización para el desarrollo del sistema, también se debe organizar el tiempo a invertir para el análisis previo necesario y el diseño de base de datos o interfaces de la aplicación. Una vez tengamos todos los puntos estudiados y definidos podremos comenzar con el desarrollo en programación. Podemos ver la organización prevista en la siguiente imagen:
 
@@ -70,8 +63,58 @@ Además de la organización para el desarrollo del sistema, también se debe org
   \label{}
 \end{figure}
 
-Como se indica, el tiempo transcurrido desde que se comienza este proyecto hasta que se pasa a la parte de desarrollo web es de aproximadamente mes y medio. Esto es debido a la cantidad de información y casuisticas que debemos analizar. Además el análisis previo es muy importante a la hora del diseño de la base de datos ya que a partir de este obtendremos toda la información necesaria de almacenar y las relaciones que tendremos entre nuestras entidades.
+Como se indica, el tiempo transcurrido desde que se comienza este proyecto hasta que se pasa a la parte de desarrollo web es de aproximadamente mes y medio. Esto es debido a la cantidad de información y casuísticas que debemos analizar. Además el análisis previo es muy importante a la hora del diseño de la base de datos, ya que a partir de este obtendremos toda la información necesaria de almacenar y las relaciones que tendremos entre nuestras entidades.
 
-La programación ocupará tamién alrededor de un mes y medio de trabajo. Con todo el analisis y diseño ya realizado no debería llevar un tiempo muy prologado su implementación, aunque siempre podemos encontrarnos problemas de integración con herramientas externas que utilicemos.
+La programación ocupará también alrededor de un mes y medio de trabajo. Con todo el análisis y diseño ya realizado no debería llevar un tiempo muy prologado su implementación, aunque siempre podemos encontrarnos problemas de integración con herramientas externas que utilicemos.
 
 Por último tendremos dos semanas para el despliegue en producción y pruebas para comprobar que todo funciona perfectamente.
+
+\section{Presupuesto}
+
+Suponiendo que el proyecto se realizara bajo una contratación para su desarrollo, vamos a proceder a hacer un desglose del presupuesto que sería necesario.
+
+En primer lugar, haremos un cálculo del salario mensual de un programador junior. Observando los diferentes portales de ofertas de trabajo como pueden ser InfoJobs o LinkedIn vemos que los salarios netos anuales rondan entre los 16.000 y 24.000 euros brutos. Supondremos un sueldo medio de entre el rango dado, es decir, 20.000€, que al mes supondrán un gasto de 1.666 € aproximadamente.\\
+
+En segundo lugar, calcularemos el gasto añadido de las licencias de software requeridas. Las únicas licencias que supondrán un gasto extra en el proyecto serán las de los IDEs utilizados, debido a que para los repositorios de los proyectos haremos uso de GNU General Public License v3.0. Al usar varios IDEs para el desarrollo de este proyecto como es PHPStorm (para la parte de Back-End), WebStorm (para Front-End) y DataGrip (para el acceso a base de datos) usaremos el paquete en la que se proporcionan todas las herramientas de JetBrains con un precio de 301,29€, el primer año. Por la duración del proyecto (4 meses) realizaremos una regla de tres para calcular cual sería el importe a pagar en estos meses de desarrollo, siendo 100,43€.\\ 
+
+Por último añadiremos al presupuesto el hardware utilizado. En este caso tendremos un ordenador portátil Intel® Core™ de 7.ª generación y una tarjeta gráfica independiente NVIDIA GTX 1050 por 700€. Supondremos que se realizará una financiación de este equipo en los meses de trabajo por lo que supondrá un gasto mensual de 175€.
+
+\subsection{Factura total}
+
+Realizaremos finalmente el cálculo total (aproximado) de los costes por mes y total del proyecto con la duración que se estimó en los puntos anteriores:
+
+\begin{table}[H]
+\begin{tabular}{lll}
+\hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Tipo de Gasto}} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    \textbf{Mensual}
+} & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}
+    \textbf{Total (4 meses)}
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Salario}} & \multicolumn{1}{l|}{
+    1.666€
+}  & \multicolumn{1}{l|}{
+    6.664€
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Software}} & \multicolumn{1}{l|}{
+    25,11€
+}  & \multicolumn{1}{l|}{
+    100,43€
+} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Hardware}} & \multicolumn{1}{l|}{
+    175€
+}  & \multicolumn{1}{l|}{
+    700€
+} \\ \hline
+
+\multicolumn{3}{l}{} \\ \hline
+\rowcolor[HTML]{EFEFEF}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{EFEFEF}\textbf{Gasto total}} & \multicolumn{1}{l|}{
+    1.866,11€
+}  & \multicolumn{1}{l|}{
+    7.464,44€
+} \\ \hline
+
+\end{tabular}
+\end{table}
