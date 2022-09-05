@@ -130,21 +130,26 @@ class OrderCrudController extends AbstractCrudController implements OrderCrudCon
                     ->displayIf(static function ($entity) {
                         return $entity->getStatus() === Order::STATUS_PENDING;
                     })
-            )
-            ->add(
+            )->add(
                 Crud::PAGE_INDEX,
                 Action::new('toPreparingAction', FALSE, 'fas fa-box')
                     ->linkToCrudAction('toPreparingAction')
                     ->displayIf(static function ($entity) {
                         return $entity->getStatus() === Order::STATUS_PAID;
                     })
-            )
-            ->add(
+            )->add(
                 Crud::PAGE_INDEX,
                 Action::new('toSentAction', FALSE, 'fas fa-truck')
                     ->linkToCrudAction('toSentAction')
                     ->displayIf(static function ($entity) {
                         return $entity->getStatus() === Order::STATUS_PREPARING;
+                    })
+            ) ->add(
+                Crud::PAGE_INDEX,
+                Action::new('toDeliveredAction', FALSE, 'fas fa-check')
+                    ->linkToCrudAction('toDeliveredAction')
+                    ->displayIf(static function ($entity) {
+                        return $entity->getStatus() === Order::STATUS_SENT;
                     })
             );
 
@@ -203,6 +208,24 @@ class OrderCrudController extends AbstractCrudController implements OrderCrudCon
 
         if ($order !== NULL && $order->getStatus() === Order::STATUS_PREPARING):
             $order->setStatus(Order::STATUS_SENT);
+            $this->getBusinessService()->persistAndFlush($order);
+        endif;
+
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+    /**
+     * @inheritDoc
+     * @return RedirectResponse RedirectResponse
+     */
+    public function toDeliveredAction(Request $request): RedirectResponse
+    {
+        /** @noinspection DuplicatedCode */
+        $orderID = (int)$request->get('entityId');
+        $order = $this->getBusinessService()->getOrderRepository()->find($orderID ?? -1);
+
+        if ($order !== NULL && $order->getStatus() === Order::STATUS_SENT):
+            $order->setStatus(Order::STATUS_DELIVERED);
             $this->getBusinessService()->persistAndFlush($order);
         endif;
 

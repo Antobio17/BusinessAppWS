@@ -225,7 +225,7 @@ class UserService extends AppService implements UserServiceInterface
             endif;
         endif;
 
-        if (!$user->getIsVerified()):
+        if ($user !== NULL && !$user->getIsVerified()):
             $this->registerAppError(
                 ToolsHelper::getStringifyMethod(get_class($this), __FUNCTION__),
                 Response::HTTP_UNAUTHORIZED,

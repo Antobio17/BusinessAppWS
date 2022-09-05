@@ -61,6 +61,15 @@ interface OrderCrudControllerInterface
      */
     public function toSentAction(Request $request): RedirectResponse;
 
+    /**
+     * Method to change the status of the order to delivered.
+     *
+     * @param Request $request Request of the page.
+     *
+     * @return RedirectResponse RedirectResponse
+     */
+    public function toDeliveredAction(Request $request): RedirectResponse;
+
     /*********************************************** STATIC METHODS ***********************************************/
 
     /**

@@ -43,7 +43,6 @@ class PostalAddressType extends AbstractType
             ->add('postalCode', IntegerType::class, array(
                 'label'      => 'Código Postal:',
                 'required'   => TRUE,
-                'data'       => 0,
                 'help'       => '* Código Postal perteneciente a la dirección postal.',
             ))
             ->add('province', TextType::class, array(

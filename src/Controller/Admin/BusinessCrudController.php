@@ -24,7 +24,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use App\Controller\Admin\Interfaces\BusinessCrudControllerInterface;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class BusinessCrudController extends AbstractCrudController implements BusinessCrudControllerInterface
 {
@@ -174,7 +173,7 @@ class BusinessCrudController extends AbstractCrudController implements BusinessC
         return new Business(
             '', '', '',
             new PostalAddress(
-                '', '', '', '', '', '', ''
+                '', '', '', 0, '', '', ''
             ), array()
         );
     }
