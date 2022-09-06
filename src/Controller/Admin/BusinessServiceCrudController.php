@@ -75,12 +75,14 @@ class BusinessServiceCrudController extends AbstractCrudController implements Bu
 
         if (isset($homeConfig)):
             $homeConfigID = $homeConfig->getID();
-        else:
+        elseif (!in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())):
             $homeConfigID = -1;
         endif;
 
-        $queryBuilder->andWhere('entity.homeConfig = :homeConfig');
-        $queryBuilder->setParameter('homeConfig', $homeConfigID);
+        if (isset($homeConfigID)):
+            $queryBuilder->andWhere('entity.homeConfig = :homeConfig');
+            $queryBuilder->setParameter('homeConfig', $homeConfigID);
+        endif;
 
         return $queryBuilder;
     }
@@ -131,7 +133,7 @@ class BusinessServiceCrudController extends AbstractCrudController implements Bu
                 ->setRequired($pageName === Crud::PAGE_NEW)
                 ->onlyOnForms()
                 ->setUploadedFileNamePattern(
-                    fn (UploadedFile $file): string => sprintf(
+                    fn(UploadedFile $file): string => sprintf(
                         '%d-%s',
                         date_create()->getTimestamp(),
                         $file->getClientOriginalName()

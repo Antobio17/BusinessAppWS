@@ -73,12 +73,14 @@ class SocialImageCrudController extends AbstractCrudController implements Social
 
         if (isset($homeConfig)):
             $homeConfigID = $homeConfig->getID();
-        else:
+        elseif (!in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())):
             $homeConfigID = -1;
         endif;
 
-        $queryBuilder->andWhere('entity.homeConfig = :homeConfig');
-        $queryBuilder->setParameter('homeConfig', $homeConfigID);
+        if (isset($homeConfigID)):
+            $queryBuilder->andWhere('entity.homeConfig = :homeConfig');
+            $queryBuilder->setParameter('homeConfig', $homeConfigID);
+        endif;
 
         return $queryBuilder;
     }
