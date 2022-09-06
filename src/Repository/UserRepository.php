@@ -61,7 +61,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         try {
             $user = $this->createQueryBuilder($alias)
                 ->andWhere($alias . '.business = :business')
-                ->setParameter('business', $business)
+                ->setParameter('business', $business->getID())
                 ->andWhere($alias . '.email = :email')
                 ->setParameter('email', $email)
                 ->orderBy($alias . '.id', 'ASC')
@@ -87,7 +87,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         return $this->createQueryBuilder($alias)
             ->andWhere(sprintf('%s.business = :business', $alias))
-            ->setParameter('business', $business)
+            ->setParameter('business', $business->getID())
             ->andWhere(sprintf('%s.isWorker = :isWorker', $alias))
             ->setParameter('isWorker', $isWorker)
             ->getQuery()

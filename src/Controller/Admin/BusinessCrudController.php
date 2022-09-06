@@ -16,6 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
@@ -118,6 +119,7 @@ class BusinessCrudController extends AbstractCrudController implements BusinessC
                     'by_reference' => FALSE,
                 )),
             FormField::addPanel('Horario'),
+            IntegerField::new('appointmentDuration', 'Duración de citas (en minutos)'),
             CollectionField::new('shifts')
                 ->hideWhenCreating()
                 ->hideOnIndex()
@@ -154,7 +156,7 @@ class BusinessCrudController extends AbstractCrudController implements BusinessC
 
         if (!in_array(User::ROLE_ADMIN, $this->getUser()->getRoles())):
             $actions
-                ->disable('delete');
+                ->disable('new', 'delete');
         endif;
 
         return $actions

@@ -74,9 +74,13 @@ class BusinessServiceCrudController extends AbstractCrudController implements Bu
         $queryBuilder = $this->getEntityRepository()->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
 
         if (isset($homeConfig)):
-            $queryBuilder->andWhere('entity.homeConfig = :homeConfig');
-            $queryBuilder->setParameter('homeConfig', $homeConfig->getID());
+            $homeConfigID = $homeConfig->getID();
+        else:
+            $homeConfigID = -1;
         endif;
+
+        $queryBuilder->andWhere('entity.homeConfig = :homeConfig');
+        $queryBuilder->setParameter('homeConfig', $homeConfigID);
 
         return $queryBuilder;
     }

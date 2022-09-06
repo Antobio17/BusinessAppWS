@@ -36,6 +36,9 @@ class UserService extends AppService implements UserServiceInterface
      */
     protected AuthenticationSuccessHandler $authenticationSuccessHandler;
 
+    /**
+     * @var PasswordHasherFactoryInterface
+     */
     protected PasswordHasherFactoryInterface $passwordHasherFactory;
 
     use MailServiceTrait;

@@ -72,9 +72,13 @@ class SocialImageCrudController extends AbstractCrudController implements Social
         $queryBuilder = $this->getEntityRepository()->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
 
         if (isset($homeConfig)):
-            $queryBuilder->andWhere('entity.homeConfig = :homeConfig');
-            $queryBuilder->setParameter('homeConfig', $homeConfig->getID());
+            $homeConfigID = $homeConfig->getID();
+        else:
+            $homeConfigID = -1;
         endif;
+
+        $queryBuilder->andWhere('entity.homeConfig = :homeConfig');
+        $queryBuilder->setParameter('homeConfig', $homeConfigID);
 
         return $queryBuilder;
     }
@@ -116,7 +120,7 @@ class SocialImageCrudController extends AbstractCrudController implements Social
                 ->setRequired($pageName === Crud::PAGE_NEW)
                 ->onlyOnForms()
                 ->setUploadedFileNamePattern(
-                    fn (UploadedFile $file): string => sprintf(
+                    fn(UploadedFile $file): string => sprintf(
                         '%d-%s',
                         date_create()->getTimestamp(),
                         $file->getClientOriginalName()

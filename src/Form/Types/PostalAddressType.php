@@ -45,6 +45,11 @@ class PostalAddressType extends AbstractType
                 'required'   => TRUE,
                 'help'       => '* Código Postal perteneciente a la dirección postal.',
             ))
+            ->add('population', TextType::class, array(
+                'label'      => 'Población:',
+                'required'   => TRUE,
+                'help'       => '* Población perteneciente a la dirección postal.',
+            ))
             ->add('province', TextType::class, array(
                 'label'      => 'Provincia:',
                 'required'   => TRUE,

@@ -196,10 +196,11 @@ class User extends AbstractORM implements UserInterface, HasBusinessNullableInte
     /**
      * A visual identifier that represents this user.
      *
-     * @see UserInterface UserInterface
+     * @return  string string
      */
     public function getUserIdentifier(): string
     {
+//        return $this->getID();
         return $this->getEmail() ?? $this->getPhoneNumber();
     }
 
@@ -208,6 +209,7 @@ class User extends AbstractORM implements UserInterface, HasBusinessNullableInte
      */
     public function getUsername(): string
     {
+//        return $this->getID();
         return $this->getEmail();
     }
 
