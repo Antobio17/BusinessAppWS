@@ -101,6 +101,7 @@ abstract class AbstractCrudController extends EAAbstractCrudController implement
     {
         return $actions
             # PAGE_INDEX
+            ->disable('delete')
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
             ->update(Crud::PAGE_INDEX, Action::DETAIL, function (Action $action) {
                 return $action->setIcon('fa fa-eye')->setLabel(FALSE);
